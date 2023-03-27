@@ -17,6 +17,7 @@ import {Screen} from '@toolkit/ui/screen/Screen';
 import {FIREBASE_CONFIG} from '@app/common/Config';
 import AppIcon from '../../assets/splash.png';
 import AllThingsScreen from './AllThingsScreen';
+import LoginScreen from './LoginScreen';
 
 /**
  * Checks that new apps have been initiatlized sufficiently so that they can run.
@@ -58,8 +59,8 @@ const StartupScreen: Screen<{}> = () => {
   // Async initialization that occurs before redirecting to main app
   async function waitForInitialization() {
     if (appChecks.passed) {
-      await auth.getLoggedInUser();
-      nav.reset(AllThingsScreen);
+      const user = await auth.getLoggedInUser();
+      nav.reset(user ? AllThingsScreen : LoginScreen);
     }
   }
 
