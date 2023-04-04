@@ -15,7 +15,10 @@ import IdentityService from '@toolkit/core/api/Login';
 import {SimpleUserMessaging} from '@toolkit/core/client/UserMessaging';
 import {registerAppConfig} from '@toolkit/core/util/AppConfig';
 import {AppContextProvider} from '@toolkit/core/util/AppContext';
-import {filterHandledExceptions} from '@toolkit/core/util/Environment';
+import {
+  deviceIsMobile,
+  filterHandledExceptions,
+} from '@toolkit/core/util/Environment';
 import {FIRESTORE_DATASTORE} from '@toolkit/providers/firebase/DataStore';
 import {FIREBASE_LOGGER} from '@toolkit/providers/firebase/client/Logger';
 import {fbAuthProvider} from '@toolkit/providers/login/FacebookLogin';
@@ -29,7 +32,10 @@ import PhoneVerification from '@toolkit/screens/login/PhoneVerification';
 import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
 import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
-import {NavItem, tabLayout} from '@toolkit/ui/layout/TabLayout';
+import {bottomTabLayout} from '@toolkit/ui/layout/BottomTabLayout';
+import {ModalLayout, NavItem} from '@toolkit/ui/layout/LayoutBlocks';
+import {layoutSelector} from '@toolkit/ui/layout/LayoutSelector';
+import {topbarLayout} from '@toolkit/ui/layout/TopbarLayout';
 import {Routes} from '@toolkit/ui/screen/Nav';
 import WebViewScreen from '@toolkit/ui/screen/WebScreen';
 import 'expo-dev-client';
@@ -115,29 +121,27 @@ const ROUTES: Routes = {
 };
 const Stack = createStackNavigator();
 
-const TABS: NavItem[] = [
-  {
-    icon: 'ion:images-outline',
-    title: 'All Things',
-    screen: AllThingsScreen,
-    route: 'AllThingsScreen',
-  },
-  {
-    icon: 'ion:heart-outline',
-    title: 'Faves',
-    screen: MyFavesScreen,
-    route: 'MyFavesScreen',
-  },
-];
-
-const HEADER_RIGHT: NavItem[] = [
-  {
-    icon: 'ion:settings-outline',
-    title: 'Settings',
-    screen: SettingsScreen,
-    route: 'SettingsScreen',
-  },
-];
+const NAV = {
+  main: [
+    {
+      icon: 'ion:images-outline',
+      title: 'All Things',
+      screen: AllThingsScreen,
+    },
+    {
+      icon: 'ion:heart-outline',
+      title: 'Faves',
+      screen: MyFavesScreen,
+    },
+  ],
+  extra: [
+    {
+      icon: 'ion:settings-outline',
+      title: 'Settings',
+      screen: SettingsScreen,
+    },
+  ],
+};
 
 // Set this to true to enable logging to Firebase Analytics
 const USE_FIREBASE_ANALYTICS = false;
@@ -160,13 +164,16 @@ export default function App() {
   registerIconPack('mci', MaterialCommunityIcons);
   usePaperComponents();
 
+  const layout = layoutSelector({
+    base: bottomTabLayout(NAV),
+    desktopWeb: topbarLayout(NAV),
+    modal: ModalLayout,
+    loginScreen: LoginScreen,
+  });
+
   const {navScreens, linkingScreens} = useReactNavScreens(
     ROUTES,
-    tabLayout({
-      tabs: TABS,
-      headerRight: HEADER_RIGHT,
-      loginScreen: LoginScreen,
-    }),
+    layout,
     Stack.Screen,
   );
 
@@ -207,6 +214,8 @@ const S = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     maxWidth: 800,
+    borderRadius: deviceIsMobile() ? 0 : 20,
+    overflow: 'hidden',
   },
   messaging: {
     bottom: 100,
