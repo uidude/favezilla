@@ -14,12 +14,11 @@ import {
 import {Screen} from '@toolkit/ui/screen/Screen';
 
 const LOGIN_SCREEN_CONFIG: SimpleLoginScreenConfig = {
-  title: 'Welcome to favezilla',
-  subtitle:
-    'This is a Simple Login Screen. \nEdit app/screens/LoginScreen.tsx to edit this!',
+  title: 'Favezilla',
+  subtitle: 'Share your favorite books!\n(and soon other favorite things)',
   authTypes: ['google'],
   home: 'AllThingsScreen',
-  tos: 'Edit this markdown to link to your your **Terms of Service**.',
+  tos: '*Terms of Service coming soon*',
 };
 
 const LoginScreen: Screen<{}> = simpleLoginScreen(LOGIN_SCREEN_CONFIG);
