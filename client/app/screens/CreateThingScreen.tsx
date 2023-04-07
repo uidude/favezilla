@@ -20,7 +20,7 @@ import {Opt} from '@toolkit/core/util/Types';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
-import AllThingsScreen from '@app/app/screens/AllThingsScreen';
+import AllThingsScreen from '@app/app/screens/Catalog';
 import {AddThing} from '@app/common/AppLogic';
 
 const CreateNewThingScreen: Screen<{}> = () => {
@@ -49,7 +49,7 @@ const CreateNewThingScreen: Screen<{}> = () => {
       return;
     }
     setSaving(true);
-    await addThing({name, description, imageUrl, creator: user});
+    await addThing({name, description, image: imageUrl});
     await sleep(5000);
     setSaving(false);
     back();

@@ -17,7 +17,7 @@ const LOGIN_SCREEN_CONFIG: SimpleLoginScreenConfig = {
   title: 'Favezilla',
   subtitle: 'Share your favorite books!\n(and soon other favorite things)',
   authTypes: ['google'],
-  home: 'AllThingsScreen',
+  home: 'Favorites',
   tos: '*Terms of Service coming soon*',
 };
 

@@ -8,13 +8,15 @@
  */
 
 import React from 'react';
-import {ViewStyle} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {Image, Text, View} from 'react-native';
+import DefaultThumb from '@assets/bookicon-small.png';
 import {Ionicons} from '@expo/vector-icons';
 import {useData} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useReload} from '@toolkit/core/client/Reload';
 import {useMessageOnFail} from '@toolkit/core/client/UserMessaging';
+import {Opt} from '@toolkit/core/util/Types';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useApi} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
@@ -24,15 +26,13 @@ import {Fave, Thing} from '@app/common/DataTypes';
 
 type Props = {
   thing: Thing;
-  isFave: boolean;
-  faveId?: string;
-  style?: ViewStyle;
+  /** If it's a fave of the current user */
+  fave?: Opt<Fave>;
   canDelete?: boolean;
 };
 
 export default function ThingRow(props: Props) {
-  const {thing, isFave, faveId, style, canDelete = false} = props;
-  const {imageUrl} = thing;
+  const {thing, fave, canDelete = false} = props;
   requireLoggedInUser();
   const addFave = useData(AddFave);
   const faveStore = useDataStore(Fave);
@@ -53,8 +53,8 @@ export default function ThingRow(props: Props) {
 
   async function unFave() {
     // TODO: Look up based on thing ID instead
-    if (faveId) {
-      await faveStore.remove(faveId);
+    if (fave) {
+      await faveStore.remove(fave.id);
       reload();
     }
   }
@@ -67,16 +67,11 @@ export default function ThingRow(props: Props) {
     reload();
   }
 
+  const image = thing.thumb ? {uri: thing.thumb} : DefaultThumb;
+
   return (
-    <View style={[{flexDirection: 'row'}, style]}>
-      {imageUrl != null && imageUrl !== '' ? (
-        <Image
-          style={{width: 60, height: 60, borderRadius: 7}}
-          source={{uri: imageUrl}}
-        />
-      ) : (
-        <DefaultThumbnail />
-      )}
+    <View style={S.row}>
+      <Image style={S.image} source={image} resizeMode="contain" />
       <View style={{alignSelf: 'center', marginLeft: 10, flex: 1}}>
         <Text style={{fontSize: 18}}>{props.thing.name}</Text>
         <Text style={{color: 'gray'}}>{props.thing.description}</Text>
@@ -89,7 +84,7 @@ export default function ThingRow(props: Props) {
           <Ionicons name="close-circle-outline" color="gray" size={30} />
         </PressableSpring>
       )}
-      {isFave ? (
+      {fave != null ? (
         <PressableSpring onPress={unFave} style={{alignSelf: 'center'}}>
           <Ionicons name="heart" color="red" size={30} />
         </PressableSpring>
@@ -104,23 +99,19 @@ export default function ThingRow(props: Props) {
   );
 }
 
-const DefaultThumbnail = () => {
-  return (
-    <View
-      style={{
-        alignSelf: 'center',
-        justifyContent: 'center',
-        width: 60,
-        height: 60,
-        borderRadius: 7,
-        backgroundColor: 'lightgray',
-      }}>
-      <Ionicons
-        name="image"
-        color="gray"
-        size={45}
-        style={{alignSelf: 'center'}}
-      />
-    </View>
-  );
-};
+const S = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+  },
+  image: {
+    width: 60,
+    height: 60,
+    borderRadius: 7,
+    backgroundColor: '#FAFAFA',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+});
