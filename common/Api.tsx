@@ -1,12 +1,3 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * @format
- */
-
 import {createApiKey} from '@toolkit/core/api/DataApi';
 import {User} from '@toolkit/core/api/User';
 import {Updater} from '@toolkit/data/DataStore';

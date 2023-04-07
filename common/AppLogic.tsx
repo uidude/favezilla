@@ -1,12 +1,3 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * @format
- */
-
 import {dataApi} from '@toolkit/core/api/DataApi';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';

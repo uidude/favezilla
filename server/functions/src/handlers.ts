@@ -1,12 +1,3 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * @format
- */
-
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import {AuthData} from 'firebase-functions/lib/common/providers/https';
