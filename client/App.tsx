@@ -49,10 +49,12 @@ import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import AuthConfig from '@app/app/AuthConfig';
 import AboutScreen from '@app/app/screens/AboutScreen';
-import AllThingsScreen from '@app/app/screens/AllThingsScreen';
+import Catalog from '@app/app/screens/Catalog';
 import CreateNewThingScreen from '@app/app/screens/CreateThingScreen';
+import Favorites from '@app/app/screens/Favorites';
 import LoginScreen from '@app/app/screens/LoginScreen';
-import MyFavesScreen from '@app/app/screens/MyFavesScreen';
+import ProfileScreen from '@app/app/screens/ProfileScreen';
+import Profiles from '@app/app/screens/Profiles';
 import SettingsScreen from '@app/app/screens/SettingsScreen';
 import StartupScreen from '@app/app/screens/StartupScreen';
 import {FIREBASE_CONFIG, GOOGLE_LOGIN_CONFIG} from '@app/common/Config';
@@ -109,8 +111,10 @@ PhoneVerification.style = {nav: 'none'};
 const ROUTES: Routes = {
   StartupScreen,
   LoginScreen,
-  MyFavesScreen,
-  AllThingsScreen,
+  Favorites,
+  Catalog,
+  Profiles,
+  ProfileScreen,
   SettingsScreen,
   CreateNewThingScreen,
   PhoneInput,
@@ -124,14 +128,20 @@ const Stack = createStackNavigator();
 const NAV = {
   main: [
     {
-      icon: 'ion:images-outline',
-      title: 'All Things',
-      screen: AllThingsScreen,
+      icon: 'ion:book-outline',
+      title: 'Catalog',
+      screen: Catalog,
     },
     {
       icon: 'ion:heart-outline',
       title: 'Faves',
-      screen: MyFavesScreen,
+      screen: Favorites,
+    },
+
+    {
+      icon: 'ion:people-outline',
+      title: 'Profiles',
+      screen: Profiles,
     },
   ],
   extra: [
