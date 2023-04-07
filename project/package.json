@@ -4,7 +4,7 @@
   "scripts": {
     "start": "expo start --dev-client",
     "ios": "expo start -i",
-    "web": "expo start -w",
+    "web": "expo start -w --https",
     "build:web": "expo export:web",
     "admin": "CLIENT=admin expo start --web",
     "build:admin": "CLIENT=admin expo export:web"
@@ -33,7 +33,8 @@
     "@toolkit": "../../npe-toolkit/lib",
     "@app/admin": "../admin",
     "@app/common": "../common",
-    "@app": "../client"
+    "@app": "../client",
+    "@assets": "../project/assets"
   },
   "private": true
 }
