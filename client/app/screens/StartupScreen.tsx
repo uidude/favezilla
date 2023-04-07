@@ -9,14 +9,14 @@
 
 import * as React from 'react';
 import {Image, Linking, StyleSheet, Text, View} from 'react-native';
+import AppIcon from '@assets/splash.png';
 import {useNavigation} from '@react-navigation/native';
 import Constants from 'expo-constants';
 import {useAuth} from '@toolkit/core/api/Auth';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {FIREBASE_CONFIG} from '@app/common/Config';
-import AppIcon from '../../assets/splash.png';
-import AllThingsScreen from './AllThingsScreen';
+import Favorites from './Favorites';
 import LoginScreen from './LoginScreen';
 
 /**
@@ -60,7 +60,7 @@ const StartupScreen: Screen<{}> = () => {
   async function waitForInitialization() {
     if (appChecks.passed) {
       const user = await auth.getLoggedInUser();
-      nav.reset(user ? AllThingsScreen : LoginScreen);
+      nav.reset(user ? Favorites : LoginScreen);
     }
   }
 
