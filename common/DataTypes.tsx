@@ -7,7 +7,7 @@
  * @format
  */
 
-import {User} from '@toolkit/core/api/User';
+import {Profile, User} from '@toolkit/core/api/User';
 import {
   BaseModel,
   DeletedBy,
@@ -22,21 +22,22 @@ import {
 export const PROFILE_FIELDS = ['pic', 'name'];
 
 export type ThingType = 'book';
-export type ExternalType = 'openLibrary';
+export type ExternalType = 'openlibrary';
 @Model({name: 'things'})
 export class Thing extends BaseModel {
   @Field() name: string;
   @Field() description: string;
   @Field(TString) type: ThingType;
-  @Field() imageUrl: string;
-  @Field(TString) externalId: string;
-  @Field(TString) externalType: ExternalType;
+  @Field() image: string;
+  @Field() thumb: string;
+  @Field(TString) externalId?: string;
+  @Field(TString) externalType?: ExternalType;
 }
 
 @Model({name: 'faves'})
 @DeletedBy(Ref('user'), Ref('thing'))
 export class Fave extends BaseModel {
-  @Field() user: User;
+  @Field() user: Profile;
   @Field() thing: Thing;
 }
 
