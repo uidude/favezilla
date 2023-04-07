@@ -22,16 +22,7 @@ export const GetThings = dataApi<void, Thing[]>('things.get', () => {
   const thingStore = useDataStore(Thing);
 
   return async function getAllThings() {
-    let things = await thingStore.getAll();
-
-    // If it's a first time load, populate DB with initial set of things
-    if (things.length === 0) {
-      const newThings = INITIAL_THINGS.map(thing => {
-        thing.creator = user;
-        return thingStore.create(thing);
-      });
-      things = await Promise.all(newThings);
-    }
+    const things = await thingStore.getAll();
 
     // Alphabetize
     things.sort((thing1, thing2) => thing1.name.localeCompare(thing2.name));
@@ -101,7 +92,6 @@ export const AddThing = dataApi<Partial<Thing>, string>('addThing', () => {
   const user = requireLoggedInUser<User>();
   const thingStore = useDataStore(Thing);
   return async (thing: Partial<Thing>) => {
-    thing.creator = user;
     const result = await thingStore.create(thing);
     return result.id;
   };
@@ -128,31 +118,3 @@ export const RemoveThing = dataApi<string, void>('removeThing', () => {
     await thingStore.remove(thingId);
   };
 });
-
-/**
- * Initial set of Things to load when DB is empty
- */
-const INITIAL_THINGS: Partial<Thing>[] = [
-  {
-    name: 'Thing One',
-    description: 'How do you do?',
-    imageUrl:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLlk8hk1QfmsUd_ywSN8oL5k6zDaaoFlbIw&usqp=CAU',
-  },
-  {
-    name: 'Thing Two',
-    description: 'Would you like to shake hands?',
-    imageUrl: 'https://m.media-amazon.com/images/I/81uAsD24VcL._AC_SL1500_.jpg',
-  },
-  {
-    name: 'Fantastic Thing',
-    description: "It's clobbering time!",
-    imageUrl:
-      'https://cdn.webshopapp.com/shops/153/files/314909725/funko-the-thing-560-fantastic-four-pop-marvel.jpg',
-  },
-  {
-    name: 'The Thing',
-    description: 'The ultimate in alien terror',
-    imageUrl: 'https://m.media-amazon.com/images/I/91U8fI0EBdL._SY445_.jpg',
-  },
-];
