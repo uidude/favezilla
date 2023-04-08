@@ -61,12 +61,8 @@ ProfileScreen.load = async props => {
     }),
     getFaves(),
   ]);
-
-  if (profile == null) {
-    throw new Error('Profile not found');
-  }
-
   faves.sort((a, b) => a.thing.name.localeCompare(b.thing.name));
+  if (profile == null) throw new Error('Profile not found');
 
   return {profile, faves, myFaves};
 };
@@ -81,7 +77,8 @@ const S = StyleSheet.create({
     borderColor: '#444',
   },
   profileHeader: {
-    paddingVertical: 40,
+    paddingTop: 36,
+    paddingBottom: 16,
     alignItems: 'center',
   },
   profilePic: {
