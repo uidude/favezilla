@@ -5,10 +5,11 @@
  */
 
 import * as React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Profile, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
+import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import ProfileScreen from '@app/app/screens/ProfileScreen';
@@ -20,27 +21,43 @@ type Props = {
   };
 };
 
-const Profiles: Screen<Props> = props => {
-  const {profiles} = props.async;
-  const user = requireLoggedInUser();
-  const {Button, Title} = useComponents();
+type ProfileRowProps = {
+  profile: Profile;
+  isMe?: boolean;
+};
+
+export const ProfileRow = (props: ProfileRowProps) => {
+  const {profile, isMe = false} = props;
   const {navTo} = useNav();
 
-  function goTo(id: string) {
-    navTo(ProfileScreen, {id});
+  function goPro() {
+    navTo(ProfileScreen, {id: profile.id});
   }
 
   return (
+    <PressableSpring style={S.row} onPress={goPro}>
+      <Image source={{uri: profile.pic ?? ''}} style={S.profilePic} />
+      <View style={{alignSelf: 'center', marginLeft: 16, flex: 1}}>
+        <Text style={{fontSize: 18}}>
+          {profile.name} {isMe && "<-- that's you!"}
+        </Text>
+        <Text style={{color: 'gray'}}>a gentleperson and a scholar</Text>
+      </View>
+    </PressableSpring>
+  );
+};
+
+const Profiles: Screen<Props> = props => {
+  requireLoggedInUser();
+  const {profiles, me} = props.async;
+  const {Title} = useComponents();
+
+  return (
     <ScrollView style={S.container} contentContainerStyle={S.content}>
-      <Title style={S.otherProfiles}>Your Profile</Title>
-      <Button onPress={() => goTo(user.id)} type="primary" style={S.button}>
-        View
-      </Button>
+      <ProfileRow profile={me} isMe={true} />
       <Title style={S.otherProfiles}>Other Profiles</Title>
       {profiles.map((profile, idx) => (
-        <Button onPress={() => goTo(profile.id)} style={S.button} key={idx}>
-          {profile.name}
-        </Button>
+        <ProfileRow profile={profile} key={idx} />
       ))}
     </ScrollView>
   );
@@ -64,21 +81,28 @@ const S = StyleSheet.create({
     flex: 1,
   },
   content: {
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   row: {
-    padding: 20,
-    borderWidth: 1,
-    borderColor: '#444',
-  },
-  button: {
-    marginHorizontal: 40,
-    marginTop: 40,
-    width: 250,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 12,
   },
   otherProfiles: {
-    marginHorizontal: 40,
-    marginTop: 40,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    backgroundColor: '#D0D0D0',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#B0B0B0',
+  },
+  profilePic: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#888',
   },
 });
 

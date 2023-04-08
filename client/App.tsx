@@ -10,6 +10,7 @@ import {
   deviceIsMobile,
   filterHandledExceptions,
 } from '@toolkit/core/util/Environment';
+import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {FIRESTORE_DATASTORE} from '@toolkit/providers/firebase/DataStore';
 import {FIREBASE_LOGGER} from '@toolkit/providers/firebase/client/Logger';
 import {fbAuthProvider} from '@toolkit/providers/login/FacebookLogin';
@@ -23,21 +24,13 @@ import PhoneVerification from '@toolkit/screens/login/PhoneVerification';
 import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
 import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
+import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import {bottomTabLayout} from '@toolkit/ui/layout/BottomTabLayout';
 import {ModalLayout, NavItem} from '@toolkit/ui/layout/LayoutBlocks';
 import {layoutSelector} from '@toolkit/ui/layout/LayoutSelector';
 import {topbarLayout} from '@toolkit/ui/layout/TopbarLayout';
 import {Routes} from '@toolkit/ui/screen/Nav';
 import WebViewScreen from '@toolkit/ui/screen/WebScreen';
-import 'expo-dev-client';
-import React from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
-import {StatusBar} from 'expo-status-bar';
-import 'react-native-gesture-handler';
-import {Provider as PaperProvider} from 'react-native-paper';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {initializeFirebase} from '@toolkit/providers/firebase/Config';
-import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import AuthConfig from '@app/app/AuthConfig';
 import AboutScreen from '@app/app/screens/AboutScreen';
 import Catalog from '@app/app/screens/Catalog';
@@ -48,7 +41,15 @@ import ProfileScreen from '@app/app/screens/ProfileScreen';
 import Profiles from '@app/app/screens/Profiles';
 import SettingsScreen from '@app/app/screens/SettingsScreen';
 import StartupScreen from '@app/app/screens/StartupScreen';
+import ThingScreen from '@app/app/screens/ThingScreen';
 import {FIREBASE_CONFIG, GOOGLE_LOGIN_CONFIG} from '@app/common/Config';
+import 'expo-dev-client';
+import React from 'react';
+import {Platform, StyleSheet, View} from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import 'react-native-gesture-handler';
+import {Provider as PaperProvider} from 'react-native-paper';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {APP_CONFIG, APP_INFO, NOTIF_CHANNELS_CONTEXT} from './lib/Config';
 
 //
@@ -110,6 +111,7 @@ const ROUTES: Routes = {
   CreateNewThingScreen,
   PhoneInput,
   PhoneVerification,
+  ThingScreen,
   WebViewScreen,
   AboutScreen,
   NotificationSettingsScreen,
@@ -215,7 +217,7 @@ const S = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     maxWidth: 800,
-    borderRadius: deviceIsMobile() ? 0 : 20,
+    borderRadius: deviceIsMobile() ? 0 : 16,
     overflow: 'hidden',
   },
   messaging: {

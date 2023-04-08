@@ -1,6 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Image, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import DefaultThumb from '@assets/bookicon-small.png';
 import {Ionicons} from '@expo/vector-icons';
 import {useData} from '@toolkit/core/api/DataApi';
@@ -11,9 +10,11 @@ import {Opt} from '@toolkit/core/util/Types';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useApi} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
+import {useNav} from '@toolkit/ui/screen/Nav';
 import {SEND_FAVE_NOTIF, SEND_THING_DELETE_NOTIF} from '@app/common/Api';
 import {AddFave, RemoveThing} from '@app/common/AppLogic';
 import {Fave, Thing} from '@app/common/DataTypes';
+import ThingScreen from '../screens/ThingScreen';
 
 type Props = {
   thing: Thing;
@@ -30,6 +31,7 @@ export default function ThingRow(props: Props) {
   const removeThing = useData(RemoveThing);
   const reload = useReload();
   const messageOnFail = useMessageOnFail();
+  const {navTo} = useNav();
 
   const sendFaveNotif = useApi(SEND_FAVE_NOTIF);
   const sendDeleteNotif = useApi(SEND_THING_DELETE_NOTIF);
@@ -58,10 +60,14 @@ export default function ThingRow(props: Props) {
     reload();
   }
 
+  function goThing() {
+    navTo(ThingScreen, {id: thing.id});
+  }
+
   const image = thing.thumb ? {uri: thing.thumb} : DefaultThumb;
 
   return (
-    <View style={S.row}>
+    <PressableSpring style={S.row} onPress={goThing}>
       <Image style={S.image} source={image} resizeMode="contain" />
       <View style={{alignSelf: 'center', marginLeft: 10, flex: 1}}>
         <Text style={{fontSize: 18}}>{props.thing.name}</Text>
@@ -86,7 +92,7 @@ export default function ThingRow(props: Props) {
           <Ionicons name="heart-outline" color="gray" size={30} />
         </PressableSpring>
       )}
-    </View>
+    </PressableSpring>
   );
 }
 
