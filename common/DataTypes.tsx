@@ -3,6 +3,7 @@ import {
   BaseModel,
   DeletedBy,
   Field,
+  InverseField,
   Model,
   Ref,
   TString,
@@ -23,13 +24,14 @@ export class Thing extends BaseModel {
   @Field() thumb: string;
   @Field(TString) externalId?: string;
   @Field(TString) externalType?: ExternalType;
+  @InverseField() faves: Fave[];
 }
 
 @Model({name: 'faves'})
 @DeletedBy(Ref('user'), Ref('thing'))
 export class Fave extends BaseModel {
   @Field() user: Profile;
-  @Field() thing: Thing;
+  @Field({inverse: {field: 'faves', many: true}}) thing: Thing;
 }
 
 export type TagType = 'library' | 'ignored';
