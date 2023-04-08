@@ -194,7 +194,7 @@ export const SearchBar = (props: Props) => {
               <Button
                 onPress={() => addFave(match)}
                 type="secondary"
-                style={{opacity: 0.6}}>
+                style={{opacity: 0.6, marginLeft: 6}}>
                 Add
               </Button>
             </View>
