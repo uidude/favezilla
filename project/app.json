@@ -34,7 +34,7 @@
       "package": "com.facebook.npe.hax_app"
     },
     "web": {
-      "favicon": "../client/assets/favicon.png"
+      "favicon": "../project/assets/favicon.png"
     },
     "facebookScheme": "fb",
     "facebookAppId": "",
