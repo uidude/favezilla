@@ -6,14 +6,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@toolkit/*": [
+        "../../npe-toolkit/lib/*"
+      ],
       "@app/common/*": [
         "../common/*"
       ],
       "@app/*": [
         "./*"
-      ],
-      "@toolkit/*": [
-        "../../npe-toolkit/lib/*"
       ],
       "@npe-toolkit-shell/*": [
         "../../npe-toolkit/shell/latest"
