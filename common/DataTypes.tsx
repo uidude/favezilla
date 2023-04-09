@@ -1,4 +1,4 @@
-import {Profile, User} from '@toolkit/core/api/User';
+import {ProfileUser, User} from '@toolkit/core/api/User';
 import {
   BaseModel,
   DeletedBy,
@@ -9,9 +9,12 @@ import {
   TString,
 } from '@toolkit/data/DataStore';
 
-// These are the fields that will be copied from the user type
-// to the profile type that is visible to other users
-export const PROFILE_FIELDS = ['pic', 'name'];
+@Model({name: 'profile'})
+export class Profile extends BaseModel {
+  @Field() user?: ProfileUser;
+  @Field() about?: string;
+  @InverseField() faves?: Fave[];
+}
 
 export type ThingType = 'book';
 export type ExternalType = 'openlibrary';
@@ -30,7 +33,7 @@ export class Thing extends BaseModel {
 @Model({name: 'faves'})
 @DeletedBy(Ref('user'), Ref('thing'))
 export class Fave extends BaseModel {
-  @Field() user: Profile;
+  @Field({inverse: {field: 'faves', many: true}}) user: Profile;
   @Field({inverse: {field: 'faves', many: true}}) thing: Thing;
 }
 

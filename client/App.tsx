@@ -35,6 +35,7 @@ import AuthConfig from '@app/app/AuthConfig';
 import AboutScreen from '@app/app/screens/AboutScreen';
 import Catalog from '@app/app/screens/Catalog';
 import CreateNewThingScreen from '@app/app/screens/CreateThingScreen';
+import EditProfile from '@app/app/screens/EditProfile';
 import Favorites from '@app/app/screens/Favorites';
 import LoginScreen from '@app/app/screens/LoginScreen';
 import ProfileScreen from '@app/app/screens/ProfileScreen';
@@ -105,6 +106,7 @@ const ROUTES: Routes = {
   LoginScreen,
   Favorites,
   Catalog,
+  EditProfile,
   Profiles,
   ProfileScreen,
   SettingsScreen,

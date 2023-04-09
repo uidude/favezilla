@@ -6,13 +6,14 @@
 
 import * as React from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Profile, requireLoggedInUser} from '@toolkit/core/api/User';
+import {ProfileUser, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import ProfileScreen from '@app/app/screens/ProfileScreen';
+import {Profile} from '@app/common/DataTypes';
 
 type Props = {
   async: {
@@ -28,6 +29,7 @@ type ProfileRowProps = {
 
 export const ProfileRow = (props: ProfileRowProps) => {
   const {profile, isMe = false} = props;
+  const profileUser = profile.user!;
   const {navTo} = useNav();
 
   function goPro() {
@@ -36,12 +38,16 @@ export const ProfileRow = (props: ProfileRowProps) => {
 
   return (
     <PressableSpring style={S.row} onPress={goPro}>
-      <Image source={{uri: profile.pic ?? ''}} style={S.profilePic} />
+      <Image source={{uri: profileUser.pic ?? ''}} style={S.profilePic} />
       <View style={{alignSelf: 'center', marginLeft: 16, flex: 1}}>
         <Text style={{fontSize: 18}}>
-          {profile.name} {isMe && "<-- that's you!"}
+          {profileUser.name} {isMe && "(<- that's you!)"}
         </Text>
-        <Text style={{color: 'gray'}}>a gentleperson and a scholar</Text>
+        {profile.about != null && (
+          <Text style={{color: 'gray'}} numberOfLines={1}>
+            {profile.about}
+          </Text>
+        )}
       </View>
     </PressableSpring>
   );
@@ -68,7 +74,7 @@ Profiles.style = {type: 'top'};
 Profiles.load = async () => {
   const user = requireLoggedInUser();
   const profileStore = useDataStore(Profile);
-  const profiles = await profileStore.getAll();
+  const profiles = await profileStore.getAll({edges: [ProfileUser]});
   const myIndex = profiles.findIndex(p => p.id === user.id);
   const me = profiles[myIndex];
   profiles.splice(myIndex, 1);
