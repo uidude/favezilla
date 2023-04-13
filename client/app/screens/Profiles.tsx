@@ -6,7 +6,7 @@
 
 import * as React from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {ProfileUser, requireLoggedInUser} from '@toolkit/core/api/User';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
@@ -29,7 +29,6 @@ type ProfileRowProps = {
 
 export const ProfileRow = (props: ProfileRowProps) => {
   const {profile, isMe = false} = props;
-  const profileUser = profile.user!;
   const {navTo} = useNav();
 
   function goPro() {
@@ -38,10 +37,10 @@ export const ProfileRow = (props: ProfileRowProps) => {
 
   return (
     <PressableSpring style={S.row} onPress={goPro}>
-      <Image source={{uri: profileUser.pic ?? ''}} style={S.profilePic} />
+      <Image source={{uri: profile.pic ?? ''}} style={S.profilePic} />
       <View style={{alignSelf: 'center', marginLeft: 16, flex: 1}}>
         <Text style={{fontSize: 18}}>
-          {profileUser.name} {isMe && "(<- that's you!)"}
+          {profile.name} {isMe && "(<- that's you!)"}
         </Text>
         {profile.about != null && (
           <Text style={{color: 'gray'}} numberOfLines={1}>
@@ -74,7 +73,7 @@ Profiles.style = {type: 'top'};
 Profiles.load = async () => {
   const user = requireLoggedInUser();
   const profileStore = useDataStore(Profile);
-  const profiles = await profileStore.getAll({edges: [ProfileUser]});
+  const profiles = await profileStore.getAll();
   const myIndex = profiles.findIndex(p => p.id === user.id);
   const me = profiles[myIndex];
   profiles.splice(myIndex, 1);

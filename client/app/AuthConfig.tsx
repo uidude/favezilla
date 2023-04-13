@@ -1,8 +1,8 @@
 import React from 'react';
 import firebase from 'firebase';
 import {Account} from '@toolkit/core/api/Auth';
-import {ProfileUser, User} from '@toolkit/core/api/User';
-import {DataStore, useDataStore} from '@toolkit/data/DataStore';
+import {User} from '@toolkit/core/api/User';
+import {useDataStore} from '@toolkit/data/DataStore';
 import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthService';
 import {useApi} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {GET_USER} from '@app/common/Api';
@@ -48,11 +48,12 @@ export default function AuthConfig(props: {children?: React.ReactNode}) {
   );
 }
 
-function profileUserFor(user: User): ProfileUser {
+function newProfileFor(user: User): Partial<Profile> {
   return {
     id: user.id,
+    user: user,
     name: user.name,
-    pic: user.pic,
+    ...(user.pic && {pic: user.pic}),
   };
 }
 
@@ -67,18 +68,18 @@ function addDerivedFields(user: User) {
 function useGetOrCreateUser() {
   const users = useDataStore(User);
   const profiles = useDataStore(Profile);
-  const profileUsers = useDataStore(ProfileUser);
 
   return async (firebaseAccount: firebase.User): Promise<User> => {
     const userId = firebaseAccount.uid;
+    await users.get(userId);
+    await profiles.get(userId);
 
-    let [user, profile, profileUser] = await Promise.all([
+    let [user, profile] = await Promise.all([
       users.get(userId),
       profiles.get(userId),
-      profileUsers.get(userId),
     ]);
 
-    if (user != null && profile != null && profileUser != null) {
+    if (user != null && profile != null) {
       addDerivedFields(user);
       return user;
     }
@@ -96,8 +97,7 @@ function useGetOrCreateUser() {
       email: firebaseAccount.email || undefined,
     };
 
-    const newProfileUser = profileUserFor(newUser);
-    const newProfile = {user: newProfileUser};
+    const newProfile = newProfileFor(newUser);
 
     // We have an example of doing these in a transaction (in server code)
     // but for simplicity, will make separate calls.
@@ -106,13 +106,10 @@ function useGetOrCreateUser() {
       addDerivedFields(user);
     }
 
-    if (profileUser == null) {
-      await profileUsers.create(newProfileUser);
-    }
-
     if (profile == null) {
       await profiles.create(newProfile);
     }
+
     return user;
   };
 }

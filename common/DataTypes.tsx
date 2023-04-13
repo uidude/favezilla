@@ -1,4 +1,4 @@
-import {ProfileUser, User} from '@toolkit/core/api/User';
+import {User} from '@toolkit/core/api/User';
 import {
   BaseModel,
   DeletedBy,
@@ -11,7 +11,9 @@ import {
 
 @Model({name: 'profile'})
 export class Profile extends BaseModel {
-  @Field() user?: ProfileUser;
+  @Field() user: User;
+  @Field() name: string;
+  @Field() pic?: string;
   @Field() about?: string;
   @InverseField() faves?: Fave[];
 }

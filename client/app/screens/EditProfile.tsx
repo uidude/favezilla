@@ -6,7 +6,7 @@
 
 import * as React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {ProfileUser, User, requireLoggedInUser} from '@toolkit/core/api/User';
+import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {getRequired, useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {useNav} from '@toolkit/ui/screen/Nav';
@@ -20,36 +20,24 @@ type Props = {
   };
 };
 
-function profileUserFor(id: string, user: Partial<User>): Partial<ProfileUser> {
-  return {
-    id,
-    name: user.name,
-    pic: user.pic,
-  };
-}
-
-/**
- * Update user info in `User`, `ProfileUser, and `Profile` stores
- */
-function useUpdateUserInfo() {
-  const {id} = requireLoggedInUser();
+function useUpdateUserAndProfile() {
   const userStore = useDataStore(User);
-  const profileUserStore = useDataStore(ProfileUser);
   const profileStore = useDataStore(Profile);
 
-  return async function updateUserInfo(
+  return async function updateUserAndProfile(
     id: string,
     user: Partial<User>,
     profile: Partial<Profile>,
   ) {
-    // Ensure user has updated before updating profileUserStore
+    // Ensure user` has updated before updating profile
     await userStore.update({...user, id});
 
+    const userFieldsToCopy = {
+      name: user.name,
+      ...(user.pic && {pic: user.pic}),
+    };
     // TODO: Consider using transactions
-    await Promise.all([
-      profileUserStore.update(profileUserFor(id, user)),
-      profileStore.update({...profile, id}),
-    ]);
+    await profileStore.update({...profile, ...userFieldsToCopy, id});
   };
 }
 
@@ -57,10 +45,10 @@ const EditProfile: Screen<Props> = props => {
   requireLoggedInUser();
   const {me} = props.async;
   const {Button, TextInput} = useComponents();
-  const [name, setName] = React.useState(me.user!.name);
+  const [name, setName] = React.useState(me.name);
   const [bio, setBio] = React.useState(me.about ?? '');
   const nav = useNav();
-  const updateUserInfo = useUpdateUserInfo();
+  const updateUserAndProfile = useUpdateUserAndProfile();
 
   function back(reload: boolean = false) {
     if (nav.backOk()) {
@@ -72,7 +60,7 @@ const EditProfile: Screen<Props> = props => {
   }
 
   async function save() {
-    await updateUserInfo(me.id, {name}, {about: bio});
+    await updateUserAndProfile(me.id, {name}, {about: bio});
     back(true);
   }
 
@@ -110,7 +98,7 @@ EditProfile.title = 'Edit Your Profile';
 EditProfile.load = async () => {
   const {id} = requireLoggedInUser();
   const profileStore = useDataStore(Profile);
-  const me = await getRequired(profileStore, id, {edges: [ProfileUser]});
+  const me = await getRequired(profileStore, id);
 
   return {me};
 };

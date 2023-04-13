@@ -10,7 +10,6 @@ service cloud.firestore {
     return {
       "user": {"*": ['owner']},
       "profile": {"read": ['public'], "write": ['owner']},
-      "profileUser": {"read": ['public'], "write": ['owner']},
       "things": {"*": ['public']},
       "faves": {"read": ['public'], "write": ['owner']},
       "push_tokens": {"*": ['owner']},
@@ -26,7 +25,6 @@ service cloud.firestore {
     return {
       "user": "id",
       "profile": "user",
-      "profileUser": "id",
       "faves": "user",
       "push_tokens": "user",
       "notification_pref": "user"

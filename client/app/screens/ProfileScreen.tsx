@@ -5,9 +5,9 @@
  */
 
 import * as React from 'react';
-import {Image, Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import {useData} from '@toolkit/core/api/DataApi';
-import {ProfileUser, requireLoggedInUser} from '@toolkit/core/api/User';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {Icon} from '@toolkit/ui/components/Icon';
@@ -31,10 +31,9 @@ type Props = {
 const ProfileScreen: Screen<Props> = props => {
   const {id} = requireLoggedInUser();
   const {profile, faves, myFaves} = props.async;
-  const {Title, Subtitle, Button, Body} = useComponents();
+  const {Title, Body} = useComponents();
   const {navTo} = useNav();
-  const profileUser = profile.user!;
-  const isMe = id === profileUser.id;
+  const isMe = id === profile.id;
   const about = profile.about ?? '';
 
   function isMyFave(thing: Thing) {
@@ -44,10 +43,10 @@ const ProfileScreen: Screen<Props> = props => {
   return (
     <ScrollView style={S.container}>
       <View style={S.profileHeader}>
-        <Image source={{uri: profileUser.pic ?? ''}} style={S.profilePic} />
+        <Image source={{uri: profile.pic ?? ''}} style={S.profilePic} />
         <Title style={S.title}>
           {isMe && <View style={{width: 30}} />}
-          {profileUser.name}
+          {profile.name}
           {isMe && (
             <PressableSpring
               style={{marginLeft: 6}}
@@ -71,7 +70,10 @@ ProfileScreen.load = async props => {
   const getFaves = useData(GetFaves);
   let [profile, myFaves] = await Promise.all([
     profileStore.get(props.id, {
-      edges: [ProfileUser, [Profile, Fave, 1], [Fave, Thing, 1]],
+      edges: [
+        [Profile, Fave, 1],
+        [Fave, Thing, 1],
+      ],
     }),
     getFaves(),
   ]);

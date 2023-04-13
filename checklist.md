@@ -58,6 +58,6 @@
 
 - **Data consistency**
   - Set up cron jobs to
-    - [ ] Sync `User` and `ProfileUser`
+    - [ ] Sync `User` and `Profile` fields from user
     - [ ] Remove Firebase accounts without corresponding `User` objects
     - [ ] Delete objects that no longer have a deletion owner

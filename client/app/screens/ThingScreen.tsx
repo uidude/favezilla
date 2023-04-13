@@ -7,7 +7,7 @@
 import * as React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import DefaultThumb from '@assets/bookicon-small.png';
-import {ProfileUser, requireLoggedInUser} from '@toolkit/core/api/User';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {useScreenState} from '@toolkit/ui/screen/Layout';
@@ -49,7 +49,10 @@ ThingScreen.title = ' ';
 ThingScreen.load = async props => {
   const thingStore = useDataStore(Thing);
   const thing = await thingStore.get(props.id, {
-    edges: [[Thing, Fave, 1], [Fave, Profile, 1], ProfileUser],
+    edges: [
+      [Thing, Fave, 1],
+      [Fave, Profile, 1],
+    ],
   });
   if (thing == null) throw new Error('Thing not found');
 
