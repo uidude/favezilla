@@ -4,9 +4,9 @@
     "slug": "studio",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "../client/assets/icon.png",
+    "icon": "../project/assets/icon.png",
     "splash": {
-      "image": "../client/assets/splash.png",
+      "image": "../project/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
