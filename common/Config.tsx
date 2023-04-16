@@ -11,13 +11,13 @@ try {
  * https://console.firebase.google.com/project/YOUR_PROJECT/settings/general/, under "Web apps"
  */
 export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
-  apiKey: 'AIzaSyBPg-GJwR4N63turpv1G3tfUjYkXtu1GCA',
-  authDomain: 'minders-2d5bf.firebaseapp.com',
-  projectId: 'minders-2d5bf',
-  storageBucket: 'minders-2d5bf.appspot.com',
-  messagingSenderId: '729397867154',
-  appId: '1:729397867154:web:3f82a3e71427edd01dec4b',
-  measurementId: 'G-T7BP96L0C5',
+  apiKey: 'AIzaSyD0Gjnvn2M6OuBR45305fnCoR1QDbL1rJA',
+  authDomain: 'favezilla.firebaseapp.com',
+  projectId: 'favezilla',
+  storageBucket: 'favezilla.appspot.com',
+  messagingSenderId: '383529496724',
+  appId: '1:383529496724:web:174c55124492d417c78481',
+  measurementId: 'G-8HCB3DZ285',
   namespace: 'favezilla',
   emulators: {
     functions: {
@@ -35,7 +35,7 @@ export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
  */
 export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
   iosClientId:
-    '729397867154-o7pdcviop9n916p65ptf8j37v1kd9tl9.apps.googleusercontent.com',
+    '383529496724-0tt33uo3bbq0t5sc94m2u9cigd8p92p6.apps.googleusercontent.com',
   webClientId:
-    '729397867154-rbsrjlb7cvm3jfcq04gei4j730qo4jtc.apps.googleusercontent.com',
+    '383529496724-0tt33uo3bbq0t5sc94m2u9cigd8p92p6.apps.googleusercontent.com',
 };
