@@ -43,7 +43,11 @@ import Profiles from '@app/app/screens/Profiles';
 import SettingsScreen from '@app/app/screens/SettingsScreen';
 import StartupScreen from '@app/app/screens/StartupScreen';
 import ThingScreen from '@app/app/screens/ThingScreen';
-import {FIREBASE_CONFIG, GOOGLE_LOGIN_CONFIG} from '@app/common/Config';
+import {
+  APP_CONFIG,
+  FIREBASE_CONFIG,
+  GOOGLE_LOGIN_CONFIG,
+} from '@app/common/Config';
 import 'expo-dev-client';
 import React from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
@@ -51,7 +55,7 @@ import {StatusBar} from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {APP_CONFIG, APP_INFO, NOTIF_CHANNELS_CONTEXT} from './lib/Config';
+import {APP_INFO, NOTIF_CHANNELS_CONTEXT} from './lib/Config';
 
 //
 /**
