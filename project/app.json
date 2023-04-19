@@ -28,7 +28,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "../client/assets/adaptive-icon.png",
+        "foregroundImage": "../project/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.facebook.npe.hax_app"
