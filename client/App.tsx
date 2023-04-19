@@ -12,6 +12,7 @@ import {
 } from '@toolkit/core/util/Environment';
 import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {FIRESTORE_DATASTORE} from '@toolkit/providers/firebase/DataStore';
+import {FIRESTORE_FILESTORE} from '@toolkit/providers/firebase/FileStore';
 import {FIREBASE_LOGGER} from '@toolkit/providers/firebase/client/Logger';
 import {fbAuthProvider} from '@toolkit/providers/login/FacebookLogin';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
@@ -160,6 +161,7 @@ const APP_CONTEXT = [
   APP_CONFIG,
   APP_INFO,
   FIRESTORE_DATASTORE,
+  FIRESTORE_FILESTORE,
   LOGGER,
   NOTIF_CHANNELS_CONTEXT,
 ];

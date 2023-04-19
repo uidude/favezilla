@@ -1,18 +1,21 @@
 /**
- * TODO: Describe what this screen is doing :)
- *
- * @format
+ * Screen for editing the user's profile.
  */
 
 import * as React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
+import {SaveFormat, manipulateAsync} from 'expo-image-manipulator';
+import * as ImagePicker from 'expo-image-picker';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {getRequired, useDataStore} from '@toolkit/data/DataStore';
+import {useStorage} from '@toolkit/data/FileStore';
 import {useComponents} from '@toolkit/ui/components/Components';
+import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
-import {Profile, Thing} from '@app/common/DataTypes';
-import ProfileScreen from './ProfileScreen';
+import {ProfilePic} from '@app/app/components/Profile';
+import ProfileScreen from '@app/app/screens/ProfileScreen';
+import {Profile} from '@app/common/DataTypes';
 
 type Props = {
   async: {
@@ -41,14 +44,48 @@ function useUpdateUserAndProfile() {
   };
 }
 
+async function pickSquarePhoto(size: number = 256) {
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    quality: 1,
+    allowsEditing: true,
+    aspect: [1, 1],
+  });
+
+  const image = result.assets && result.assets[0];
+
+  if (image) {
+    // Crop square box in the middle
+    const width = image.width;
+    const height = image.height;
+    const boxSize = Math.min(width, height);
+    const x = (width - boxSize) / 2;
+    const y = (height - boxSize) / 2;
+    const cropped = await manipulateAsync(
+      image.uri,
+      [
+        {crop: {originX: x, originY: y, width: boxSize, height: boxSize}},
+        {resize: {width: size, height: size}},
+      ],
+      {compress: 1, format: SaveFormat.PNG},
+    );
+    return cropped.uri;
+  }
+
+  return null;
+}
+
 const EditProfile: Screen<Props> = props => {
   requireLoggedInUser();
   const {me} = props.async;
   const {Button, TextInput} = useComponents();
   const [name, setName] = React.useState(me.name);
   const [bio, setBio] = React.useState(me.about ?? '');
+  const [pic, setPic] = React.useState(me.pic);
+  const [isUploading, setIsUploading] = React.useState(false);
   const nav = useNav();
   const updateUserAndProfile = useUpdateUserAndProfile();
+  const {upload} = useStorage(Profile, 'pic');
 
   function back(reload: boolean = false) {
     if (nav.backOk()) {
@@ -60,12 +97,37 @@ const EditProfile: Screen<Props> = props => {
   }
 
   async function save() {
-    await updateUserAndProfile(me.id, {name}, {about: bio});
+    await updateUserAndProfile(me.id, {name, pic}, {about: bio});
     back(true);
+  }
+
+  async function editPic() {
+    try {
+      const toUploadUri = await pickSquarePhoto();
+      if (toUploadUri != null) {
+        setIsUploading(true);
+        const uploadResult = await upload(toUploadUri);
+        setPic(uploadResult.storageUri);
+      }
+    } catch (e) {
+      console.log('failed', e);
+    } finally {
+      setIsUploading(false);
+    }
   }
 
   return (
     <ScrollView style={S.container} contentContainerStyle={S.content}>
+      <PressableSpring onPress={editPic}>
+        {isUploading ? (
+          <View style={S.uploading}>
+            <ActivityIndicator size="large" />
+          </View>
+        ) : (
+          <ProfilePic pic={pic} size={128} style={{alignSelf: 'center'}} />
+        )}
+      </PressableSpring>
+      <View style={{height: 20}} />
       <TextInput
         type="primary"
         value={name}
@@ -117,6 +179,19 @@ const S = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: '#444',
+  },
+  profilePic: {
+    width: 128,
+    height: 128,
+    borderWidth: 1,
+    borderColor: '#888',
+    alignSelf: 'center',
+  },
+  uploading: {
+    width: 128,
+    height: 128,
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
 });
 

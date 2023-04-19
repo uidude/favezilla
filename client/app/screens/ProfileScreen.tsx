@@ -14,10 +14,11 @@ import {Icon} from '@toolkit/ui/components/Icon';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
+import {ProfilePic} from '@app/app/components/Profile';
+import ThingRow from '@app/app/components/ThingRow';
+import EditProfile from '@app/app/screens/EditProfile';
 import {GetFaves} from '@app/common/AppLogic';
 import {Fave, Profile, Thing} from '@app/common/DataTypes';
-import ThingRow from '../components/ThingRow';
-import EditProfile from './EditProfile';
 
 type Props = {
   id: string;
@@ -43,7 +44,7 @@ const ProfileScreen: Screen<Props> = props => {
   return (
     <ScrollView style={S.container}>
       <View style={S.profileHeader}>
-        <Image source={{uri: profile.pic ?? ''}} style={S.profilePic} />
+        <ProfilePic pic={profile.pic} size={128} />
         <Title style={S.title}>
           {isMe && <View style={{width: 30}} />}
           {profile.name}
@@ -97,13 +98,6 @@ const S = StyleSheet.create({
     paddingTop: 36,
     paddingBottom: 16,
     alignItems: 'center',
-  },
-  profilePic: {
-    width: 128,
-    height: 128,
-    borderRadius: 64,
-    borderWidth: 1,
-    borderColor: '#888',
   },
   title: {
     textAlign: 'center',

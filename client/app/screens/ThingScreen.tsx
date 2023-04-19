@@ -12,8 +12,8 @@ import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {useScreenState} from '@toolkit/ui/screen/Layout';
 import {Screen} from '@toolkit/ui/screen/Screen';
+import {ProfileRow} from '@app/app/components/Profile';
 import {Fave, Profile, Thing} from '@app/common/DataTypes';
-import {ProfileRow} from './Profiles';
 
 type Props = {
   id: string;
