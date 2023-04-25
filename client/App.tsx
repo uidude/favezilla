@@ -3,7 +3,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {CONSOLE_LOGGER} from '@toolkit/core/api/Log';
 import IdentityService from '@toolkit/core/api/Login';
-import {SimpleUserMessaging} from '@toolkit/core/client/UserMessaging';
+import {
+  SimpleUserMessaging,
+  StatusContainer,
+} from '@toolkit/core/client/UserMessaging';
 import {registerAppConfig} from '@toolkit/core/util/AppConfig';
 import {AppContextProvider} from '@toolkit/core/util/AppContext';
 import {
@@ -27,7 +30,7 @@ import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
 import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import {bottomTabLayout} from '@toolkit/ui/layout/BottomTabLayout';
-import {ModalLayout, NavItem} from '@toolkit/ui/layout/LayoutBlocks';
+import {ModalLayout} from '@toolkit/ui/layout/LayoutBlocks';
 import {layoutSelector} from '@toolkit/ui/layout/LayoutSelector';
 import {topbarLayout} from '@toolkit/ui/layout/TopbarLayout';
 import {Routes} from '@toolkit/ui/screen/Nav';
@@ -197,22 +200,24 @@ export default function App() {
   return (
     <AppContextProvider ctx={APP_CONTEXT}>
       <PaperProvider theme={BLACK_AND_WHITE} settings={{icon: Icon}}>
-        <AuthConfig>
-          <View style={S.background}>
-            <SafeAreaProvider style={S.container}>
-              <SimpleUserMessaging style={S.messaging} />
-              <NavigationContainer linking={linking}>
-                <StatusBar style="auto" />
-                <NavContext routes={ROUTES} />
-                <Stack.Navigator
-                  screenOptions={{headerShown: false}}
-                  initialRouteName="StartupScreen">
-                  {navScreens}
-                </Stack.Navigator>
-              </NavigationContainer>
-            </SafeAreaProvider>
-          </View>
-        </AuthConfig>
+        <StatusContainer top={true}>
+          <AuthConfig>
+            <View style={S.background}>
+              <SafeAreaProvider style={S.container}>
+                <SimpleUserMessaging style={S.messaging} />
+                <NavigationContainer linking={linking}>
+                  <StatusBar style="auto" />
+                  <NavContext routes={ROUTES} />
+                  <Stack.Navigator
+                    screenOptions={{headerShown: false}}
+                    initialRouteName="StartupScreen">
+                    {navScreens}
+                  </Stack.Navigator>
+                </NavigationContainer>
+              </SafeAreaProvider>
+            </View>
+          </AuthConfig>
+        </StatusContainer>
       </PaperProvider>
     </AppContextProvider>
   );

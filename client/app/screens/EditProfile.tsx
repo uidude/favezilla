@@ -7,6 +7,10 @@ import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
 import {SaveFormat, manipulateAsync} from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
+import {useAction} from '@toolkit/core/client/Action';
+import {StatusBar} from '@toolkit/core/client/UserMessaging';
+import {withTimeout} from '@toolkit/core/util/DevUtil';
+import {Opt} from '@toolkit/core/util/Types';
 import {getRequired, useDataStore} from '@toolkit/data/DataStore';
 import {useStorage} from '@toolkit/data/FileStore';
 import {useComponents} from '@toolkit/ui/components/Components';
@@ -51,7 +55,6 @@ async function pickSquarePhoto(size: number = 256) {
     allowsEditing: true,
     aspect: [1, 1],
   });
-
   const image = result.assets && result.assets[0];
 
   if (image) {
@@ -82,44 +85,45 @@ const EditProfile: Screen<Props> = props => {
   const [name, setName] = React.useState(me.name);
   const [bio, setBio] = React.useState(me.about ?? '');
   const [pic, setPic] = React.useState(me.pic);
-  const [isUploading, setIsUploading] = React.useState(false);
   const nav = useNav();
   const updateUserAndProfile = useUpdateUserAndProfile();
-  const {upload} = useStorage(Profile, 'pic');
+  const {upload} = useStorage(Profile, 'pic', {maxBytes: 50000000});
+  const [uploadPic, uploading] = useAction(uploadPicHandler);
+  const [save, saving] = useAction(saveHandler);
+  const toUploadUri = React.useRef<Opt<string>>();
 
   function back(reload: boolean = false) {
     if (nav.backOk()) {
       nav.back();
-      nav.setParams({reload: true});
+      nav.setParams({reload});
     } else {
-      nav.navTo(ProfileScreen, {id: me.id, reload: true});
+      nav.navTo(ProfileScreen, {id: me.id, reload});
     }
   }
 
-  async function save() {
+  async function saveHandler() {
     await updateUserAndProfile(me.id, {name, pic}, {about: bio});
     back(true);
   }
 
   async function editPic() {
-    try {
-      const toUploadUri = await pickSquarePhoto();
-      if (toUploadUri != null) {
-        setIsUploading(true);
-        const uploadResult = await upload(toUploadUri);
-        setPic(uploadResult.storageUri);
-      }
-    } catch (e) {
-      console.log('failed', e);
-    } finally {
-      setIsUploading(false);
+    toUploadUri.current = await pickSquarePhoto();
+    uploadPic();
+  }
+
+  async function uploadPicHandler() {
+    const uri = toUploadUri.current;
+    if (uri != null) {
+      const uploadResult = await withTimeout(() => upload(uri), 30000);
+      setPic(uploadResult.storageUri);
     }
   }
 
   return (
     <ScrollView style={S.container} contentContainerStyle={S.content}>
+      <StatusBar style={{marginBottom: 20}} />
       <PressableSpring onPress={editPic}>
-        {isUploading ? (
+        {uploading ? (
           <View style={S.uploading}>
             <ActivityIndicator size="large" />
           </View>
@@ -148,7 +152,7 @@ const EditProfile: Screen<Props> = props => {
         <Button type="tertiary" onPress={() => back()}>
           Cancel
         </Button>
-        <Button type="primary" onPress={save}>
+        <Button type="primary" onPress={save} loading={saving}>
           Save
         </Button>
       </View>
@@ -164,7 +168,6 @@ EditProfile.load = async () => {
 
   return {me};
 };
-
 const S = StyleSheet.create({
   container: {
     flex: 1,

@@ -33,7 +33,7 @@ const DrawerNavigator = () => {
     id: 'logout',
     label: 'Logout',
     icon: 'mci:logout',
-    act: () => auth.logout(),
+    action: () => auth.logout(),
   };
 
   const navItems: NavItem[] = [

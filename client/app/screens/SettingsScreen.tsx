@@ -2,6 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {useAuth} from '@toolkit/core/api/Auth';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {actionHook} from '@toolkit/core/client/Action';
 import {useUserMessaging} from '@toolkit/core/client/UserMessaging';
 import Settings, {Setting} from '@toolkit/screens/Settings';
 import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
@@ -46,24 +47,24 @@ const NOTIF_SETTINGS = {
   to: NotificationSettingsScreen,
 };
 
-const DEV_SETTINGS = () => {
-  const {showMessage} = useUserMessaging();
-  return {
-    id: 'DEV_SETTINGS',
-    label: 'Dev Settings',
-    icon: 'wrench-outline',
-    act: () => showMessage('coming soon'!),
-  };
+const DEV_SETTINGS = {
+  id: 'DEV_SETTINGS',
+  label: 'Dev Settings',
+  icon: 'wrench-outline',
+  action: actionHook(() => {
+    const {showMessage, showError} = useUserMessaging();
+    return () => showMessage('Coming soon!');
+  }),
 };
 
-export const LOGOUT_ACTION = () => {
-  const auth = useAuth();
-  return {
-    id: 'LOGOUT',
-    label: 'Log Out',
-    icon: 'logout',
-    act: () => auth.logout(),
-  };
+export const LOGOUT_ACTION = {
+  id: 'LOGOUT',
+  label: 'Log Out',
+  icon: 'logout',
+  action: actionHook(() => {
+    const auth = useAuth();
+    return () => auth.logout();
+  }),
 };
 
 const SETTINGS: Setting[] = [
