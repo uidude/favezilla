@@ -5,6 +5,7 @@ import {useDataStore} from '@toolkit/data/DataStore';
 import DataTable from '@toolkit/ui/components/DataTable';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
+import {actionHook} from '@app/admin/../../npe-toolkit/lib/core/client/Action';
 import BroadcastNotificationModal from './BroadcastNotificationModal';
 import SendNotificationModal from './SendNotificationModal';
 
@@ -43,14 +44,14 @@ NotificationsScreen.load = async () => {
   return {users: await userStore.getAll()};
 };
 
-const SHOW_BROADCAST_MODAL_ACTION = () => {
-  const nav = useNav();
-  return {
-    id: 'showBroadcastModal',
-    label: 'Send Broadcast',
-    icon: 'oct:megaphone',
-    act: () => nav.navTo(BroadcastNotificationModal),
-  };
+const SHOW_BROADCAST_MODAL_ACTION = {
+  id: 'showBroadcastModal',
+  label: 'Send Broadcast',
+  icon: 'oct:megaphone',
+  action: actionHook(() => {
+    const nav = useNav();
+    return () => nav.navTo(BroadcastNotificationModal);
+  }),
 };
 
 NotificationsScreen.actions = [SHOW_BROADCAST_MODAL_ACTION];
