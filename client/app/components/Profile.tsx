@@ -143,12 +143,12 @@ export const ProfileRow = (props: ProfileRowProps) => {
   const {profile, isMe = false} = props;
   const {navTo} = useNav();
 
-  function goPro() {
+  function goProfile() {
     navTo(ProfileScreen, {id: profile.id});
   }
 
   return (
-    <PressableSpring style={S.row} onPress={goPro}>
+    <PressableSpring style={S.row} onPress={goProfile}>
       <ProfilePic pic={profile.pic} size={60} />
       <View style={{alignSelf: 'center', marginLeft: 16, flex: 1}}>
         <Text style={{fontSize: 18}}>
