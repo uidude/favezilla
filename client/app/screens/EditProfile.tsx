@@ -8,7 +8,6 @@ import {SaveFormat, manipulateAsync} from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
-import {StatusBar} from '@toolkit/core/client/UserMessaging';
 import {withTimeout} from '@toolkit/core/util/DevUtil';
 import {Opt} from '@toolkit/core/util/Types';
 import {getRequired, useDataStore} from '@toolkit/data/DataStore';
@@ -121,7 +120,6 @@ const EditProfile: Screen<Props> = props => {
 
   return (
     <ScrollView style={S.container} contentContainerStyle={S.content}>
-      <StatusBar style={{marginBottom: 20}} />
       <PressableSpring onPress={editPic}>
         {uploading ? (
           <View style={S.uploading}>
