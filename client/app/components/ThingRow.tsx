@@ -4,6 +4,7 @@ import DefaultThumb from '@assets/bookicon-small.png';
 import {Ionicons} from '@expo/vector-icons';
 import {useData} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useAction} from '@toolkit/core/client/Action';
 import {useReload} from '@toolkit/core/client/Reload';
 import {useMessageOnFail} from '@toolkit/core/client/UserMessaging';
 import {Opt} from '@toolkit/core/util/Types';
@@ -32,12 +33,13 @@ export default function ThingRow(props: Props) {
   const reload = useReload();
   const messageOnFail = useMessageOnFail();
   const {navTo} = useNav();
-
+  const [makeFaveAction] = useAction(makeFave);
+  const [unfaveAction] = useAction(unFave);
   const sendFaveNotif = useApi(SEND_FAVE_NOTIF);
   const sendDeleteNotif = useApi(SEND_THING_DELETE_NOTIF);
 
   async function makeFave() {
-    const fave = await addFave(thing.id);
+    await addFave(thing.id);
     sendFaveNotif(fave).catch((e: Error) =>
       console.error("Couldn't send notification", e),
     );
@@ -82,13 +84,11 @@ export default function ThingRow(props: Props) {
         </PressableSpring>
       )}
       {fave != null ? (
-        <PressableSpring onPress={unFave} style={{alignSelf: 'center'}}>
+        <PressableSpring onPress={unfaveAction} style={{alignSelf: 'center'}}>
           <Ionicons name="heart" color="red" size={30} />
         </PressableSpring>
       ) : (
-        <PressableSpring
-          onPress={messageOnFail(makeFave)}
-          style={{alignSelf: 'center'}}>
+        <PressableSpring onPress={makeFaveAction} style={{alignSelf: 'center'}}>
           <Ionicons name="heart-outline" color="gray" size={30} />
         </PressableSpring>
       )}
