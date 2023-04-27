@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Animated, ScrollView, StyleSheet, View} from 'react-native';
 import {useData} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useAction} from '@toolkit/core/client/Action';
 import {useReload} from '@toolkit/core/client/Reload';
 import {sleep} from '@toolkit/core/util/DevUtil';
 import {useDataStore} from '@toolkit/data/DataStore';
@@ -11,8 +12,7 @@ import {Screen} from '@toolkit/ui/screen/Screen';
 import {SearchBar} from '@app/app/components/SearchBar';
 import ThingRow from '@app/app/components/ThingRow';
 import {GetFaves} from '@app/common/AppLogic';
-import {Fave} from '@app/common/DataTypes';
-import {Thing} from '@app/common/DataTypes';
+import {Fave, Thing} from '@app/common/DataTypes';
 
 type Props = {
   async: {
@@ -27,8 +27,9 @@ const Favorites: Screen<Props> = props => {
   const hasFaves = faves.length > 0;
   const faveStore = useDataStore(Fave);
   const reload = useReload();
+  const [addFave] = useAction(addFaveHandler);
 
-  async function addFave(thing: Thing) {
+  async function addFaveHandler(thing: Thing) {
     await faveStore.create({user, thing});
     reload();
   }

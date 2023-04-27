@@ -96,7 +96,7 @@ function imageSource(item: OpenLibraryResult) {
 }
 
 type Props = {
-  onAdd: (toAdd: Thing) => void | Promise<void>;
+  onAdd: ((toAdd: Thing) => void) | ((toAdd: Thing) => Promise<void>);
 };
 
 export const SearchBar = (props: Props) => {
@@ -130,7 +130,7 @@ export const SearchBar = (props: Props) => {
     ]);
 
     if (requestCounter.current !== id) {
-      // Another reuqest was sent while in flight, so don't update value
+      // Another request was sent while in flight, so don't update value
       return;
     }
 
@@ -170,6 +170,7 @@ export const SearchBar = (props: Props) => {
     const thing = await getOrCreateThing(toAdd);
     setValue('');
     setMatches([]);
+    console.log('Thing', thing);
     await onAdd(thing);
   }
 
