@@ -2,9 +2,8 @@ import * as React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {TextInput} from 'react-native-paper';
-import {useData} from '@toolkit/core/api/DataApi';
-import {User} from '@toolkit/core/api/User';
-import {useLoggedInUser} from '@toolkit/core/api/User';
+import {useApi} from '@toolkit/core/api/DataApi';
+import {User, useLoggedInUser} from '@toolkit/core/api/User';
 import {useMessageOnFail} from '@toolkit/core/client/UserMessaging';
 import {sleep} from '@toolkit/core/util/DevUtil';
 import {Opt} from '@toolkit/core/util/Types';
@@ -24,7 +23,7 @@ const CreateNewThingScreen: Screen<{}> = () => {
   const [saving, setSaving] = React.useState<boolean>(false);
 
   const user = useLoggedInUser<User>();
-  const addThing = useData(AddThing);
+  const addThing = useApi(AddThing);
   const nav = useNav();
   const messageOnFail = useMessageOnFail();
 

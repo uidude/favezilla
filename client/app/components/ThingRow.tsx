@@ -2,14 +2,13 @@ import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import DefaultThumb from '@assets/bookicon-small.png';
 import {Ionicons} from '@expo/vector-icons';
-import {useData} from '@toolkit/core/api/DataApi';
+import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {useReload} from '@toolkit/core/client/Reload';
 import {useMessageOnFail} from '@toolkit/core/client/UserMessaging';
 import {Opt} from '@toolkit/core/util/Types';
 import {useDataStore} from '@toolkit/data/DataStore';
-import {useApi} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {SEND_FAVE_NOTIF, SEND_THING_DELETE_NOTIF} from '@app/common/Api';
@@ -27,9 +26,9 @@ type Props = {
 export default function ThingRow(props: Props) {
   const {thing, fave, canDelete = false} = props;
   requireLoggedInUser();
-  const addFave = useData(AddFave);
+  const addFave = useApi(AddFave);
   const faveStore = useDataStore(Fave);
-  const removeThing = useData(RemoveThing);
+  const removeThing = useApi(RemoveThing);
   const reload = useReload();
   const messageOnFail = useMessageOnFail();
   const {navTo} = useNav();

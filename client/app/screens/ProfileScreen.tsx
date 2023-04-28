@@ -6,7 +6,7 @@
 
 import * as React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
-import {useData} from '@toolkit/core/api/DataApi';
+import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
@@ -68,7 +68,7 @@ ProfileScreen.title = 'Profile';
 
 ProfileScreen.load = async props => {
   const profileStore = useDataStore(Profile);
-  const getFaves = useData(GetFaves);
+  const getFaves = useApi(GetFaves);
   let [profile, myFaves] = await Promise.all([
     profileStore.get(props.id, {
       edges: [

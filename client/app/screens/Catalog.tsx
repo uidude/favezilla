@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import * as Device from 'expo-device';
-import {useData} from '@toolkit/core/api/DataApi';
+import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useNotifications} from '@toolkit/services/notifications/NotificationsClient';
 import {Screen} from '@toolkit/ui/screen/Screen';
@@ -77,8 +77,8 @@ Catalog.title = 'Catalog';
 Catalog.style = {type: 'top'};
 
 Catalog.load = async () => {
-  const getAllThings = useData(GetThings);
-  const getFaves = useData(GetFaves);
+  const getAllThings = useApi(GetThings);
+  const getFaves = useApi(GetFaves);
 
   const [faves, allThings] = await Promise.all([getFaves(), getAllThings()]);
 

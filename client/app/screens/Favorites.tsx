@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Animated, ScrollView, StyleSheet, View} from 'react-native';
-import {useData} from '@toolkit/core/api/DataApi';
+import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {useReload} from '@toolkit/core/client/Reload';
@@ -72,7 +72,7 @@ Favorites.title = 'Favorites';
 Favorites.style = {type: 'top'};
 
 Favorites.load = async () => {
-  const getFaves = useData(GetFaves);
+  const getFaves = useApi(GetFaves);
 
   // Give time to show the fun loading screen
   const [faves] = await Promise.all([getFaves(), sleep(0 /*2500*/)]);

@@ -1,10 +1,10 @@
 import React from 'react';
 import firebase from 'firebase';
 import {Account} from '@toolkit/core/api/Auth';
+import {useApi} from '@toolkit/core/api/DataApi';
 import {User} from '@toolkit/core/api/User';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthService';
-import {useApi} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {GET_USER} from '@app/common/Api';
 import {Profile} from '@app/common/DataTypes';
 
