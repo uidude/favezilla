@@ -6,7 +6,7 @@ import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {useReload} from '@toolkit/core/client/Reload';
-import {useMessageOnFail} from '@toolkit/core/client/UserMessaging';
+import {useMessageOnFail} from '@toolkit/core/client/Status';
 import {Opt} from '@toolkit/core/util/Types';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {PressableSpring} from '@toolkit/ui/components/Tools';

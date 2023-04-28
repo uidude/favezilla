@@ -4,7 +4,7 @@ import {Ionicons} from '@expo/vector-icons';
 import {TextInput} from 'react-native-paper';
 import {useApi} from '@toolkit/core/api/DataApi';
 import {User, useLoggedInUser} from '@toolkit/core/api/User';
-import {useMessageOnFail} from '@toolkit/core/client/UserMessaging';
+import {useMessageOnFail} from '@toolkit/core/client/Status';
 import {sleep} from '@toolkit/core/util/DevUtil';
 import {Opt} from '@toolkit/core/util/Types';
 import {useComponents} from '@toolkit/ui/components/Components';

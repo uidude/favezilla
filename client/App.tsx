@@ -7,7 +7,7 @@ import IdentityService from '@toolkit/core/api/Login';
 import {
   SimpleUserMessaging,
   StatusContainer,
-} from '@toolkit/core/client/UserMessaging';
+} from '@toolkit/core/client/Status';
 import {registerAppConfig} from '@toolkit/core/util/AppConfig';
 import {AppContextProvider} from '@toolkit/core/util/AppContext';
 import {
