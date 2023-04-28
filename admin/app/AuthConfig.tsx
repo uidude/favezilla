@@ -6,6 +6,7 @@ import {useUserMessaging} from '@toolkit/core/client/UserMessaging';
 import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthService';
 import {UnauthorizedError} from '@toolkit/tbd/CommonErrors';
 import {GetUser} from '@app/common/Api';
+import {LoginUserInfo} from '@app/common/AppLogic';
 
 export default function AuthConfig(props: {children?: React.ReactNode}) {
   const getUser = useApi(GetUser);
@@ -18,15 +19,9 @@ export default function AuthConfig(props: {children?: React.ReactNode}) {
     account: Account,
     firebaseAccount: firebase.User,
   ) => {
-    if (
-      firebaseAccount == null ||
-      firebaseAccount.uid !== account.id ||
-      (firebaseAccount.email == null && firebaseAccount.phoneNumber == null)
-    ) {
-      throw Error('Invalid account for login');
-    }
-
-    const user = await getUser();
+    throwIfInvalidAccount(firebaseAccount, account.id);
+    const loginInfo = loginFields(firebaseAccount);
+    const user = await getUser(loginInfo);
     // If the user doesn't have roles set or if the user isn't an admin or dev, reject login
     if (
       user.roles == null ||
@@ -47,4 +42,26 @@ export default function AuthConfig(props: {children?: React.ReactNode}) {
       {props.children}
     </FirebaseAuthService>
   );
+}
+
+function throwIfInvalidAccount(
+  firebaseAccount: firebase.User,
+  expectedId: string,
+) {
+  if (
+    firebaseAccount.uid !== expectedId ||
+    (firebaseAccount.email == null && firebaseAccount.phoneNumber == null)
+  ) {
+    throw Error('Invalid account for login');
+  }
+}
+
+function loginFields(firebaseAccount: firebase.User): LoginUserInfo {
+  return {
+    uid: firebaseAccount.uid,
+    displayName: firebaseAccount.displayName,
+    email: firebaseAccount.email,
+    phoneNumber: firebaseAccount.phoneNumber,
+    photoURL: firebaseAccount.photoURL,
+  };
 }
