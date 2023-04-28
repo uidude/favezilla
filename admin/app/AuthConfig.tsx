@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from 'firebase';
 import {Account} from '@toolkit/core/api/Auth';
 import {useApi} from '@toolkit/core/api/DataApi';
-import {useUserMessaging} from '@toolkit/core/client/UserMessaging';
+import {useBackgroundStatus} from '@toolkit/core/client/UserMessaging';
 import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthService';
 import {UnauthorizedError} from '@toolkit/tbd/CommonErrors';
 import {GetUser} from '@app/common/Api';
@@ -10,7 +10,7 @@ import {LoginUserInfo} from '@app/common/AppLogic';
 
 export default function AuthConfig(props: {children?: React.ReactNode}) {
   const getUser = useApi(GetUser);
-  const msg = useUserMessaging();
+  const {setError} = useBackgroundStatus();
 
   /**
    * Use this method to create an instance of your app's user when they log in.
@@ -30,7 +30,7 @@ export default function AuthConfig(props: {children?: React.ReactNode}) {
       const err = UnauthorizedError(
         "User's roles do not match any allowed roles for this function",
       );
-      msg.showError(err);
+      setError(err);
       throw err;
     }
 
