@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "NPE Studio",
-    "slug": "studio",
+    "name": "Favezilla",
+    "slug": "favezilla",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "../project/assets/icon.png",
@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.facebook.npe.hax-app",
+      "bundleIdentifier": "com.npetoolkit.favezilla",
       "config": {
         "googleSignIn": {
           "reservedClientId": "com.googleusercontent.apps.316194284018-4iucu1np3ngg7n3ngprre8iro04oe173"
@@ -36,8 +36,19 @@
     "web": {
       "favicon": "../project/assets/favicon.png"
     },
-    "facebookScheme": "fb",
-    "facebookAppId": "",
-    "facebookDisplayName": "favezilla"
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "deploymentTarget": "13.0"
+          }
+        }
+      ]
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }
