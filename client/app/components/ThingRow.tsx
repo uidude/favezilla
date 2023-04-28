@@ -39,7 +39,7 @@ export default function ThingRow(props: Props) {
   const sendDeleteNotif = useApi(SEND_THING_DELETE_NOTIF);
 
   async function makeFave() {
-    await addFave(thing.id);
+    const fave = await addFave(thing.id);
     sendFaveNotif(fave).catch((e: Error) =>
       console.error("Couldn't send notification", e),
     );
