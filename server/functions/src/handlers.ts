@@ -1,12 +1,12 @@
 import {
-  ADD_FAVE,
-  ADD_THING,
-  BROADCAST_ADMIN_NOTIF,
-  GET_USER,
-  SEND_ADMIN_NOTIF,
-  SEND_FAVE_NOTIF,
-  SEND_THING_DELETE_NOTIF,
-  UPDATE_USER,
+  AddFave,
+  AddThing,
+  BroadcastAdminNotif,
+  GetUser,
+  SendAdminNotif,
+  SendFaveNotif,
+  SendThingDeleteNotif,
+  UpdateUser,
 } from '@app/common/Api';
 import {Fave, Profile, Thing} from '@app/common/DataTypes';
 import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
@@ -155,7 +155,7 @@ export const convertPushToken = functions.firestore
   });
 
 export const sendFaveNotif = registerHandler(
-  SEND_FAVE_NOTIF,
+  SendFaveNotif,
   async (fave: Fave) => {
     const user = requireLoggedInUser();
     const channel = NOTIF_CHANNELS.thingFaved;
@@ -173,7 +173,7 @@ export const sendFaveNotif = registerHandler(
 );
 
 export const sendThingDeleteNotif = registerHandler(
-  SEND_THING_DELETE_NOTIF,
+  SendThingDeleteNotif,
   async (thingName: string) => {
     const user = requireLoggedInUser();
     const channel = NOTIF_CHANNELS.thingDeleted;
@@ -189,7 +189,7 @@ export const sendThingDeleteNotif = registerHandler(
   },
 );
 
-export const getUser = registerHandler(GET_USER, async () => {
+export const getUser = registerHandler(GetUser, async () => {
   const account = requireAccountInfo();
   const store = await getDataStore(User);
   const user = await getRequired(store, account.uid, {edges: [UserRoles]});
@@ -198,7 +198,7 @@ export const getUser = registerHandler(GET_USER, async () => {
 });
 
 export const updateUser = registerHandler(
-  UPDATE_USER,
+  UpdateUser,
   async (values: Updater<User>) => {
     const user = requireLoggedInUser();
     // This should be also checked by firestore rules so could remove
@@ -223,14 +223,14 @@ export const updateUser = registerHandler(
   },
 );
 
-export const addThing = registerHandler(ADD_THING, async data => {
+export const addThing = registerHandler(AddThing, async data => {
   requireLoggedInUser();
   const thingStore = await getDataStore(Thing);
   const newFave = await thingStore.create(data);
   return newFave.id;
 });
 
-export const addFave = registerHandler(ADD_FAVE, async (thingId: string) => {
+export const addFave = registerHandler(AddFave, async (thingId: string) => {
   const uid = requireLoggedInUser().id;
   const userStore = await getDataStore(User);
   const thingStore = await getDataStore(Thing);
@@ -269,7 +269,7 @@ export const addFave = registerHandler(ADD_FAVE, async (thingId: string) => {
 });
 
 export const sendAdminNotif = registerHandler(
-  SEND_ADMIN_NOTIF,
+  SendAdminNotif,
   async ({user, title, body}) => {
     const channel = NOTIF_CHANNELS.admin;
     const send = getSender();
@@ -279,7 +279,7 @@ export const sendAdminNotif = registerHandler(
 );
 
 export const broadcastAdminNotif = registerHandler(
-  BROADCAST_ADMIN_NOTIF,
+  BroadcastAdminNotif,
   async ({title = '', body}) => {
     const channel = NOTIF_CHANNELS.admin;
     const userStore = await getAdminDataStore(User);

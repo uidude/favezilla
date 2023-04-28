@@ -5,10 +5,10 @@ import {useApi} from '@toolkit/core/api/DataApi';
 import {useUserMessaging} from '@toolkit/core/client/UserMessaging';
 import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthService';
 import {UnauthorizedError} from '@toolkit/tbd/CommonErrors';
-import {GET_USER} from '@app/common/Api';
+import {GetUser} from '@app/common/Api';
 
 export default function AuthConfig(props: {children?: React.ReactNode}) {
-  const getUser = useApi(GET_USER);
+  const getUser = useApi(GetUser);
   const msg = useUserMessaging();
 
   /**

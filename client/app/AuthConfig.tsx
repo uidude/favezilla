@@ -3,11 +3,11 @@ import firebase from 'firebase';
 import {Account} from '@toolkit/core/api/Auth';
 import {useApi} from '@toolkit/core/api/DataApi';
 import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthService';
-import {GET_USER} from '@app/common/Api';
+import {GetUser} from '@app/common/Api';
 import {LoginUserInfo} from '@app/common/AppLogic';
 
 export default function AuthConfig(props: {children?: React.ReactNode}) {
-  const getUser = useApi(GET_USER);
+  const getUser = useApi(GetUser);
 
   /**
    * Use this method to create an instance of your app's user when they log in.
