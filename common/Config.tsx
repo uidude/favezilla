@@ -47,3 +47,5 @@ export const APP_CONFIG = context(APP_CONFIG_KEY, {
   dataEnv: 'prod',
   fbAppId: '',
 });
+
+export const CLIENT_FALLBACK_ENABLED = true;

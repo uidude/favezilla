@@ -11,8 +11,12 @@ import {Opt} from '@toolkit/core/util/Types';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
-import {SEND_FAVE_NOTIF, SEND_THING_DELETE_NOTIF} from '@app/common/Api';
-import {AddFave, RemoveThing} from '@app/common/AppLogic';
+import {
+  ADD_FAVE,
+  SEND_FAVE_NOTIF,
+  SEND_THING_DELETE_NOTIF,
+} from '@app/common/Api';
+import {RemoveThing} from '@app/common/AppLogic';
 import {Fave, Thing} from '@app/common/DataTypes';
 import ThingScreen from '../screens/ThingScreen';
 
@@ -26,7 +30,7 @@ type Props = {
 export default function ThingRow(props: Props) {
   const {thing, fave, canDelete = false} = props;
   requireLoggedInUser();
-  const addFave = useApi(AddFave);
+  const addFave = useApi(ADD_FAVE);
   const faveStore = useDataStore(Fave);
   const removeThing = useApi(RemoveThing);
   const reload = useReload();

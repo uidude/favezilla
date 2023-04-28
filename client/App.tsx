@@ -1,6 +1,7 @@
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {setClientFallbackEnabled} from '@toolkit/core/api/DataApi';
 import {CONSOLE_LOGGER} from '@toolkit/core/api/Log';
 import IdentityService from '@toolkit/core/api/Login';
 import {
@@ -49,6 +50,7 @@ import StartupScreen from '@app/app/screens/StartupScreen';
 import ThingScreen from '@app/app/screens/ThingScreen';
 import {
   APP_CONFIG,
+  CLIENT_FALLBACK_ENABLED,
   FIREBASE_CONFIG,
   GOOGLE_LOGIN_CONFIG,
 } from '@app/common/Config';
@@ -174,6 +176,7 @@ export default function App() {
   initializeFirebase(FIREBASE_CONFIG);
   IdentityService.addProvider(fbAuthProvider());
   IdentityService.addProvider(googleAuthProvider(GOOGLE_LOGIN_CONFIG));
+  setClientFallbackEnabled(CLIENT_FALLBACK_ENABLED);
   registerIconPack('ion', Ionicons);
   registerIconPack('mci', MaterialCommunityIcons);
   usePaperComponents();

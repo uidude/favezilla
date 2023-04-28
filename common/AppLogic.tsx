@@ -1,7 +1,8 @@
 import {api} from '@toolkit/core/api/DataApi';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
+import {Opt} from '@toolkit/core/util/Types';
 import {Updater, useDataStore} from '@toolkit/data/DataStore';
-import {Fave, Thing} from './DataTypes';
+import {Fave, Profile, Thing} from './DataTypes';
 
 // Cilent business logic
 
@@ -42,7 +43,7 @@ export const GetFaves = api<void, Fave[]>('getFaves', () => {
 /**
  * Add a new favorite to a given thingID.
  */
-export const AddFave = api<string, Fave>('addFave', () => {
+export function useAddFave() {
   const user = requireLoggedInUser<User>();
   const thingStore = useDataStore(Thing);
   const faveStore = useDataStore(Fave);
@@ -74,7 +75,7 @@ export const AddFave = api<string, Fave>('addFave', () => {
       edges: [User, Fave],
     }))!;
   };
-});
+}
 
 /**
  * Add a new thing
@@ -109,3 +110,75 @@ export const RemoveThing = api<string, void>('removeThing', () => {
     await thingStore.remove(thingId);
   };
 });
+
+function newProfileFor(user: User): Partial<Profile> {
+  return {
+    id: user.id,
+    user: user,
+    name: user.name,
+    ...(user.pic && {pic: user.pic}),
+  };
+}
+
+function addDerivedFields(user: User) {
+  user.canLogin = true;
+}
+
+export type LoginUserInfo = {
+  uid: string;
+  displayName: Opt<string>;
+  email: Opt<string>;
+  phoneNumber: Opt<string>;
+  photoURL: Opt<string>;
+};
+
+/**
+ * Client version of creating user - this is for early development,
+ * should switch to a server-based version for launch
+ */
+export function useGetOrCreateUser() {
+  const users = useDataStore(User);
+  const profiles = useDataStore(Profile);
+
+  return async (firebaseAccount: LoginUserInfo): Promise<User> => {
+    const userId = firebaseAccount.uid;
+
+    let [user, profile] = await Promise.all([
+      users.get(userId),
+      profiles.get(userId),
+    ]);
+
+    if (user != null && profile != null) {
+      addDerivedFields(user);
+      return user;
+    }
+
+    const initialName =
+      firebaseAccount.displayName ||
+      firebaseAccount.email ||
+      firebaseAccount.phoneNumber ||
+      'No Name';
+
+    const newUser: User = {
+      id: userId,
+      name: initialName,
+      pic: firebaseAccount.photoURL || undefined,
+      email: firebaseAccount.email || undefined,
+    };
+
+    const newProfile = newProfileFor(newUser);
+
+    // We have an example of doing these in a transaction (in server code)
+    // but for simplicity, will make separate calls.
+    if (user == null) {
+      user = await users.create(newUser);
+      addDerivedFields(user);
+    }
+
+    if (profile == null) {
+      await profiles.create(newProfile);
+    }
+
+    return user;
+  };
+}
