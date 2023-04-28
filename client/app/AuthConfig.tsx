@@ -71,8 +71,6 @@ function useGetOrCreateUser() {
 
   return async (firebaseAccount: firebase.User): Promise<User> => {
     const userId = firebaseAccount.uid;
-    await users.get(userId);
-    await profiles.get(userId);
 
     let [user, profile] = await Promise.all([
       users.get(userId),
