@@ -9,7 +9,8 @@
     "build:web": "expo export:web",
     "admin": "CLIENT=admin expo start --web",
     "build:admin": "CLIENT=admin expo export:web",
-    "eas-build-pre-install": "echo $PWD && ls && git clone https://github.com/facebookincubator/npe-toolkit.git ../../npe-toolkit && ls ../../npe-toolkit"
+    "build:ios": "npx -p eas-cli@latest eas build --platform ios -e sim",
+    "eas-build-pre-install": "git clone https://github.com/facebookincubator/npe-toolkit.git ../../npe-toolkit && ls ../../npe-toolkit"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.5",

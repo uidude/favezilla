@@ -7,6 +7,8 @@
     "android": "echo Android build not enabled - yet...",
     "web": "cd project && yarn web",
     "admin": "cd project && yarn admin",
+    "build:web": "cd project && yarn build:web",
+    "build:ios": "cd project && yarn build:ios",
     "postinstall": "cd project && ./setup.sh"
   },
   "devDependencies": {
