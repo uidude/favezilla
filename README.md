@@ -1,14 +1,14 @@
 # Commands
 
-| Command          | Action                                                                            | Params |
-| ---------------- | --------------------------------------------------------------------------------- | ------ |
-| `yarn web`       | Runs web app locally                                                              |
-| `yarn ios`       | Runs iOS on simulator or attached iOS device                                      |
-| `yarn android`   | Runs Android on emulator or attached Android device. Need some additional testing |
-| `yarn start`     | Runs the React Native JavaScript bundler                                          |
-| `yarn admin`     | Runs admin web UI locally                                                         |
-| `yarn build:web` | Runs a full web build in preparation for deploying                                |
-| `yarn build:ios` | Builds and deploys your own iOS app build using Expo's EAS service.               |
+| Command           | Action                                                                    |
+| ----------------- | ------------------------------------------------------------------------- |
+| `yarn web`        | Runs web app locally                                                      |
+| `yarn go:ios`     | Runs app in Expo go on iOS simulator or attached device                   |
+| `yarn start:ios`  | Runs app in your own iOS build (need to have run build:ios and installed) |
+| `yarn go:android` | Runs app in Expo go on Android emulator or attached device                |
+| `yarn admin`      | Runs admin web UI locally                                                 |
+| `yarn build:web`  | Runs a full web build in preparation for deploying                        |
+| `yarn build:ios`  | Builds and deploys your own iOS app build using Expo's EAS service.       |
 
 ## iOS Build notes
 

@@ -2,9 +2,9 @@
   "name": "faves-template",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start --dev-client",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "go:ios": "expo start -i",
+    "go:android": "expo start -a",
+    "start:ios": "expo start -i --dev-client",
     "web": "expo start -w",
     "build:web": "expo export:web",
     "admin": "CLIENT=admin expo start --web",
