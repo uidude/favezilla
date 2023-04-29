@@ -141,6 +141,3 @@ build/Release
 
 # dotenv environment variables file
 .env
-
-# Built TS files
-lib
