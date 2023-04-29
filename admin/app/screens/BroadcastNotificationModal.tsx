@@ -5,7 +5,7 @@ import {useApi} from '@toolkit/core/api/DataApi';
 import Banner from '@toolkit/screens/admin/BroadcastNotificationModal';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
-import {BROADCAST_ADMIN_NOTIF} from '@app/common/Api';
+import {BroadcastAdminNotif} from '@app/common/Api';
 
 const BroadcastNotificationModal: Screen<{}> = () => {
   const [notifTitle, setNotifTitle] = React.useState('');
@@ -14,7 +14,7 @@ const BroadcastNotificationModal: Screen<{}> = () => {
 
   const theme = useTheme();
   const nav = useNav();
-  const sendBroadcast = useApi(BROADCAST_ADMIN_NOTIF);
+  const sendBroadcast = useApi(BroadcastAdminNotif);
 
   const sendNotif = async () => {
     setSendingNotif(true);

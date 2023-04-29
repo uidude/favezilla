@@ -6,7 +6,7 @@ import {User} from '@toolkit/core/api/User';
 import {useUserMessaging} from '@toolkit/core/client/Status';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
-import {SEND_ADMIN_NOTIF} from '@app/common/Api';
+import {SendAdminNotif} from '@app/common/Api';
 
 type Props = {user: User};
 const SendNotificationModal: Screen<Props> = ({user}: Props) => {
@@ -17,7 +17,7 @@ const SendNotificationModal: Screen<Props> = ({user}: Props) => {
   const theme = useTheme();
   const nav = useNav();
   const msg = useUserMessaging();
-  const sendAdminNotif = useApi(SEND_ADMIN_NOTIF);
+  const sendAdminNotif = useApi(SendAdminNotif);
 
   const sendNotif = async () => {
     if (notifBody == '') {
