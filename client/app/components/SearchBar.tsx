@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Keyboard, StyleSheet, View} from 'react-native';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {Icon} from '@toolkit/ui/components/Icon';
@@ -150,7 +150,6 @@ export const SearchBar = (props: Props) => {
       query: {where: [{field: 'externalId', op: '==', value: from.key}]},
     });
     if (existing.length > 0) {
-      console.log('found it!');
       thing = existing[0];
     } else {
       thing = await thingStore.create({
@@ -170,8 +169,8 @@ export const SearchBar = (props: Props) => {
     const thing = await getOrCreateThing(toAdd);
     setValue('');
     setMatches([]);
-    console.log('Thing', thing);
     await onAdd(thing);
+    Keyboard.dismiss();
   }
 
   return (
