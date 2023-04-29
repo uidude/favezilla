@@ -37,7 +37,7 @@ export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
  */
 export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
   iosClientId:
-    '383529496724-0tt33uo3bbq0t5sc94m2u9cigd8p92p6.apps.googleusercontent.com',
+    '383529496724-ua7k0sba6ccn3kfhfhrfjv7u4v2i0qll.apps.googleusercontent.com',
   webClientId:
     '383529496724-0tt33uo3bbq0t5sc94m2u9cigd8p92p6.apps.googleusercontent.com',
 };
