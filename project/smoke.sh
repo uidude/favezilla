@@ -4,7 +4,7 @@ BASEDIR=$(cd $SCRIPTDIR/.. && echo $PWD)
 
 # Run yarn install
 sh setup.sh
-pushd $BASEDIR/../../npe-toolkit/shell/latest && yarn install && popd
+pushd $BASEDIR/../../npe-toolkit/v47/deps && yarn install && popd
 
 STATUS=0
 
