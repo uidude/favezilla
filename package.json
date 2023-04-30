@@ -1,5 +1,12 @@
 {
   "name": "favezilla",
+  "version": "0.0.3",
+  "description": "Template app for NPE Toolkit - share your favorite books!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uidude/favezilla.git"
+  },
+  "license": "MIT",
   "scripts": {
     "web": "cd project && yarn web",
     "build:web": "cd project && yarn build:web",
@@ -12,9 +19,8 @@
     "postinstall": "cd project && ./setup.sh"
   },
   "devDependencies": {
-    "typescript": "^4.5.5",
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.1",
     "prettier": "^2.5.1",
-    "@ianvs/prettier-plugin-sort-imports": "^3.7.1"
-  },
-  "private": true
+    "typescript": "^4.5.5"
+  }
 }
