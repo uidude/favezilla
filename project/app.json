@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "../project/assets/icon.png",
+    "scheme": "favezilla",
     "splash": {
       "image": "../project/assets/splash.png",
       "resizeMode": "contain",
@@ -31,7 +32,7 @@
         "foregroundImage": "../project/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.facebook.npe.hax_app"
+      "package": "com.npetoolkit.favezilla"
     },
     "web": {
       "favicon": "../project/assets/favicon.png"
@@ -43,6 +44,11 @@
           "ios": {
             "useFrameworks": "static",
             "deploymentTarget": "13.0"
+          },
+          "android": {
+            "compileSdkVersion": 31,
+            "targetSdkVersion": 31,
+            "buildToolsVersion": "31.0.0"
           }
         }
       ]

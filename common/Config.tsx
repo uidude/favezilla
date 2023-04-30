@@ -30,7 +30,7 @@ export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
 
 /**
  * Fill in the client IDs from
- * https://console.cloud.google.com/apis/credentials?project=YOUR_PROJECT
+ * https://console.cloud.google.com/apis/credentials
  *
  * You also will need to add redirect URIs in the console, see
  * https://github.com/facebookincubator/npe-toolkit/blob/main/docs/getting-started/Firebase.md
@@ -40,6 +40,8 @@ export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
     '383529496724-ua7k0sba6ccn3kfhfhrfjv7u4v2i0qll.apps.googleusercontent.com',
   webClientId:
     '383529496724-0tt33uo3bbq0t5sc94m2u9cigd8p92p6.apps.googleusercontent.com',
+  androidClientId:
+    '383529496724-sde740nljlllndj90e1qfkgonvmdg95d.apps.googleusercontent.com',
 };
 
 export const APP_CONFIG = context(APP_CONFIG_KEY, {
