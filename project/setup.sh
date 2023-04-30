@@ -1,13 +1,7 @@
 #!/bin/bash
 #
-# Copyright (c) Meta Platforms, Inc. and affiliates.
-# This source code is licensed under the MIT license found in the
-# LICENSE file in the root directory of this source tree.
-#
-# Script to set up a new project directory
-
-# Currently just verifies that there is a symlink at `/usr/local/lib/npe-toolkit`
-# and prints a message to set up symlink if not
+# Script to setup workspace for development
+# Run as post-install after initial `yarn create expo-app`
 
 NPE_TOOLKIT_SYMLINK=../../npe-toolkit
 
