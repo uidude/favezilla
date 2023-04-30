@@ -6,7 +6,7 @@
 NPE_TOOLKIT_SYMLINK=../../npe-toolkit
 
 if [[ ! -d $NPE_TOOLKIT_SYMLINK ]]; then
-    echo ERROR: You need toe symlink npe-toolkit when using developer build
+    echo ERROR: You need to symlink npe-toolkit when using developer build
     echo "> ln -snf \$PATH_TO_NPE_TOOLKIT \$YOUR_APP_DIR/../npe-toolkit"
     exit 1
 fi

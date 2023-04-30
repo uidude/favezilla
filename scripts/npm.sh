@@ -15,15 +15,15 @@ STATUS=$(git diff --exit-code)
 # Check if files are modified
 if [[ $STATUS -ne 0 ]]; then
   echo " Can't publish with uncommitted changes."
-  #exit 0
+  exit 0
 fi
 
-# Change "helloworld" to "helloword" for Expo app template
+# Change "favezilla" to "helloword" for Expo app template
 cd $BASEDIR
-git grep -li 'helloworld' | xargs -n 1 sed -i '' 's/[fF]avezilla/helloworld/g' $1
+git grep -li 'favezilla' | xargs -n 1 sed -i '' 's/[fF]avezilla/helloworld/g' $1
 
 # Replace helloworld back in package.json, as it is getting checked in
-sed -i '' 's/helloworld/helloworld/g' package.json
+sed -i '' 's/favezilla/helloworld/g' package.json
 
 # Remove Firebase config
 cp scripts/Config.template.tsx common/Config.tsx
