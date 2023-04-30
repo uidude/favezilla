@@ -1,4 +1,14 @@
-# Commands
+# Favezilla
+
+Template project for
+[NPE Toolkit](https://github.com/facebookincubator/npe-toolkit). Also a way to
+share books you like!
+
+### Creating your app
+
+`yarn create expo-app your-app-name favezilla`
+
+### Commands
 
 | Command           | Action                                                                    |
 | ----------------- | ------------------------------------------------------------------------- |
@@ -10,7 +20,7 @@
 | `yarn build:web`  | Runs a full web build in preparation for deploying                        |
 | `yarn build:ios`  | Builds and deploys your own iOS app build using Expo's EAS service.       |
 
-## iOS Build notes
+### Creating iOS builds
 
 There are two options for running your app on iOS
 
