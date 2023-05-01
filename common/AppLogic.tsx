@@ -182,3 +182,24 @@ export function useGetOrCreateUser() {
     return user;
   };
 }
+
+export function useUpdateUserAndProfile() {
+  const userStore = useDataStore(User);
+  const profileStore = useDataStore(Profile);
+
+  return async function updateUserAndProfile(
+    id: string,
+    user: Partial<User>,
+    profile: Partial<Profile>,
+  ) {
+    // Ensure user` has updated before updating profile
+    await userStore.update({...user, id});
+
+    const userFieldsToCopy = {
+      name: user.name,
+      ...(user.pic && {pic: user.pic}),
+    };
+    // TODO: Consider using transactions
+    await profileStore.update({...profile, ...userFieldsToCopy, id});
+  };
+}

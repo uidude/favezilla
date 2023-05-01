@@ -18,6 +18,7 @@ import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {ProfilePic} from '@app/app/components/Profile';
 import ProfileScreen from '@app/app/screens/ProfileScreen';
+import {useUpdateUserAndProfile} from '@app/common/AppLogic';
 import {Profile} from '@app/common/DataTypes';
 
 type Props = {
@@ -25,27 +26,6 @@ type Props = {
     me: Profile;
   };
 };
-
-function useUpdateUserAndProfile() {
-  const userStore = useDataStore(User);
-  const profileStore = useDataStore(Profile);
-
-  return async function updateUserAndProfile(
-    id: string,
-    user: Partial<User>,
-    profile: Partial<Profile>,
-  ) {
-    // Ensure user` has updated before updating profile
-    await userStore.update({...user, id});
-
-    const userFieldsToCopy = {
-      name: user.name,
-      ...(user.pic && {pic: user.pic}),
-    };
-    // TODO: Consider using transactions
-    await profileStore.update({...profile, ...userFieldsToCopy, id});
-  };
-}
 
 async function pickSquarePhoto(size: number = 256) {
   const result = await ImagePicker.launchImageLibraryAsync({
