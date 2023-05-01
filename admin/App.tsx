@@ -2,7 +2,10 @@ import React, {Suspense} from 'react';
 import {Ionicons, MaterialCommunityIcons, Octicons} from '@expo/vector-icons';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import IdentityService from '@toolkit/core/api/Login';
-import {SimpleUserMessaging} from '@toolkit/core/client/Status';
+import {
+  SimpleUserMessaging,
+  StatusContainer,
+} from '@toolkit/core/client/Status';
 import {AppContextProvider} from '@toolkit/core/util/AppContext';
 import {filterHandledExceptions} from '@toolkit/core/util/Environment';
 import {initializeFirebase} from '@toolkit/providers/firebase/Config';
@@ -47,12 +50,14 @@ export default function AppShell() {
   return (
     <AppContextProvider ctx={APP_CONTEXT}>
       <PaperProvider theme={theme} settings={{icon: Icon}}>
-        <Suspense fallback={null}>
-          <SimpleUserMessaging style={{bottom: 100}} />
-          <AuthConfig>
-            <DrawerNavigator />
-          </AuthConfig>
-        </Suspense>
+        <StatusContainer top={true}>
+          <Suspense fallback={null}>
+            <SimpleUserMessaging style={{bottom: 100}} />
+            <AuthConfig>
+              <DrawerNavigator />
+            </AuthConfig>
+          </Suspense>
+        </StatusContainer>
       </PaperProvider>
     </AppContextProvider>
   );
