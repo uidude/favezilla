@@ -22,7 +22,7 @@ export const NOTIF_CHANNELS: Record<string, NotificationChannel> = {
   }),
 
   admin: new NotificationChannel({
-    id: 'Ffavezilla:ADMIN',
+    id: 'favezilla:ADMIN',
     name: 'ADMIN',
     description: 'These are one-off notifications from admins',
     titleFormat: '${title}',

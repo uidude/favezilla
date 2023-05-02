@@ -275,7 +275,7 @@ export const sendAdminNotif = registerHandler(
     const send = getSender();
     await send(user.id, channel, {title: title != null ? title : ''}, {body});
   },
-  {allowedRoles: ['ADMIN']},
+  {allowedRoles: ['admin']},
 );
 
 export const broadcastAdminNotif = registerHandler(
@@ -290,5 +290,5 @@ export const broadcastAdminNotif = registerHandler(
       allUsers.map(user => send(user.id, channel, {title}, {body})),
     );
   },
-  {allowedRoles: ['ADMIN']},
+  {allowedRoles: ['admin']},
 );
