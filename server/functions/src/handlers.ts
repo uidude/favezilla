@@ -127,7 +127,7 @@ async function accountToUser(auth: AuthData): Promise<User> {
 setAccountToUserCallback(accountToUser);
 
 export const convertPushToken = functions.firestore
-  .document('instance/haxapp/push_tokens/{token}')
+  .document('instance/favezilla/push_tokens/{token}')
   .onCreate(async (change, context) => {
     if (change.get('type') !== 'ios') {
       return;
