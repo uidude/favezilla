@@ -23,11 +23,11 @@ const NotificationsScreen: Screen<Props> = ({async: {users}}: Props) => {
     <DataTable style={S.table}>
       {users.map((user, i) => (
         <Row key={i}>
-          <TextCell title="ID" value={user.id} />
           <TextCell title="Name" value={user.name} />
           <ButtonCell
             title="Notify"
             label="Send Push"
+            labelStyle={{paddingHorizontal: 12}}
             onPress={() => nav.navTo(SendNotificationModal, {user})}
           />
         </Row>
