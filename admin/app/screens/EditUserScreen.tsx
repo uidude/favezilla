@@ -9,7 +9,6 @@ import {
   requireLoggedInUser,
 } from '@toolkit/core/api/User';
 import {CodedError} from '@toolkit/core/util/CodedError';
-import {sleep} from '@toolkit/core/util/DevUtil';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {UserNotFoundError} from '@toolkit/tbd/CommonErrors';
 import {useTextInput} from '@toolkit/ui/UiHooks';
@@ -62,7 +61,7 @@ const EditUserScreen: Screen<Props> = ({async: {user}}: Props) => {
   }
 
   const roleToggled = (role: Role) => {
-    if (loggedInUser.id === user.id && role === 'ADMIN') {
+    if (loggedInUser.id === user.id && role === 'admin') {
       setError(
         new CodedError(
           'npe.adhoc',

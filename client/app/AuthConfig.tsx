@@ -2,12 +2,15 @@ import React from 'react';
 import firebase from 'firebase';
 import {Account} from '@toolkit/core/api/Auth';
 import {useApi} from '@toolkit/core/api/DataApi';
+import {useOnAllowlist} from '@toolkit/core/util/Access';
+import {CodedError} from '@toolkit/core/util/CodedError';
 import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthService';
 import {GetUser} from '@app/common/Api';
 import {LoginUserInfo} from '@app/common/AppLogic';
 
 export default function AuthConfig(props: {children?: React.ReactNode}) {
   const getUser = useApi(GetUser);
+  const getOnAllowlist = useOnAllowlist();
 
   /**
    * Use this method to create an instance of your app's user when they log in.
@@ -18,6 +21,13 @@ export default function AuthConfig(props: {children?: React.ReactNode}) {
   ) => {
     throwIfInvalidAccount(firebaseAccount, account.id);
     const loginInfo = loginFields(firebaseAccount);
+    const onAllowlist = await getOnAllowlist();
+
+    // Note: All data access checks will fail if app is enforcing an allowlist
+    // and user is not on the allowlist. This a just a nice error message.
+    if (!onAllowlist) {
+      throw new CodedError('npe.anhoc', "You're not on the guest list yet");
+    }
     return await getUser(loginInfo);
   };
 

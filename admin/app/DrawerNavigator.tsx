@@ -8,6 +8,7 @@ import {
   useReactNavScreens,
 } from '@toolkit/providers/navigation/ReactNavigation';
 import AllowlistScreen from '@toolkit/screens/admin/Allowlist';
+import AllowlistEdit from '@toolkit/screens/admin/AllowlistEdit';
 import {NavItem, drawerLayout} from '@toolkit/ui/layout/DrawerLayout';
 import AllUsersScreen from './screens/AllUsersScreen';
 import BroadcastNotificationModal from './screens/BroadcastNotificationModal';
@@ -27,7 +28,7 @@ const Stack = createStackNavigator();
 const DrawerNavigator = () => {
   const auth = useAuth();
   const user = useLoggedInUser();
-  const isDev = user?.roles?.roles.includes('DEV') || true;
+  const isDev = user?.roles?.roles.includes('dev') || true;
 
   const logoutAction = {
     id: 'logout',
@@ -50,18 +51,19 @@ const DrawerNavigator = () => {
   const routes = {
     users: AllUsersScreen,
     notifications: NotificationsScreen,
-    send_notif: SendNotificationModal,
-    edit_user: EditUserScreen,
+    sendNotif: SendNotificationModal,
+    editUser: EditUserScreen,
     login: LoginScreen,
     broadcast: BroadcastNotificationModal,
     allowlist: AllowlistScreen,
+    editAllowlist: AllowlistEdit,
     //...DELETION_ROUTES,
   };
 
   const {navScreens, linkingScreens} = useReactNavScreens(
     routes,
     drawerLayout({
-      title: 'Hax App Admin',
+      title: 'Favezilla Admin',
       navItems: navItems,
       loginScreen: LoginScreen,
       home: AllUsersScreen,

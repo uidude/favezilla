@@ -15,6 +15,9 @@ service cloud.firestore {
       "push_tokens": {"*": ['owner']},
       "notification_pref": {"*": ['owner']},
       "allowlist": {"*": []},
+      "check_admin": {"*": ['admin']},
+      "check_allowlist": {"*": ['public']},
+      "check_privacy": {"*": ['']}
     }
   }
 
@@ -144,17 +147,11 @@ service cloud.firestore {
         // Allowlist is useful for granting a role *before* the user has
         // created an account.
         function allowlistRoles() {
-          let emails = getDocWithFallback('allowlist', 'emails', {"data": {}});
-          let phones = getDocWithFallback('allowlist', 'phones', {"data": {}});
+          let NO_ACCESS = {"data": {"roles": []}};
+          let emailEntry = getDocWithFallback('allowlist', 'allowlist:' + userEmail(), NO_ACCESS);
+          let phoneEntry = getDocWithFallback('allowlist', 'allowlist:' + userPhone(), NO_ACCESS);
           
-          // TODO: Figure out when it needs to be verified
-          let email = userEmail();
-          let phone = userPhone();
-          
-          let emailRoles = getOr(emails.data, email, []);
-          let phoneRoles = getOr(phones.data, phone, []);
-					
-          return emailRoles.concat(phoneRoles);
+          return emailEntry.data.roles.concat(phoneEntry.data.roles);					
         }
 
         // Owner resource for the request
