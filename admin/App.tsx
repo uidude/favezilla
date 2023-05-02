@@ -12,7 +12,6 @@ import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {FIRESTORE_DATASTORE} from '@toolkit/providers/firebase/DataStore';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
-import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import AuthConfig from '@app/admin/app/AuthConfig';
 import DrawerNavigator from '@app/admin/app/DrawerNavigator';
 import {
@@ -20,6 +19,7 @@ import {
   FIREBASE_CONFIG,
   GOOGLE_LOGIN_CONFIG,
 } from '@app/common/Config';
+import {registerUiComponents} from './app/Components';
 import {APP_INFO} from './lib/Config';
 
 function initIcons() {
@@ -34,16 +34,16 @@ export default function AppShell() {
   const APP_CONTEXT = [FIRESTORE_DATASTORE, APP_CONFIG, APP_INFO];
   initializeFirebase(FIREBASE_CONFIG);
   initIcons();
-  usePaperComponents();
+  registerUiComponents();
   IdentityService.addProvider(googleAuthProvider(GOOGLE_LOGIN_CONFIG));
 
   const theme = {
     ...DefaultTheme,
-    dark: true,
+    dark: false,
     colors: {
       ...DefaultTheme.colors,
       primary: '#618BB3',
-      accent: '#EFA42F',
+      accent: '#E3C067',
     },
   };
 
