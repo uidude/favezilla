@@ -6,6 +6,7 @@ import {
   SendAdminNotif,
   SendFaveNotif,
   SendThingDeleteNotif,
+  TestNotif,
   UpdateUser,
 } from '@app/common/Api';
 import {Fave, Profile, Thing} from '@app/common/DataTypes';
@@ -30,10 +31,13 @@ import {
   getSender,
 } from '@toolkit/providers/firebase/server/PushNotifications';
 import {getAllowlistMatchedRoles} from '@toolkit/providers/firebase/server/Roles';
+import {PushToken} from '@toolkit/services/notifications/NotificationTypes';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import {AuthData} from 'firebase-functions/lib/common/providers/https';
+const {defineSecret} = require('firebase-functions/params');
 
+const notificationApiKey = defineSecret('fcm_server_key');
 const firebaseConfig = getFirebaseConfig();
 
 function newProfileFor(user: Updater<User>): Updater<Profile> {
@@ -64,14 +68,20 @@ async function accountToUser(auth: AuthData): Promise<User> {
     users.get(userId, {edges: [UserRoles]}),
     profiles.get(userId),
   ]);
+  const roles = await getAllowlistMatchedRoles(auth);
   if (user != null && profile != null) {
+    if (!user.roles) {
+      user.roles = {id: user.id, roles: []};
+    }
+    user.roles.roles = user.roles.roles ?? [];
+    user.roles.roles.push(...roles);
     addDerivedFields(user);
+    functions.logger.debug(user, roles);
     return user;
   }
 
   // TODO: Potentially fix this logic
   // If the user matches any role, make them a user.
-  const roles = await getAllowlistMatchedRoles(auth);
   if (roles.length === 0) {
     throw new CodedError('AUTH.ERROR', 'You are not in allowlist');
   }
@@ -126,21 +136,71 @@ async function accountToUser(auth: AuthData): Promise<User> {
 }
 setAccountToUserCallback(accountToUser);
 
-export const convertPushToken = functions.firestore
-  .document('instance/favezilla/push_tokens/{token}')
+async function convertPushTokenImpl(pushToken: PushToken) {
+  if (pushToken.type !== 'ios') {
+    return;
+  }
+
+  const apnsToken = pushToken.token;
+  functions.logger.debug('Converting token: ', apnsToken);
+  const fcmTokenResp = Object.values(
+    await apnsToFCMToken(
+      pushToken.sandbox
+        ? 'com.npetoolkit.favezilla'
+        : 'com.npetoolkit.favezilla',
+
+      notificationApiKey.value(),
+      [apnsToken],
+      pushToken.sandbox,
+    ),
+  );
+  if (fcmTokenResp.length !== 1) {
+    throw new Error('Unexpected response when converting APNs token to FCM');
+  }
+  const fcmToken = fcmTokenResp[0];
+  return fcmToken;
+}
+
+/**
+ * Send a test notification to the device associated with the
+ * push token passed in. This is the simplest "lights-on" test that
+ * notifications is working - if this fails then there are likely
+ * configuration issues.
+ *
+ * TODO: Add link to notification setup docs
+ */
+export const testNotif = registerHandler(
+  TestNotif,
+  async (pushToken: PushToken) => {
+    const fcm = await convertPushTokenImpl(pushToken);
+    if (!fcm) {
+      return;
+    }
+    functions.logger.debug('Got FCM Token: ', fcm);
+    const payload = {
+      notification: {title: 'Ahoy!', body: 'We have contact 🚀'},
+    };
+    const resp = await admin.messaging().sendToDevice(fcm, payload);
+    functions.logger.debug(resp.results[0]);
+  },
+  {secrets: [notificationApiKey]},
+);
+
+export const convertPushToken = functions
+  .runWith({secrets: [notificationApiKey]})
+  .firestore.document('instance/favezilla/push_tokens/{token}')
   .onCreate(async (change, context) => {
     if (change.get('type') !== 'ios') {
       return;
     }
 
     const apnsToken = change.get('token');
-    functions.logger.debug('Converting token: ', apnsToken);
     const fcmTokenResp = Object.values(
       await apnsToFCMToken(
         change.get('sandbox')
-          ? 'com.facebook.npe.favezilla.localDevelopment'
-          : 'com.facebook.npe.favezilla',
-        functions.config().fcm.server_key,
+          ? 'com.npetoolkit.favezilla'
+          : 'com.npetoolkit.favezilla',
+        notificationApiKey.value(),
         [apnsToken],
         change.get('sandbox'),
       ),
@@ -149,7 +209,6 @@ export const convertPushToken = functions.firestore
       throw new Error('Unexpected response when converting APNs token to FCM');
     }
     const fcmToken = fcmTokenResp[0];
-    functions.logger.debug('Got FCM Token: ', fcmToken);
 
     return change.ref.set({fcmToken}, {merge: true});
   });
@@ -271,6 +330,7 @@ export const addFave = registerHandler(AddFave, async (thingId: string) => {
 export const sendAdminNotif = registerHandler(
   SendAdminNotif,
   async ({user, title, body}) => {
+    functions.logger.debug('<<<HELLO!>>>');
     const channel = NOTIF_CHANNELS.admin;
     const send = getSender();
     await send(user.id, channel, {title: title != null ? title : ''}, {body});

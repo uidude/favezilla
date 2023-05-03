@@ -38,11 +38,12 @@ const Catalog: Screen<Props> = props => {
         ? await registerForPushNotificationsAsync()
         : null;
       if (pushToken != null) {
-        await registerPushToken({
+        const req = {
           token: pushToken.data,
           type: pushToken.type,
-          sandbox: __DEV__,
-        });
+          sandbox: false,
+        };
+        await registerPushToken(req);
       }
     };
 

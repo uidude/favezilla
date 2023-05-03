@@ -2,6 +2,7 @@ import {api, noop} from '@toolkit/core/api/DataApi';
 import {User} from '@toolkit/core/api/User';
 import {Updater} from '@toolkit/data/DataStore';
 import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
+import {PushToken} from '../../npe-toolkit/lib/services/notifications/NotificationTypes';
 import {LoginUserInfo, useAddFave, useGetOrCreateUser} from './AppLogic';
 import {Fave, Thing} from './DataTypes';
 
@@ -32,3 +33,6 @@ export const BroadcastAdminNotif = api<Omit<AdminNotifPayload, 'user'>, void>(
   'broadcastAdminNotif',
   firebaseFn,
 );
+
+/** Dev API to send yourself a test notification. */
+export const TestNotif = api<PushToken, void>('testNotif', firebaseFn);
