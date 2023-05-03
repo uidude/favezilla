@@ -8,5 +8,5 @@ then
 fi
 
 # Download this from Firebase Console, `Settings icon > Service Accounts tab`
-export GOOGLE_APPLICATION_CREDENTIALS=$HOME/.secrets/day-tripper.json
+export GOOGLE_APPLICATION_CREDENTIALS=$HOME/.secrets/favezilla.json
 yarn firebase emulators:start --only functions $1 $2
