@@ -26,7 +26,7 @@ export default function AuthConfig(props: {children?: React.ReactNode}) {
     // Note: All data access checks will fail if app is enforcing an allowlist
     // and user is not on the allowlist. This a just a nice error message.
     if (!onAllowlist) {
-      throw new CodedError('npe.anhoc', "You're not on the guest list yet");
+      throw new CodedError('npe.adhoc', "You're not on the guest list yet");
     }
     return await getUser(loginInfo);
   };
