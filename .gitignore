@@ -141,3 +141,7 @@ build/Release
 
 # dotenv environment variables file
 .env
+
+# Firebase runtime config
+.runtimeconfig.json
+.runtimeconfig_checksum
