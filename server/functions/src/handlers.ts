@@ -1,7 +1,7 @@
 import {
   AddFave,
   AddThing,
-  BroadcastAdminNotif,
+  BroadcastNotif,
   GetUser,
   SendAdminNotif,
   SendFaveNotif,
@@ -338,8 +338,8 @@ export const sendAdminNotif = registerHandler(
   {allowedRoles: ['admin']},
 );
 
-export const broadcastAdminNotif = registerHandler(
-  BroadcastAdminNotif,
+export const broadcastNotif = registerHandler(
+  BroadcastNotif,
   async ({title = '', body}) => {
     const channel = NOTIF_CHANNELS.admin;
     const userStore = await getAdminDataStore(User);

@@ -1,7 +1,10 @@
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {setClientFallbackEnabled} from '@toolkit/core/api/DataApi';
+import {
+  setClientFallbackEnabled,
+  setDefaultServerApi,
+} from '@toolkit/core/api/DataApi';
 import {CONSOLE_LOGGER} from '@toolkit/core/api/Log';
 import IdentityService from '@toolkit/core/api/Login';
 import {
@@ -17,6 +20,7 @@ import {
 import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {FIRESTORE_DATASTORE} from '@toolkit/providers/firebase/DataStore';
 import {FIRESTORE_FILESTORE} from '@toolkit/providers/firebase/FileStore';
+import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {FIREBASE_LOGGER} from '@toolkit/providers/firebase/client/Logger';
 import {fbAuthProvider} from '@toolkit/providers/login/FacebookLogin';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
@@ -180,6 +184,7 @@ export default function App() {
   registerIconPack('ion', Ionicons);
   registerIconPack('mci', MaterialCommunityIcons);
   usePaperComponents();
+  setDefaultServerApi(firebaseFn);
 
   const layout = layoutSelector({
     base: bottomTabLayout(NAV),
