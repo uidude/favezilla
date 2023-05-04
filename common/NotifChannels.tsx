@@ -7,17 +7,7 @@ export const NOTIF_CHANNELS: Record<string, NotificationChannel> = {
     description:
       "These are notifications for when someone Fave's a Thing you added",
     titleFormat: 'New Fave',
-    bodyFormat: '${likerName} faved your thing: "${thingName}"',
-    defaultDeliveryMethod: 'PUSH',
-  }),
-
-  thingDeleted: new NotificationChannel({
-    id: 'favezilla:THING_DELETED',
-    name: 'Thing Deleted',
-    description:
-      'These are notifications for when someone deletes a Thing you added',
-    titleFormat: 'Thing Deleted',
-    bodyFormat: '"${thingName}" has been deleted',
+    bodyFormat: '${likerName} faved a thing you\'ve faved: "${thingName}"',
     defaultDeliveryMethod: 'PUSH',
   }),
 

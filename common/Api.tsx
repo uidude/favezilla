@@ -12,12 +12,9 @@ export const GetUser = serverApi<LoginUserInfo, User>(
 export const UpdateUser = serverApi<Updater<User>, User>('updateUser');
 export const AddThing = serverApi<Updater<Thing>, string>('addThing');
 
-export type ThingID = string;
-export const AddFave = serverApi<ThingID, Fave>('addFave', useAddFave);
-export const SendFaveNotif = serverApi<Fave, void>('sendFaveNotif', noop);
-export const SendThingDeleteNotif = serverApi<string, void>(
-  'sendThingDeleteNotif',
-);
+export type ID = string;
+export const AddFave = serverApi<ID, Fave>('addFave', useAddFave);
+export const SendFaveNotif = serverApi<{thingId: ID}>('sendFaveNotif', noop);
 
 // Admin panel
 type AdminNotifReq = {user: User; title?: string; body: string};

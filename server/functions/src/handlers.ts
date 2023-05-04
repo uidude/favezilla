@@ -5,7 +5,6 @@ import {
   GetUser,
   SendAdminNotif,
   SendFaveNotif,
-  SendThingDeleteNotif,
   TestNotif,
   UpdateUser,
 } from '@app/common/Api';
@@ -215,35 +214,24 @@ export const convertPushToken = functions
 
 export const sendFaveNotif = registerHandler(
   SendFaveNotif,
-  async (fave: Fave) => {
+  async ({thingId}) => {
     const user = requireLoggedInUser();
-    const channel = NOTIF_CHANNELS.thingFaved;
-    const send = getSender();
-    await send(
-      user.id,
-      channel,
-      {},
-      {
-        likerName: fave.user.name,
-        thingName: fave.thing.name,
-      },
-    );
-  },
-);
+    const profileStore = await getDataStore(Profile);
+    const thingStore = await getDataStore(Thing);
 
-export const sendThingDeleteNotif = registerHandler(
-  SendThingDeleteNotif,
-  async (thingName: string) => {
-    const user = requireLoggedInUser();
-    const channel = NOTIF_CHANNELS.thingDeleted;
+    const [thing, profile] = await Promise.all([
+      getRequired(thingStore, thingId, {edges: [Fave, [Fave, Profile, 1]]}),
+      getRequired(profileStore, user.id),
+    ]);
+
+    let toNotify = thing.faves.map(f => f.user.id).filter(id => id !== user.id);
+
     const send = getSender();
     await send(
-      user.id,
-      channel,
+      toNotify,
+      NOTIF_CHANNELS.thingFaved,
       {},
-      {
-        thingName,
-      },
+      {likerName: profile.name, thingName: thing.name},
     );
   },
 );

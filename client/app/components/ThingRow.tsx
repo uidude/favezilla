@@ -11,7 +11,7 @@ import {Opt} from '@toolkit/core/util/Types';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
-import {AddFave, SendFaveNotif, SendThingDeleteNotif} from '@app/common/Api';
+import {AddFave, SendFaveNotif} from '@app/common/Api';
 import {RemoveThing} from '@app/common/AppLogic';
 import {Fave, Thing} from '@app/common/DataTypes';
 import ThingScreen from '../screens/ThingScreen';
@@ -35,18 +35,14 @@ export default function ThingRow(props: Props) {
   const [makeFaveAction] = useAction(makeFave);
   const [unfaveAction] = useAction(unFave);
   const sendFaveNotif = useApi(SendFaveNotif);
-  const sendDeleteNotif = useApi(SendThingDeleteNotif);
 
   async function makeFave() {
-    const fave = await addFave(thing.id);
-    sendFaveNotif(fave).catch((e: Error) =>
-      console.error("Couldn't send notification", e),
-    );
+    await addFave(thing.id);
+    sendFaveNotif({thingId: thing.id});
     reload();
   }
 
   async function unFave() {
-    // TODO: Look up based on thing ID instead
     if (fave) {
       await faveStore.remove(fave.id);
       reload();
@@ -55,9 +51,6 @@ export default function ThingRow(props: Props) {
 
   async function onRemove() {
     await removeThing(thing.id);
-    sendDeleteNotif(thing.name).catch((e: Error) =>
-      console.error("Couldn't send notification", e),
-    );
     reload();
   }
 
@@ -83,11 +76,17 @@ export default function ThingRow(props: Props) {
         </PressableSpring>
       )}
       {fave != null ? (
-        <PressableSpring onPress={unfaveAction} style={{alignSelf: 'center'}}>
+        <PressableSpring
+          hitSlop={20}
+          onPress={unfaveAction}
+          style={{alignSelf: 'center'}}>
           <Ionicons name="heart" color="red" size={30} />
         </PressableSpring>
       ) : (
-        <PressableSpring onPress={makeFaveAction} style={{alignSelf: 'center'}}>
+        <PressableSpring
+          hitSlop={20}
+          onPress={makeFaveAction}
+          style={{alignSelf: 'center'}}>
           <Ionicons name="heart-outline" color="gray" size={30} />
         </PressableSpring>
       )}
