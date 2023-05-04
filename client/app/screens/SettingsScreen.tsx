@@ -3,12 +3,13 @@ import {View} from 'react-native';
 import {useAuth} from '@toolkit/core/api/Auth';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {actionHook} from '@toolkit/core/client/Action';
-import {useUserMessaging} from '@toolkit/core/client/Status';
+import {useStatus} from '@toolkit/core/client/Status';
 import Settings, {Setting} from '@toolkit/screens/Settings';
 import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
 import {navToAction} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
-import {openUrlAction} from '@toolkit/ui/screen/WebScreen';
+import {OpenLinkAction, openUrlAction} from '@toolkit/ui/screen/WebScreen';
+import {LEGAL_LINKS} from '@app/common/Config';
 import AboutScreen from './AboutScreen';
 
 const META_TOS = {
@@ -52,8 +53,8 @@ const DEV_SETTINGS = {
   label: 'Dev Settings',
   icon: 'wrench-outline',
   action: actionHook(() => {
-    const {showMessage, showError} = useUserMessaging();
-    return () => showMessage('Coming soon!');
+    const {setMessage} = useStatus();
+    return () => setMessage('Coming soon!');
   }),
 };
 
@@ -73,10 +74,7 @@ const SETTINGS: Setting[] = [
   LOGOUT_ACTION,
   navToAction(ABOUT),
   'LEGAL',
-  openUrlAction(META_TOS),
-  openUrlAction(META_DATA_POLICY),
-  openUrlAction(NPE_TOS),
-  openUrlAction(NPE_EU_DATA_POLICY),
+  ...LEGAL_LINKS.map((link: OpenLinkAction) => openUrlAction(link)),
 ];
 
 const SettingsScreen: Screen<{}> = () => {

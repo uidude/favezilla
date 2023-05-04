@@ -39,7 +39,9 @@ import {ModalLayout} from '@toolkit/ui/layout/LayoutBlocks';
 import {layoutSelector} from '@toolkit/ui/layout/LayoutSelector';
 import {topbarLayout} from '@toolkit/ui/layout/TopbarLayout';
 import {Routes} from '@toolkit/ui/screen/Nav';
-import WebViewScreen from '@toolkit/ui/screen/WebScreen';
+import WebViewScreen, {
+  allowWebScreenDomains,
+} from '@toolkit/ui/screen/WebScreen';
 import AuthConfig from '@app/app/AuthConfig';
 import AboutScreen from '@app/app/screens/AboutScreen';
 import Catalog from '@app/app/screens/Catalog';
@@ -57,6 +59,7 @@ import {
   CLIENT_FALLBACK_ENABLED,
   FIREBASE_CONFIG,
   GOOGLE_LOGIN_CONFIG,
+  LEGAL_LINKS,
 } from '@app/common/Config';
 import 'expo-dev-client';
 import React from 'react';
@@ -185,6 +188,7 @@ export default function App() {
   registerIconPack('mci', MaterialCommunityIcons);
   usePaperComponents();
   setDefaultServerApi(firebaseFn);
+  allowWebScreenDomains(LEGAL_LINKS.map(l => l.url));
 
   const layout = layoutSelector({
     base: bottomTabLayout(NAV),

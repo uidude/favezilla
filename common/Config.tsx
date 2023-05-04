@@ -51,3 +51,12 @@ export const APP_CONFIG = context(APP_CONFIG_KEY, {
 });
 
 export const CLIENT_FALLBACK_ENABLED = true;
+
+// Add legal links here for easy reference.
+export const LEGAL_LINKS = [
+  {
+    id: 'tos',
+    label: 'Terms of Service',
+    url: 'https://facebookincubator.github.io/npe-toolkit/docs/getting-started/FirstScreen.html',
+  },
+];
