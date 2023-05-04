@@ -3,9 +3,8 @@ import NotificationChannel from '@toolkit/services/notifications/NotificationCha
 export const NOTIF_CHANNELS: Record<string, NotificationChannel> = {
   thingFaved: new NotificationChannel({
     id: 'favezilla:THING_FAVED',
-    name: 'Faves',
-    description:
-      "These are notifications for when someone Fave's a Thing you added",
+    name: 'Fave',
+    description: 'When someone Faves a book you also a a a a faved',
     titleFormat: 'New Fave',
     bodyFormat: '${likerName} faved a thing you\'ve faved: "${thingName}"',
     defaultDeliveryMethod: 'PUSH',
@@ -13,8 +12,8 @@ export const NOTIF_CHANNELS: Record<string, NotificationChannel> = {
 
   admin: new NotificationChannel({
     id: 'favezilla:ADMIN',
-    name: 'ADMIN',
-    description: 'These are one-off notifications from admins',
+    name: 'System notifications',
+    description: 'Notifications from the app',
     titleFormat: '${title}',
     bodyFormat: '${body}',
     defaultDeliveryMethod: 'PUSH',
