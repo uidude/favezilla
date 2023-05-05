@@ -14,10 +14,10 @@ service cloud.firestore {
       "faves": {"read": ['public'], "write": ['owner']},
       "push_tokens": {"*": ['owner']},
       "notification_pref": {"*": ['owner']},
-      "allowlist": {"*": []},
+      "allowlist": {"*": ['admin']},
       "check_admin": {"*": ['admin']},
       "check_allowlist": {"*": ['public']},
-      "check_privacy": {"*": ['']}
+      "check_privacy": {"*": []}
     }
   }
 
@@ -75,7 +75,7 @@ service cloud.firestore {
           let public = 'public' in rule;
           let roles = getRoles();
           let allowlisted = !enforceAllowlist() || 'allowlist' in roles;
-          let adminAccess = globalAdminAccess() && 'admin' in roles;
+          let adminAccess = globalAdminAccess() && 'admin' in roles && entity != 'check_privacy';
           let ownerAccess = 'owner' in rule && isOwner(entity);
           return allowlisted && (public || ownerAccess || adminAccess);
         }
