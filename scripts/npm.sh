@@ -23,11 +23,16 @@ cd $BASEDIR
 git grep -li 'favezilla' | xargs -n 1 sed -i '' 's/[fF]avezilla/helloworld/g' $1
 
 # Replace helloworld back in package.json, as it is getting checked in
-sed -i '' 's/favezilla/helloworld/g' package.json
+sed -i '' 's/helloworld/favezilla/g' package.json
 
-# Remove Firebase config
+# Replace Favezilla config with generic config
 cp scripts/Config.template.tsx common/Config.tsx
 
+# Copy .gitignore (`create-expo-app` uses `gitignore` to create `.gitignore` files)
+cp .gitignore gitignore
+cp server/functions/.gitignore server/functions/gitignore
+
+# Publish
 yarn publish --access public
 
 # Print message
