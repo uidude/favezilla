@@ -1,3 +1,23 @@
+import AuthConfig from '@app/app/AuthConfig';
+import AboutScreen from '@app/app/screens/AboutScreen';
+import Catalog from '@app/app/screens/Catalog';
+import CreateNewThingScreen from '@app/app/screens/CreateThingScreen';
+import DevSettings from '@app/app/screens/DevSettings';
+import EditProfile from '@app/app/screens/EditProfile';
+import Favorites from '@app/app/screens/Favorites';
+import LoginScreen from '@app/app/screens/LoginScreen';
+import ProfileScreen from '@app/app/screens/ProfileScreen';
+import Profiles from '@app/app/screens/Profiles';
+import SettingsScreen from '@app/app/screens/SettingsScreen';
+import StartupScreen from '@app/app/screens/StartupScreen';
+import ThingScreen from '@app/app/screens/ThingScreen';
+import {
+  APP_CONFIG,
+  CLIENT_FALLBACK_ENABLED,
+  FIREBASE_CONFIG,
+  GOOGLE_LOGIN_CONFIG,
+  LEGAL_LINKS,
+} from '@app/common/Config';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -42,29 +62,10 @@ import {Routes} from '@toolkit/ui/screen/Nav';
 import WebViewScreen, {
   allowWebScreenDomains,
 } from '@toolkit/ui/screen/WebScreen';
-import AuthConfig from '@app/app/AuthConfig';
-import AboutScreen from '@app/app/screens/AboutScreen';
-import Catalog from '@app/app/screens/Catalog';
-import CreateNewThingScreen from '@app/app/screens/CreateThingScreen';
-import EditProfile from '@app/app/screens/EditProfile';
-import Favorites from '@app/app/screens/Favorites';
-import LoginScreen from '@app/app/screens/LoginScreen';
-import ProfileScreen from '@app/app/screens/ProfileScreen';
-import Profiles from '@app/app/screens/Profiles';
-import SettingsScreen from '@app/app/screens/SettingsScreen';
-import StartupScreen from '@app/app/screens/StartupScreen';
-import ThingScreen from '@app/app/screens/ThingScreen';
-import {
-  APP_CONFIG,
-  CLIENT_FALLBACK_ENABLED,
-  FIREBASE_CONFIG,
-  GOOGLE_LOGIN_CONFIG,
-  LEGAL_LINKS,
-} from '@app/common/Config';
 import 'expo-dev-client';
+import {StatusBar} from 'expo-status-bar';
 import React from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
-import {StatusBar} from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -127,6 +128,7 @@ const ROUTES: Routes = {
   Profiles,
   ProfileScreen,
   SettingsScreen,
+  DevSettings,
   CreateNewThingScreen,
   PhoneInput,
   PhoneVerification,
