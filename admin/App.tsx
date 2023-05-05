@@ -1,6 +1,7 @@
 import React, {Suspense} from 'react';
 import {Ionicons, MaterialCommunityIcons, Octicons} from '@expo/vector-icons';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import {setDefaultServerApi} from '@toolkit/core/api/DataApi';
 import IdentityService from '@toolkit/core/api/Login';
 import {
   SimpleUserMessaging,
@@ -20,7 +21,6 @@ import {
   FIREBASE_CONFIG,
   GOOGLE_LOGIN_CONFIG,
 } from '@app/common/Config';
-import {setDefaultServerApi} from '../../sltk/lib/core/api/DataApi';
 import {registerUiComponents} from './app/Components';
 import {APP_INFO} from './lib/Config';
 
