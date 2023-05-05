@@ -7,10 +7,15 @@ try {
   // @ts-ignore
   localConf = require('./.localconf.json');
 } catch (_ignored) {}
-
 /**
  * Fill in the Firebase config from values at
  * https://console.firebase.google.com/project/YOUR_PROJECT/settings/general/, under "Web apps"
+ * 
+ * Per https://firebase.google.com/docs/projects/api-keys the `apiKey` is OK to include in checked-in code,
+ * and it can be found by looking at your production JavaScript anyway. However by checking it into a public
+ * repositoriy you increase the likelihood of abuse. With new projects you should limit user access
+ * via an allowlist until you are ready to launch, and at launch time review Firestore and Firebase Storage
+ * privacy rules as well as quota limits.
  */
 export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
   apiKey: 'AIzaSyD0Gjnvn2M6OuBR45305fnCoR1QDbL1rJA',
