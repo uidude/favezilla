@@ -57,6 +57,6 @@ export const LEGAL_LINKS = [
   {
     id: 'tos',
     label: 'Terms of Service',
-    url: 'https://facebookincubator.github.io/npe-toolkit/docs/getting-started/FirstScreen.html',
+    url: 'https://facebookincubator.github.io/npe-toolkit/docs/release/tos.html',
   },
 ];
