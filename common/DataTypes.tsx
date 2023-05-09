@@ -1,4 +1,5 @@
 import {User} from '@toolkit/core/api/User';
+import {type Opt} from '@toolkit/core/util/Types';
 import {
   BaseModel,
   DeletedBy,
@@ -13,8 +14,8 @@ import {
 export class Profile extends BaseModel {
   @Field() user: User;
   @Field() name: string;
-  @Field() pic?: string;
-  @Field() about?: string;
+  @Field(TString) pic?: Opt<string>;
+  @Field(TString) about?: Opt<string>;
   @InverseField() faves?: Fave[];
 }
 

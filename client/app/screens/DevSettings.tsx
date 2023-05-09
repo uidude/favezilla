@@ -2,10 +2,10 @@
  * TODO: Describe what this screen is doing :)
  */
 
-import {TestNotif} from '@app/common/Api';
-import {registerForPushNotificationsAsync} from '@app/lib/Notifications';
+import * as React from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {useApi} from '@toolkit/core/api/DataApi';
-import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {useBackgroundStatus} from '@toolkit/core/client/Status';
 import {AdhocError} from '@toolkit/core/util/CodedError';
@@ -13,21 +13,27 @@ import {
   getNetworkDelayMs,
   useSetNetworkDelay,
 } from '@toolkit/core/util/DevUtil';
+import {getRequired, useDataStore} from '@toolkit/data/DataStore';
 import {useTextInput} from '@toolkit/ui/UiHooks';
 import {useComponents} from '@toolkit/ui/components/Components';
+import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
-import * as React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {TestNotif} from '@app/common/Api';
+import {Profile} from '@app/common/DataTypes';
+import {registerForPushNotificationsAsync} from '@app/lib/Notifications';
+import Onboarding from './Onboarding';
 
 type Props = {
   async: {
     networkDelay: number;
+    user: User;
+    profile: Profile;
   };
 };
 
 const DevSettings: Screen<Props> = props => {
   requireLoggedInUser();
-  const {networkDelay} = props.async;
+  const {networkDelay, user, profile} = props.async;
   const delayText = delayString(networkDelay);
   const {Body, H2} = useComponents();
   const {Button} = useComponents();
@@ -36,6 +42,7 @@ const DevSettings: Screen<Props> = props => {
   const sendTestNotification = useApi(TestNotif);
   const [notify, sending] = useAction(testNotif);
   const {setMessage} = useBackgroundStatus();
+  const {navTo} = useNav();
 
   async function testNotif() {
     const pushToken = await registerForPushNotificationsAsync();
@@ -69,37 +76,45 @@ const DevSettings: Screen<Props> = props => {
       <H2>Notifications</H2>
       <Body>Test that notifications are working end-to-end</Body>
       <Button
-        type="primary"
+        type="secondary"
         onPress={notify}
         loading={sending}
         style={S.button}>
         Send Test Notification
       </Button>
-      <View style={{height: 12}} />
-      <H2>Network Delay</H2>
+      <H2 style={{marginTop: 12}}>Network Delay</H2>
       <DelayField label="Delay in milliseconds" type="primary" />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-        }}>
-        <Button type="secondary" onPress={clearDelay} style={S.button}>
+      <View style={S.buttonRow}>
+        <Button type="tertiary" onPress={clearDelay} style={S.button}>
           Clear Delay
         </Button>
         <View style={{width: 12}} />
-        <Button type="primary" onPress={setDelay} style={S.button}>
+        <Button type="secondary" onPress={setDelay} style={S.button}>
           Set
         </Button>
       </View>
+
+      <H2 style={{marginTop: 12}}>Onboarding</H2>
+      <Button
+        type="secondary"
+        onPress={() => navTo(Onboarding, {user, profile})}
+        style={S.button}>
+        Test Onboarding
+      </Button>
     </ScrollView>
   );
 };
 DevSettings.title = 'Dev Settings';
 
 DevSettings.load = async () => {
-  const networkDelay = await getNetworkDelayMs();
+  const user = requireLoggedInUser();
+  const profileStore = useDataStore(Profile);
+  const [networkDelay, profile] = await Promise.all([
+    getNetworkDelayMs(),
+    getRequired(profileStore, user.id),
+  ]);
 
-  return {networkDelay};
+  return {networkDelay, profile, user};
 };
 
 function delayString(delay: number) {
@@ -120,6 +135,10 @@ const S = StyleSheet.create({
     alignSelf: 'flex-end',
     marginTop: 20,
     minWidth: 100,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
 });
 
