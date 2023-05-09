@@ -10,6 +10,7 @@ import {
 import AllowlistScreen from '@toolkit/screens/admin/Allowlist';
 import AllowlistEdit from '@toolkit/screens/admin/AllowlistEdit';
 import {NavItem, drawerLayout} from '@toolkit/ui/layout/DrawerLayout';
+import AdminHome from './screens/AdminHome';
 import AllUsersScreen from './screens/AllUsersScreen';
 import BroadcastNotificationModal from './screens/BroadcastNotificationModal';
 import EditUserScreen from './screens/EditUserScreen';
@@ -57,6 +58,7 @@ const DrawerNavigator = () => {
     broadcast: BroadcastNotificationModal,
     allowlist: AllowlistScreen,
     editAllowlist: AllowlistEdit,
+    home: AdminHome,
     //...DELETION_ROUTES,
   };
 
@@ -82,9 +84,8 @@ const DrawerNavigator = () => {
     <NavigationContainer linking={linking}>
       <NavContext routes={routes} />
       <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
+        screenOptions={{headerShown: false}}
+        initialRouteName="home">
         {navScreens}
       </Stack.Navigator>
     </NavigationContainer>
