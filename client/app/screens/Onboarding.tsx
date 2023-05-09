@@ -63,7 +63,7 @@ const Onboarding: Screen<Props> = props => {
         <ProfilePicEditor pic={pic} setPic={setPic} size={256} />
       </Step>
       <Step
-        title="Tell us about yourself'"
+        title="Tell us about yourself"
         subtitle="Enter a short blurb that will be shown on your profile."
         required={false}
         onSkip={onAboutSkip}>
