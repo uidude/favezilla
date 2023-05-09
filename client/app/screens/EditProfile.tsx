@@ -6,7 +6,7 @@ import * as React from 'react';
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
 import {SaveFormat, manipulateAsync} from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import {User, requireLoggedInUser} from '@toolkit/core/api/User';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {withTimeout} from '@toolkit/core/util/DevUtil';
 import {Opt} from '@toolkit/core/util/Types';
@@ -57,33 +57,16 @@ async function pickSquarePhoto(size: number = 256) {
   return null;
 }
 
-const EditProfile: Screen<Props> = props => {
-  requireLoggedInUser();
-  const {me} = props.async;
-  const {Button, TextInput} = useComponents();
-  const [name, setName] = React.useState(me.name);
-  const [bio, setBio] = React.useState(me.about ?? '');
-  const [pic, setPic] = React.useState(me.pic);
-  const nav = useNav();
-  const updateUserAndProfile = useUpdateUserAndProfile();
+export function ProfilePicEditor(props: {
+  pic: Opt<string>;
+  setPic: (pic: string) => void;
+  size?: number;
+}) {
+  const {size = 128} = props;
   const {upload} = useStorage(Profile, 'pic', {maxBytes: 50000000});
+  const {pic, setPic} = props;
   const [uploadPic, uploading] = useAction(uploadPicHandler);
-  const [save, saving] = useAction(saveHandler);
   const toUploadUri = React.useRef<Opt<string>>();
-
-  function back(reload: boolean = false) {
-    if (nav.backOk()) {
-      nav.back();
-      nav.setParams({reload});
-    } else {
-      nav.navTo(ProfileScreen, {id: me.id, reload});
-    }
-  }
-
-  async function saveHandler() {
-    await updateUserAndProfile(me.id, {name, pic}, {about: bio});
-    back(true);
-  }
 
   async function editPic() {
     toUploadUri.current = await pickSquarePhoto();
@@ -99,16 +82,46 @@ const EditProfile: Screen<Props> = props => {
   }
 
   return (
+    <PressableSpring onPress={editPic}>
+      {uploading ? (
+        <View style={[S.uploading, {width: size, height: size}]}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <ProfilePic pic={pic} size={size} style={{alignSelf: 'center'}} />
+      )}
+    </PressableSpring>
+  );
+}
+
+const EditProfile: Screen<Props> = props => {
+  requireLoggedInUser();
+  const {me} = props.async;
+  const {Button, TextInput} = useComponents();
+  const [name, setName] = React.useState(me.name);
+  const [bio, setBio] = React.useState(me.about ?? '');
+  const [pic, setPic] = React.useState(me.pic);
+  const nav = useNav();
+  const updateUserAndProfile = useUpdateUserAndProfile();
+  const [save, saving] = useAction(saveHandler);
+
+  function back(reload: boolean = false) {
+    if (nav.backOk()) {
+      nav.back();
+      nav.setParams({reload});
+    } else {
+      nav.navTo(ProfileScreen, {id: me.id, reload});
+    }
+  }
+
+  async function saveHandler() {
+    await updateUserAndProfile(me.id, {name, pic}, {about: bio});
+    back(true);
+  }
+
+  return (
     <ScrollView style={S.container} contentContainerStyle={S.content}>
-      <PressableSpring onPress={editPic}>
-        {uploading ? (
-          <View style={S.uploading}>
-            <ActivityIndicator size="large" />
-          </View>
-        ) : (
-          <ProfilePic pic={pic} size={128} style={{alignSelf: 'center'}} />
-        )}
-      </PressableSpring>
+      <ProfilePicEditor pic={pic} setPic={setPic} />
       <View style={{height: 20}} />
       <TextInput
         type="primary"
@@ -169,8 +182,6 @@ const S = StyleSheet.create({
     alignSelf: 'center',
   },
   uploading: {
-    width: 128,
-    height: 128,
     alignSelf: 'center',
     justifyContent: 'center',
   },
