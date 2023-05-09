@@ -1,20 +1,16 @@
-import {LEGAL_LINKS} from '@app/common/Config';
+import React from 'react';
+import {View} from 'react-native';
 import {useAuth} from '@toolkit/core/api/Auth';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {actionHook} from '@toolkit/core/client/Action';
-import {useStatus} from '@toolkit/core/client/Status';
 import Settings, {Setting} from '@toolkit/screens/Settings';
 import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
 import {navToAction} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {OpenLinkAction, openUrlAction} from '@toolkit/ui/screen/WebScreen';
-import {registerDevMenuItems} from 'expo-dev-menu';
-import React from 'react';
-import {View} from 'react-native';
+import {LEGAL_LINKS} from '@app/common/Config';
 import AboutScreen from './AboutScreen';
 import DevSettings from './DevSettings';
-
-registerDevMenuItems([{name: 'Foo', callback: () => console.log('Foo')}]);
 
 const ABOUT = {
   icon: 'information-outline',
