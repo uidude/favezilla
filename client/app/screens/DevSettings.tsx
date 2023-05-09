@@ -97,7 +97,7 @@ const DevSettings: Screen<Props> = props => {
       <H2 style={{marginTop: 12}}>Onboarding</H2>
       <Button
         type="secondary"
-        onPress={() => navTo(Onboarding, {user, profile})}
+        onPress={() => navTo(Onboarding, {user})}
         style={S.button}>
         Test Onboarding
       </Button>

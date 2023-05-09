@@ -9,6 +9,7 @@ const LOGIN_SCREEN_CONFIG: SimpleLoginScreenConfig = {
   subtitle: 'Share your favorite books!\n(and soon other favorite things)',
   authTypes: ['google'],
   home: 'Favorites',
+  onboarding: 'Onboarding',
   tos: '*Terms of Service coming soon*',
 };
 

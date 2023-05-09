@@ -122,6 +122,10 @@ function newProfileFor(user: User): Partial<Profile> {
 
 function addDerivedFields(user: User) {
   user.canLogin = true;
+  if (user.name === '') {
+    user.canLogin = false;
+    user.cantLoginReason = 'onboarding';
+  }
 }
 
 export type LoginUserInfo = {
@@ -154,10 +158,7 @@ export function useGetOrCreateUser() {
     }
 
     const initialName =
-      firebaseAccount.displayName ||
-      firebaseAccount.email ||
-      firebaseAccount.phoneNumber ||
-      'No Name';
+      firebaseAccount.displayName || firebaseAccount.email || '';
 
     const newUser: User = {
       id: userId,
@@ -177,6 +178,8 @@ export function useGetOrCreateUser() {
 
     if (profile == null) {
       await profiles.create(newProfile);
+      user.canLogin = false;
+      user.cantLoginReason = 'onboarding';
     }
 
     return user;

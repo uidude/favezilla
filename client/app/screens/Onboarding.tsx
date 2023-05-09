@@ -5,35 +5,42 @@
  */
 
 import * as React from 'react';
+import {useAuth} from '@toolkit/core/api/Auth';
 import {User} from '@toolkit/core/api/User';
 import {Opt} from '@toolkit/core/util/Types';
+import {useDataStore} from '@toolkit/data/DataStore';
 import {useTextInput} from '@toolkit/ui/UiHooks';
-import MultistepFlow, {Step} from '@toolkit/ui/components/MultistepFlow';
+import {MultistepFlow, Step} from '@toolkit/ui/components/MultistepFlow';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {useUpdateUserAndProfile} from '@app/common/AppLogic';
 import {Profile} from '@app/common/DataTypes';
 import {ProfilePicEditor} from './EditProfile';
 import Favorites from './Favorites';
-import ProfileScreen from './ProfileScreen';
 
 type Props = {
   user: User;
-  profile?: Partial<Profile>;
+  async: {
+    profile: Partial<Profile>;
+  };
 };
 
 const Onboarding: Screen<Props> = props => {
-  const {user, profile = {}} = props;
+  const {user} = props;
+  const {profile} = props.async;
   const nav = useNav();
   const [NameInput, name] = useTextInput(user.name);
   const [AboutInput, about, setAbout] = useTextInput(profile.about ?? '');
   const [pic, setPic] = React.useState<Opt<string>>(user.pic);
+  const auth = useAuth();
 
   const updateUserAndProfile = useUpdateUserAndProfile();
 
   async function onFinish() {
     await updateUserAndProfile(user.id, {name, pic}, {about});
-    nav.reset(ProfileScreen, {id: user.id});
+    await auth.checkLogin();
+    // TODO Show error if checkLogin() fails
+    nav.reset(Favorites);
   }
 
   function onCancel() {
@@ -73,5 +80,14 @@ const Onboarding: Screen<Props> = props => {
 Onboarding.title = 'Onboarding';
 Onboarding.style = {nav: 'none'};
 Onboarding.linkable = false;
+
+Onboarding.load = async props => {
+  const userId = props.user.id;
+  const profileStore = useDataStore(Profile);
+
+  const profile = (await profileStore.get(userId)) ?? {};
+
+  return {profile};
+};
 
 export default Onboarding;
