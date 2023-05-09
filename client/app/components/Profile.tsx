@@ -29,6 +29,7 @@ type ProfilePicProps = {
   /* Width and height of the pic to render */
   size: number;
 
+  /** Style for the containing view */
   style?: StyleProp<ViewStyle>;
 };
 
