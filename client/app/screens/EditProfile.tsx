@@ -49,7 +49,7 @@ async function pickSquarePhoto(size: number = 256) {
         {crop: {originX: x, originY: y, width: boxSize, height: boxSize}},
         {resize: {width: size, height: size}},
       ],
-      {compress: 1, format: SaveFormat.PNG},
+      {compress: 0.8, format: SaveFormat.JPEG},
     );
     return cropped.uri;
   }
