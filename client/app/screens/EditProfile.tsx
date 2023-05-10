@@ -60,13 +60,20 @@ async function pickSquarePhoto(size: number = 256) {
 export function ProfilePicEditor(props: {
   pic: Opt<string>;
   setPic: (pic: string) => void;
+  isLoading?: (loading: boolean) => void;
   size?: number;
 }) {
   const {size = 128} = props;
   const {upload} = useStorage(Profile, 'pic', {maxBytes: 50000000});
-  const {pic, setPic} = props;
+  const {pic, setPic, isLoading} = props;
   const [uploadPic, uploading] = useAction('UploadPic', uploadPicHandler);
   const toUploadUri = React.useRef<Opt<string>>();
+
+  React.useEffect(() => {
+    if (isLoading) {
+      isLoading(uploading);
+    }
+  }, [uploading]);
 
   async function editPic() {
     toUploadUri.current = await pickSquarePhoto();
@@ -76,7 +83,7 @@ export function ProfilePicEditor(props: {
   async function uploadPicHandler() {
     const uri = toUploadUri.current;
     if (uri != null) {
-      const uploadResult = await withTimeout(() => upload(uri), 1000);
+      const uploadResult = await withTimeout(() => upload(uri), 30000);
       setPic(uploadResult.storageUri);
     }
   }
@@ -104,6 +111,7 @@ const EditProfile: Screen<Props> = props => {
   const nav = useNav();
   const updateUserAndProfile = useUpdateUserAndProfile();
   const [save, saving] = useAction('SaveProfile', saveHandler);
+  const [loading, setLoading] = React.useState(false);
 
   function back(reload: boolean = false) {
     if (nav.backOk()) {
@@ -121,7 +129,7 @@ const EditProfile: Screen<Props> = props => {
 
   return (
     <ScrollView style={S.container} contentContainerStyle={S.content}>
-      <ProfilePicEditor pic={pic} setPic={setPic} />
+      <ProfilePicEditor pic={pic} setPic={setPic} isLoading={setLoading} />
       <View style={{height: 20}} />
       <TextInput
         type="primary"
@@ -143,7 +151,11 @@ const EditProfile: Screen<Props> = props => {
         <Button type="tertiary" onPress={() => back()}>
           Cancel
         </Button>
-        <Button type="primary" onPress={save} loading={saving}>
+        <Button
+          type="primary"
+          onPress={save}
+          loading={saving}
+          disabled={loading}>
           Save
         </Button>
       </View>

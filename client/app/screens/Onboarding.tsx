@@ -32,6 +32,7 @@ const Onboarding: Screen<Props> = props => {
   const [NameInput, name] = useTextInput(user.name);
   const [AboutInput, about, setAbout] = useTextInput(profile.about ?? '');
   const [pic, setPic] = React.useState<Opt<string>>(user.pic);
+  const [loading, setLoading] = React.useState(false);
   const auth = useAuth();
 
   const updateUserAndProfile = useUpdateUserAndProfile();
@@ -59,8 +60,16 @@ const Onboarding: Screen<Props> = props => {
         subtitle="This will be visible on your profile.">
         <NameInput type="primary" style={{marginTop: 32}} placeholder="Name" />
       </Step>
-      <Step title="Show yourself" subtitle="Upload your profile picture.">
-        <ProfilePicEditor pic={pic} setPic={setPic} size={256} />
+      <Step
+        title="Show yourself"
+        subtitle="Upload your profile picture."
+        nextOk={!loading}>
+        <ProfilePicEditor
+          pic={pic}
+          setPic={setPic}
+          size={256}
+          isLoading={setLoading}
+        />
       </Step>
       <Step
         title="Tell us about yourself"
