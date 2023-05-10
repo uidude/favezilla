@@ -5,6 +5,7 @@
 import * as React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useApi} from '@toolkit/core/api/DataApi';
+import {eventToString, getDevLogs} from '@toolkit/core/api/Log';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {useBackgroundStatus} from '@toolkit/core/client/Status';
@@ -43,6 +44,8 @@ const DevSettings: Screen<Props> = props => {
   const [notify, sending] = useAction('TestNotification', testNotif);
   const {setMessage} = useBackgroundStatus();
   const {navTo} = useNav();
+  const devLogs = getDevLogs();
+  const [showLogs, setShowLogs] = React.useState(false);
 
   async function testNotif() {
     const pushToken = await registerForPushNotificationsAsync();
@@ -101,6 +104,20 @@ const DevSettings: Screen<Props> = props => {
         style={S.button}>
         Test Onboarding
       </Button>
+
+      <H2 style={{marginTop: 12}}>App Logs</H2>
+      <Button onPress={() => setShowLogs(!showLogs)} style={S.button}>
+        {showLogs ? 'Hide' : 'Show'}
+      </Button>
+      {showLogs && (
+        <View style={{marginTop: 12}}>
+          {devLogs.reverse().map((event, i) => (
+            <View key={i} style={S.log}>
+              <Body>{eventToString(event).replace(', ', '\n')}</Body>
+            </View>
+          ))}
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -139,6 +156,11 @@ const S = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+  },
+  log: {
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#444',
   },
 });
 
