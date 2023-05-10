@@ -5,7 +5,7 @@ import {
   setClientFallbackEnabled,
   setDefaultServerApi,
 } from '@toolkit/core/api/DataApi';
-import {CONSOLE_LOGGER} from '@toolkit/core/api/Log';
+import {ConsoleLogger, DevLogger, MultiLogger} from '@toolkit/core/api/Log';
 import IdentityService from '@toolkit/core/api/Login';
 import {
   SimpleUserMessaging,
@@ -170,16 +170,12 @@ const NAV = {
   home: Favorites,
 };
 
-// Set this to true to enable logging to Firebase Analytics
-const USE_FIREBASE_ANALYTICS = false;
-
-const LOGGER = USE_FIREBASE_ANALYTICS ? FIREBASE_LOGGER : CONSOLE_LOGGER;
 const APP_CONTEXT = [
   APP_CONFIG,
   APP_INFO,
   FIRESTORE_DATASTORE,
   FIRESTORE_FILESTORE,
-  LOGGER,
+  MultiLogger([DevLogger, ConsoleLogger]),
   NOTIF_CHANNELS_CONTEXT,
 ];
 
