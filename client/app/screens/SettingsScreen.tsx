@@ -25,14 +25,14 @@ const NOTIF_SETTINGS = {
 };
 
 const DEV_SETTINGS = {
-  id: 'DEV_SETTINGS',
+  id: 'DevSettings',
   label: 'Dev Settings',
   icon: 'wrench-outline',
   to: DevSettings,
 };
 
 export const LOGOUT_ACTION = {
-  id: 'LOGOUT',
+  id: 'Logout',
   label: 'Log Out',
   icon: 'logout',
   action: actionHook(() => {
