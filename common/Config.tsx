@@ -10,7 +10,7 @@ try {
 /**
  * Fill in the Firebase config from values at
  * https://console.firebase.google.com/project/YOUR_PROJECT/settings/general/, under "Web apps"
- * 
+ *
  * Per https://firebase.google.com/docs/projects/api-keys the `apiKey` is OK to include in checked-in code,
  * and it can be found by looking at your production JavaScript anyway. However by checking it into a public
  * repositoriy you increase the likelihood of abuse. With new projects you should limit user access
@@ -65,3 +65,5 @@ export const LEGAL_LINKS = [
     url: 'https://facebookincubator.github.io/npe-toolkit/docs/release/tos.html',
   },
 ];
+
+export const MIXPANEL_TOKEN = 'ae6dcaf512d2311b66a99a020c2ef1c3';

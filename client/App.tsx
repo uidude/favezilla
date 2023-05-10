@@ -21,9 +21,9 @@ import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {FIRESTORE_DATASTORE} from '@toolkit/providers/firebase/DataStore';
 import {FIRESTORE_FILESTORE} from '@toolkit/providers/firebase/FileStore';
 import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
-import {FIREBASE_LOGGER} from '@toolkit/providers/firebase/client/Logger';
 import {fbAuthProvider} from '@toolkit/providers/login/FacebookLogin';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
+import {MixpanelLogger} from '@toolkit/providers/mixpanel/Logger';
 import {
   NavContext,
   useReactNavScreens,
@@ -61,6 +61,7 @@ import {
   FIREBASE_CONFIG,
   GOOGLE_LOGIN_CONFIG,
   LEGAL_LINKS,
+  MIXPANEL_TOKEN,
 } from '@app/common/Config';
 import 'expo-dev-client';
 import React from 'react';
@@ -170,12 +171,17 @@ const NAV = {
   home: Favorites,
 };
 
+const LOGGERS = [DevLogger, ConsoleLogger];
+if (MIXPANEL_TOKEN != null) {
+  LOGGERS.push(MixpanelLogger(MIXPANEL_TOKEN));
+}
+
 const APP_CONTEXT = [
   APP_CONFIG,
   APP_INFO,
   FIRESTORE_DATASTORE,
   FIRESTORE_FILESTORE,
-  MultiLogger([DevLogger, ConsoleLogger]),
+  MultiLogger(LOGGERS),
   NOTIF_CHANNELS_CONTEXT,
 ];
 

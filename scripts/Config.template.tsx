@@ -57,3 +57,5 @@ export const LEGAL_LINKS = [
     url: 'https://facebookincubator.github.io/npe-toolkit/docs/getting-started/FirstScreen.html',
   },
 ];
+
+export const MIXPANEL_TOKEN = null;
