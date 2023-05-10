@@ -31,7 +31,7 @@ const EditUserScreen: Screen<Props> = ({async: {user}}: Props) => {
   const rolesStore = useDataStore(UserRoles);
   const {setError} = useBackgroundStatus();
   const {Title, Body} = useComponents();
-  const [saveAction, saving] = useAction(save);
+  const [saveAction, saving] = useAction('SaveUser', save);
 
   const back = () => {
     if (nav.backOk()) {

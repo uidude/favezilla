@@ -65,7 +65,7 @@ export function ProfilePicEditor(props: {
   const {size = 128} = props;
   const {upload} = useStorage(Profile, 'pic', {maxBytes: 50000000});
   const {pic, setPic} = props;
-  const [uploadPic, uploading] = useAction(uploadPicHandler);
+  const [uploadPic, uploading] = useAction('UploadPic', uploadPicHandler);
   const toUploadUri = React.useRef<Opt<string>>();
 
   async function editPic() {
@@ -76,7 +76,7 @@ export function ProfilePicEditor(props: {
   async function uploadPicHandler() {
     const uri = toUploadUri.current;
     if (uri != null) {
-      const uploadResult = await withTimeout(() => upload(uri), 30000);
+      const uploadResult = await withTimeout(() => upload(uri), 1000);
       setPic(uploadResult.storageUri);
     }
   }
@@ -103,7 +103,7 @@ const EditProfile: Screen<Props> = props => {
   const [pic, setPic] = React.useState(me.pic);
   const nav = useNav();
   const updateUserAndProfile = useUpdateUserAndProfile();
-  const [save, saving] = useAction(saveHandler);
+  const [save, saving] = useAction('SaveProfile', saveHandler);
 
   function back(reload: boolean = false) {
     if (nav.backOk()) {

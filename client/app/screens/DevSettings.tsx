@@ -40,7 +40,7 @@ const DevSettings: Screen<Props> = props => {
   const [DelayField, newDelay, setDelayText] = useTextInput(delayText);
   const setNetworkDelay = useSetNetworkDelay();
   const sendTestNotification = useApi(TestNotif);
-  const [notify, sending] = useAction(testNotif);
+  const [notify, sending] = useAction('TestNotification', testNotif);
   const {setMessage} = useBackgroundStatus();
   const {navTo} = useNav();
 

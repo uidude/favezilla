@@ -32,8 +32,8 @@ export default function ThingRow(props: Props) {
   const reload = useReload();
   const messageOnFail = useMessageOnFail();
   const {navTo} = useNav();
-  const [makeFaveAction] = useAction(makeFave);
-  const [unfaveAction] = useAction(unFave);
+  const [makeFaveAction] = useAction('AddFavorite', makeFave);
+  const [unfaveAction] = useAction('Unfavorite', unFave);
   const sendFaveNotif = useApi(SendFaveNotif);
 
   async function makeFave() {

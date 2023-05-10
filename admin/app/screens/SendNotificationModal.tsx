@@ -14,7 +14,7 @@ const SendNotificationModal: Screen<Props> = ({user}: Props) => {
   const [TitleField, title] = useTextInput('');
   const [BodyField, body] = useTextInput('');
   const {Title, Subtitle, Button} = useComponents();
-  const [onSend, sending] = useAction(sendNotification);
+  const [onSend, sending] = useAction('SendNotification', sendNotification);
 
   const nav = useNav();
   const sendAdminNotif = useApi(SendAdminNotif);

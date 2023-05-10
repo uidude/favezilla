@@ -27,7 +27,7 @@ const Favorites: Screen<Props> = props => {
   const hasFaves = faves.length > 0;
   const faveStore = useDataStore(Fave);
   const reload = useReload();
-  const [addFave] = useAction(addFaveHandler);
+  const [addFave] = useAction('AddFavorite', addFaveHandler);
 
   async function addFaveHandler(thing: Thing) {
     await faveStore.create({user, thing});
