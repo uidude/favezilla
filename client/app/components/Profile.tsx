@@ -4,10 +4,7 @@
 
 import * as React from 'react';
 import {
-  Image,
-  ImageErrorEventData,
   Linking,
-  NativeSyntheticEvent,
   Platform,
   StyleProp,
   StyleSheet,
@@ -16,11 +13,11 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Opt} from '@toolkit/core/util/Types';
-import {useStorage} from '@toolkit/data/FileStore';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import ProfileScreen from '@app/app/screens/ProfileScreen';
 import {Profile} from '@app/common/DataTypes';
+import {CachingImage} from './CachingImage';
 
 type ProfilePicProps = {
   /** Uri of the profile pic. */
@@ -38,59 +35,31 @@ type ProfilePicProps = {
  */
 export const ProfilePic = (props: ProfilePicProps) => {
   const {pic, size, style} = props;
-  const {getUrl} = useStorage(Profile, 'pic');
-  const [url, setUrl] = React.useState(urlOrNull(pic));
-  const [error, setError] = React.useState<string>();
   const sizeStyle = {width: size, height: size, borderRadius: size / 2};
   const [loaded, setLoaded] = React.useState(false);
-
-  async function loadPic() {
-    setLoaded(false);
-    if (pic && pic.startsWith('firebasestorage://')) {
-      const url = await getUrl(pic);
-      setUrl(url);
-    } else {
-      setUrl(urlOrNull(pic));
-    }
-  }
-
-  React.useEffect(() => {
-    loadPic();
-  }, [pic]);
-
-  function onError(e: NativeSyntheticEvent<ImageErrorEventData>) {
-    const err = e.nativeEvent.error;
-    setError(typeof err === 'string' ? err : 'Unknown error');
-  }
 
   function onLoad() {
     setLoaded(true);
   }
 
-  let content;
-
-  if (shouldShowLocalDevHint(error)) {
-    content = (
+  const errorView = (url: string, err: string) => {
+    return shouldShowLocalDevHint(err) ? (
       <Text style={S.devHint} onPress={() => devLoadImage(url)}>
         (DEV){'\n'}load
       </Text>
+    ) : (
+      <></>
     );
-  } else if (error == null && url != null) {
-    content = (
-      <Image
-        source={{uri: url}}
-        style={[S.profilePic, sizeStyle, {opacity: loaded ? 1 : 0}]}
-        onLoad={onLoad}
-        onError={onError}
-      />
-    );
-  } else {
-    content = null;
-  }
+  };
 
   return (
     <View style={[{width: size, height: size}, S.profileBox, style]}>
-      {content}
+      <CachingImage
+        source={{uri: pic ?? ''}}
+        style={[S.profilePic, sizeStyle, {opacity: loaded ? 1 : 0}]}
+        onLoad={onLoad}
+        errorView={errorView}
+      />
     </View>
   );
 };
@@ -104,16 +73,6 @@ function shouldShowLocalDevHint(error: Opt<string>) {
     Platform.OS === 'web' &&
     location.hostname === 'localhost'
   );
-}
-
-function urlOrNull(uri: Opt<string>) {
-  return uri != null &&
-    (uri.startsWith('http://') ||
-      uri.startsWith('https://') ||
-      uri.startsWith('data:image') ||
-      uri.startsWith('file:'))
-    ? uri
-    : null;
 }
 
 function devLoadImage(url: Opt<string>) {
