@@ -23,7 +23,7 @@
   - [ ] Change the `About` page to show information about your app
   - [ ] Get an icon for your app! It doesn't have to be fancy (can use Dall-E or
         Midjourney for fun), and set it for all of the app icons in
-        `/client/assets`
+        `/project/assets`
 - **Data Access**
   - [ ] Ensure your allowlist is set up, and have a process to quickly add new
         users
