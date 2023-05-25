@@ -5,8 +5,6 @@
 		"body": [
 			"/**",
 			" * TODO: Describe what this screen is doing :)",
-			" *",
-			" * @format",
 			" */",
 			"",
 			"import * as React from 'react';",
