@@ -33,52 +33,12 @@ import StartupScreen from '@app/app/screens/StartupScreen';
 import ThingScreen from '@app/app/screens/ThingScreen';
 import 'expo-dev-client';
 import React from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AppConfig from './AppConfig';
 import Onboarding from './app/screens/Onboarding';
-
-//
-/**
- * Hacky workaround for 'react-native-webview' crashing app when JS is unloaded.
- *
- * `onContentProcessDidTerminate` bridge is always called when view is unloaded and
- * if JS engine is already stopped this will terminate the app, as the event callback
- * fires and React force quits.
- *
- * This happens in Expo Go but could also see it occuring during hot reloading.
- *
- * Temporary fix is to patch to set onContentProcessDidTerminate in bridge when the prop is
- * passed into the React Component.
- *
- */
-
-let reactNativeWebViewCrashPatched = false;
-
-// TODO: Move this to FirebasePhoneUtils, as that is the proximate use case that is most important
-function patchReactNativeWebViewCrash() {
-  if (Platform.OS !== 'web') {
-    try {
-      if (!reactNativeWebViewCrashPatched) {
-        const WebViewShared = require('react-native-webview/lib/WebViewShared');
-        const useWebWiewLogic = WebViewShared.useWebWiewLogic;
-        /** @ts-ignore */
-        WebViewShared.useWebWiewLogic = props => {
-          const result = useWebWiewLogic(props);
-          if (!props.onContentProcessDidTerminateProp && result) {
-            /** @ts-ignore */
-            delete result['onContentProcessDidTerminate'];
-          }
-          return result;
-        };
-        reactNativeWebViewCrashPatched = true;
-      }
-    } catch (ignored) {}
-  }
-}
-patchReactNativeWebViewCrash();
 
 filterHandledExceptions();
 

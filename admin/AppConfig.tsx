@@ -21,7 +21,6 @@ import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
 import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
-import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import {allowWebScreenDomains} from '@toolkit/ui/screen/WebScreen';
 import {
   APP_CONFIG,
