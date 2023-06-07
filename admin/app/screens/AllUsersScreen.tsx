@@ -47,7 +47,7 @@ const AllUsersScreen: Screen<Props> = (props: Props) => {
             title=""
             onPress={() => nav.navTo(EditUserScreen, {userId: user.id})}
             icon="oct:pencil"
-            style={{flex: 0.2}}
+            style={S.editCell}
           />
           <TextCell title="Name" value={user.name} onSort={s => setSort(s)} />
           <TextCell
@@ -98,6 +98,11 @@ const S = StyleSheet.create({
   table: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  editCell: {
+    flexBasis: 52,
+    flexShrink: 0,
+    flexGrow: 0,
   },
 });
 
