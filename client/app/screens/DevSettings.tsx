@@ -4,11 +4,18 @@
 
 import * as React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import {Checkbox} from 'react-native-paper';
 import {useApi} from '@toolkit/core/api/DataApi';
-import {eventToString, getDevLogs} from '@toolkit/core/api/Log';
+import {Flag, FlagsApiKey} from '@toolkit/core/api/Flags';
+import {
+  ConsoleLoggerEnabled,
+  eventToString,
+  getDevLogs,
+} from '@toolkit/core/api/Log';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {useBackgroundStatus} from '@toolkit/core/client/Status';
+import {use} from '@toolkit/core/providers/Providers';
 import {AdhocError} from '@toolkit/core/util/CodedError';
 import {
   getNetworkDelayMs,
@@ -118,6 +125,8 @@ const DevSettings: Screen<Props> = props => {
           ))}
         </View>
       )}
+
+      <FlagSection />
     </ScrollView>
   );
 };
@@ -133,6 +142,38 @@ DevSettings.load = async () => {
 
   return {networkDelay, profile, user};
 };
+
+function toHumanReadable(flag: Flag<boolean>) {
+  return flag.id.replace(/(\b[A-Z])(?=[^A-Z])/g, ' $1');
+}
+
+function FlagSection() {
+  const flagsToShow = [ConsoleLoggerEnabled];
+  const {Body, H2} = useComponents();
+  const flags = use(FlagsApiKey);
+  const [refresh, setRefresh] = React.useState(0);
+
+  async function toggle(flag: Flag<boolean>) {
+    await flags.set(flag, !flags.enabled(flag));
+    setRefresh(refresh + 1);
+  }
+
+  function checked(flag: Flag<boolean>) {
+    return flags.enabled(flag) ? 'checked' : 'unchecked';
+  }
+
+  return (
+    <View style={{marginBottom: 12}}>
+      <H2 style={{marginTop: 12}}>Flags</H2>
+      {flagsToShow.map(flag => (
+        <View style={S.checkRow} key={flag.id}>
+          <Checkbox status={checked(flag)} onPress={() => toggle(flag)} />
+          <Body style={{marginLeft: 6}}>{toHumanReadable(flag)}</Body>
+        </View>
+      ))}
+    </View>
+  );
+}
 
 function delayString(delay: number) {
   return delay === 0 ? '' : `${delay}`;
@@ -161,6 +202,10 @@ const S = StyleSheet.create({
     padding: 12,
     borderWidth: 1,
     borderColor: '#444',
+  },
+  checkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

@@ -1,6 +1,8 @@
-import {APP_CONFIG_KEY} from '@toolkit/core/util/AppConfig';
-import {context} from '@toolkit/core/util/AppContext';
+import {providesValue} from '@toolkit/core/providers/Providers';
+import {AppConfigKey} from '@toolkit/core/util/AppConfig';
 import {FirebaseConfig} from '@toolkit/providers/firebase/Config';
+import {NotificationChannelsKey} from '../../npe-toolkit/lib/services/notifications/NotificationChannel';
+import {NOTIF_CHANNELS} from './NotifChannels';
 
 let localConf: Record<string, any> = {};
 try {
@@ -49,11 +51,12 @@ export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
     '383529496724-sde740nljlllndj90e1qfkgonvmdg95d.apps.googleusercontent.com',
 };
 
-export const APP_CONFIG = context(APP_CONFIG_KEY, {
+export const APP_CONFIG = {
   product: 'favezilla',
   dataEnv: 'prod',
   fbAppId: '',
-});
+};
+providesValue(AppConfigKey, APP_CONFIG);
 
 export const CLIENT_FALLBACK_ENABLED = true;
 
@@ -67,3 +70,5 @@ export const LEGAL_LINKS = [
 ];
 
 export const MIXPANEL_TOKEN = 'ae6dcaf512d2311b66a99a020c2ef1c3';
+
+providesValue(NotificationChannelsKey, NOTIF_CHANNELS);

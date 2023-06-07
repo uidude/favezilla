@@ -1,29 +1,10 @@
-import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {
-  setClientFallbackEnabled,
-  setDefaultServerApi,
-} from '@toolkit/core/api/DataApi';
-import {ConsoleLogger, DevLogger, MultiLogger} from '@toolkit/core/api/Log';
-import IdentityService from '@toolkit/core/api/Login';
-import {
-  SimpleUserMessaging,
-  StatusContainer,
-} from '@toolkit/core/client/Status';
-import {registerAppConfig} from '@toolkit/core/util/AppConfig';
-import {AppContextProvider} from '@toolkit/core/util/AppContext';
+import {SimpleUserMessaging} from '@toolkit/core/client/Status';
 import {
   deviceIsMobile,
   filterHandledExceptions,
 } from '@toolkit/core/util/Environment';
-import {initializeFirebase} from '@toolkit/providers/firebase/Config';
-import {FIRESTORE_DATASTORE} from '@toolkit/providers/firebase/DataStore';
-import {FIRESTORE_FILESTORE} from '@toolkit/providers/firebase/FileStore';
-import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
-import {fbAuthProvider} from '@toolkit/providers/login/FacebookLogin';
-import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
-import {MixpanelLogger} from '@toolkit/providers/mixpanel/Logger';
 import {
   NavContext,
   useReactNavScreens,
@@ -31,17 +12,12 @@ import {
 import PhoneInput from '@toolkit/screens/login/PhoneInput';
 import PhoneVerification from '@toolkit/screens/login/PhoneVerification';
 import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
-import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
-import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
-import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import {bottomTabLayout} from '@toolkit/ui/layout/BottomTabLayout';
 import {ModalLayout} from '@toolkit/ui/layout/LayoutBlocks';
 import {layoutSelector} from '@toolkit/ui/layout/LayoutSelector';
 import {topbarLayout} from '@toolkit/ui/layout/TopbarLayout';
 import {Routes} from '@toolkit/ui/screen/Nav';
-import WebViewScreen, {
-  allowWebScreenDomains,
-} from '@toolkit/ui/screen/WebScreen';
+import WebViewScreen from '@toolkit/ui/screen/WebScreen';
 import AuthConfig from '@app/app/AuthConfig';
 import AboutScreen from '@app/app/screens/AboutScreen';
 import Catalog from '@app/app/screens/Catalog';
@@ -55,23 +31,14 @@ import Profiles from '@app/app/screens/Profiles';
 import SettingsScreen from '@app/app/screens/SettingsScreen';
 import StartupScreen from '@app/app/screens/StartupScreen';
 import ThingScreen from '@app/app/screens/ThingScreen';
-import {
-  APP_CONFIG,
-  CLIENT_FALLBACK_ENABLED,
-  FIREBASE_CONFIG,
-  GOOGLE_LOGIN_CONFIG,
-  LEGAL_LINKS,
-  MIXPANEL_TOKEN,
-} from '@app/common/Config';
 import 'expo-dev-client';
 import React from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import 'react-native-gesture-handler';
-import {Provider as PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import AppConfig from './AppConfig';
 import Onboarding from './app/screens/Onboarding';
-import {APP_INFO, NOTIF_CHANNELS_CONTEXT} from './lib/Config';
 
 //
 /**
@@ -171,32 +138,7 @@ const NAV = {
   home: Favorites,
 };
 
-const LOGGERS = [DevLogger, ConsoleLogger];
-if (MIXPANEL_TOKEN != null) {
-  LOGGERS.push(MixpanelLogger(MIXPANEL_TOKEN));
-}
-
-const APP_CONTEXT = [
-  APP_CONFIG,
-  APP_INFO,
-  FIRESTORE_DATASTORE,
-  FIRESTORE_FILESTORE,
-  MultiLogger(LOGGERS),
-  NOTIF_CHANNELS_CONTEXT,
-];
-
 export default function App() {
-  registerAppConfig(APP_CONFIG);
-  initializeFirebase(FIREBASE_CONFIG);
-  IdentityService.addProvider(fbAuthProvider());
-  IdentityService.addProvider(googleAuthProvider(GOOGLE_LOGIN_CONFIG));
-  setClientFallbackEnabled(CLIENT_FALLBACK_ENABLED);
-  registerIconPack('ion', Ionicons);
-  registerIconPack('mci', MaterialCommunityIcons);
-  usePaperComponents();
-  setDefaultServerApi(firebaseFn);
-  allowWebScreenDomains(LEGAL_LINKS.map(l => l.url));
-
   const layout = layoutSelector({
     base: bottomTabLayout(NAV),
     desktopWeb: topbarLayout(NAV),
@@ -217,28 +159,24 @@ export default function App() {
   };
 
   return (
-    <AppContextProvider ctx={APP_CONTEXT}>
-      <PaperProvider theme={BLACK_AND_WHITE} settings={{icon: Icon}}>
-        <StatusContainer top={true}>
-          <AuthConfig>
-            <View style={S.background}>
-              <SafeAreaProvider style={S.container}>
-                <SimpleUserMessaging style={S.messaging} />
-                <NavigationContainer linking={linking}>
-                  <StatusBar style="auto" />
-                  <NavContext routes={ROUTES} />
-                  <Stack.Navigator
-                    screenOptions={{headerShown: false}}
-                    initialRouteName="StartupScreen">
-                    {navScreens}
-                  </Stack.Navigator>
-                </NavigationContainer>
-              </SafeAreaProvider>
-            </View>
-          </AuthConfig>
-        </StatusContainer>
-      </PaperProvider>
-    </AppContextProvider>
+    <AppConfig>
+      <AuthConfig>
+        <View style={S.background}>
+          <SafeAreaProvider style={S.container}>
+            <SimpleUserMessaging style={S.messaging} />
+            <NavigationContainer linking={linking}>
+              <StatusBar style="auto" />
+              <NavContext routes={ROUTES} />
+              <Stack.Navigator
+                screenOptions={{headerShown: false}}
+                initialRouteName="StartupScreen">
+                {navScreens}
+              </Stack.Navigator>
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </View>
+      </AuthConfig>
+    </AppConfig>
   );
 }
 
