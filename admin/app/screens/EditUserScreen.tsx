@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, Checkbox, List, useTheme} from 'react-native-paper';
+import {Checkbox, List, useTheme} from 'react-native-paper';
 import {
   Role,
   SYSTEM_ROLES,
@@ -30,7 +30,7 @@ const EditUserScreen: Screen<Props> = ({async: {user}}: Props) => {
   const theme = useTheme();
   const rolesStore = useDataStore(UserRoles);
   const {setError} = useBackgroundStatus();
-  const {Title, Body} = useComponents();
+  const {Subtitle, Body, Button} = useComponents();
   const [saveAction, saving] = useAction('SaveUser', save);
 
   const back = () => {
@@ -95,7 +95,7 @@ const EditUserScreen: Screen<Props> = ({async: {user}}: Props) => {
 
   return (
     <View style={S.modal}>
-      <Title>Edit {user.name}</Title>
+      <Subtitle>Edit {user.name}</Subtitle>
       <Body>ID: {user.id}</Body>
       <NameInput label="Name" type="primary" style={S.nameInput} />
       <List.Section>
@@ -112,9 +112,8 @@ const EditUserScreen: Screen<Props> = ({async: {user}}: Props) => {
           onPress={saveAction}
           loading={saving}
           disabled={!hasUnsavedChanges() || saving}
-          mode="contained"
-          dark={theme.dark}
-          style={{backgroundColor: theme.colors.primary}}>
+          type="primary"
+          style={{marginLeft: 12}}>
           Save
         </Button>
       </View>
