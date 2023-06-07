@@ -45,7 +45,7 @@ const DrawerNavigator = () => {
   ];
 
   if (isDev) {
-    navItems.push({divider: true}, {header: 'Deletion'});
+    //navItems.push({divider: true}, {header: 'Deletion'});
     //TOP_LEVEL_DELETION_SCREENS.forEach(screen => navItems.push({screen}));
   }
 
