@@ -31,10 +31,8 @@ export const GetFaves = api<void, Fave[]>('getFaves', () => {
   const faveStore = useDataStore(Fave);
 
   return async function getFaves() {
-    return await faveStore.getMany({
-      query: {
-        where: [{field: 'user', op: '==', value: user.id}],
-      },
+    return await faveStore.query({
+      where: [{field: 'user', op: '==', value: user.id}],
       edges: [Thing],
     });
   };
@@ -54,13 +52,11 @@ export function useAddFave() {
       throw Error(`Thing with ID ${thingId} does not exist`);
     }
 
-    const existing = await faveStore.getMany({
-      query: {
-        where: [
-          {field: 'user', op: '==', value: user.id!},
-          {field: 'thing', op: '==', value: thingId},
-        ],
-      },
+    const existing = await faveStore.query({
+      where: [
+        {field: 'user', op: '==', value: user.id!},
+        {field: 'thing', op: '==', value: thingId},
+      ],
     });
     if (existing.length > 0) {
       return existing[0];
@@ -98,10 +94,8 @@ export const RemoveThing = api<string, void>('removeThing', () => {
 
   return async function removeThing(thingId: string) {
     // Delete fave edgers
-    const faves = await faveStore.getMany({
-      query: {
-        where: [{field: 'thing', op: '==', value: thingId}],
-      },
+    const faves = await faveStore.query({
+      where: [{field: 'thing', op: '==', value: thingId}],
     });
     const faveDeletes = faves.map(fave => faveStore.remove(fave.id));
     await Promise.all(faveDeletes);

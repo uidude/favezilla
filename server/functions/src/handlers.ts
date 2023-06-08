@@ -294,13 +294,11 @@ export const addFave = registerHandler(AddFave, async (thingId: string) => {
   }
 
   // Check if this fave already exists
-  const existing = await faveStore.getMany({
-    query: {
-      where: [
-        {field: 'user', op: '==', value: uid},
-        {field: 'thing', op: '==', value: thingId},
-      ],
-    },
+  const existing = await faveStore.query({
+    where: [
+      {field: 'user', op: '==', value: uid},
+      {field: 'thing', op: '==', value: thingId},
+    ],
   });
   if (existing.length > 0) {
     return existing[0];

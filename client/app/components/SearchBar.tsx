@@ -146,8 +146,8 @@ export const SearchBar = (props: Props) => {
 
   async function getOrCreateThing(from: OpenLibraryResult) {
     let thing;
-    let existing = await thingStore.getMany({
-      query: {where: [{field: 'externalId', op: '==', value: from.key}]},
+    let existing = await thingStore.query({
+      where: [{field: 'externalId', op: '==', value: from.key}],
     });
     if (existing.length > 0) {
       thing = existing[0];
