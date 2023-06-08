@@ -43,11 +43,11 @@ export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
   androidClientId: 'fill-me-in',
 };
 
-export const APP_CONFIG = context(APP_CONFIG_KEY, {
+export const APP_CONFIG = {
   product: 'helloworld',
   dataEnv: 'prod',
   fbAppId: '',
-});
+};
 providesValue(AppConfigKey, APP_CONFIG);
 
 export const CLIENT_FALLBACK_ENABLED = true;
@@ -62,3 +62,5 @@ export const LEGAL_LINKS = [
 ];
 
 export const MIXPANEL_TOKEN = null;
+
+providesValue(NotificationChannelsKey, NOTIF_CHANNELS);
