@@ -1,6 +1,8 @@
-import {APP_CONFIG_KEY} from '@toolkit/core/util/AppConfig';
-import {context} from '@toolkit/core/util/AppContext';
+import {providesValue} from '@toolkit/core/providers/Providers';
+import {AppConfigKey} from '@toolkit/core/util/AppConfig';
 import {FirebaseConfig} from '@toolkit/providers/firebase/Config';
+import {NotificationChannelsKey} from '../../npe-toolkit/lib/services/notifications/NotificationChannel';
+import {NOTIF_CHANNELS} from './NotifChannels';
 
 let localConf: Record<string, any> = {};
 try {
@@ -46,6 +48,7 @@ export const APP_CONFIG = context(APP_CONFIG_KEY, {
   dataEnv: 'prod',
   fbAppId: '',
 });
+providesValue(AppConfigKey, APP_CONFIG);
 
 export const CLIENT_FALLBACK_ENABLED = true;
 
