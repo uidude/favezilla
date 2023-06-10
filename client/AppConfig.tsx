@@ -1,7 +1,15 @@
-import React from 'react';
+import AuthConfig from '@app/app/AuthConfig';
+import {
+  APP_CONFIG,
+  CLIENT_FALLBACK_ENABLED,
+  FIREBASE_CONFIG,
+  GOOGLE_LOGIN_CONFIG,
+  LEGAL_LINKS,
+  MIXPANEL_TOKEN,
+} from '@app/common/Config';
+import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 import icon from '@assets/icon.png';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
-import {Provider as PaperProvider} from 'react-native-paper';
 import {
   setClientFallbackEnabled,
   setDefaultServerApi,
@@ -13,10 +21,9 @@ import {StatusContainer} from '@toolkit/core/client/Status';
 import {AppInfoKey} from '@toolkit/core/client/Theme';
 import {Scope} from '@toolkit/core/providers/Client';
 import {providesValue} from '@toolkit/core/providers/Providers';
-import {InMemoryDataCache} from '@toolkit/data/DataCache';
 import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {FirestoreFilestore} from '@toolkit/providers/firebase/FileStore';
-import {FirestoreDatastore} from '@toolkit/providers/firebase/FirestoreDatastore';
+import {FirestoreDatastoreWithCaching} from '@toolkit/providers/firebase/FirestoreDatastore';
 import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
 import {MixpanelLogger} from '@toolkit/providers/mixpanel/Logger';
@@ -24,16 +31,10 @@ import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
 import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import {allowWebScreenDomains} from '@toolkit/ui/screen/WebScreen';
-import AuthConfig from '@app/app/AuthConfig';
-import {
-  APP_CONFIG,
-  CLIENT_FALLBACK_ENABLED,
-  FIREBASE_CONFIG,
-  GOOGLE_LOGIN_CONFIG,
-  LEGAL_LINKS,
-  MIXPANEL_TOKEN,
-} from '@app/common/Config';
-import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
+import React from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
+
+import {initializeFirestore} from '@toolkit/providers/firebase/client/Firestore';
 
 type Props = {
   children: React.ReactNode;
@@ -52,8 +53,7 @@ function AppConfig(props: Props) {
   const providers = [
     LocalFlags,
     MultiLogger(loggers),
-    InMemoryDataCache,
-    FirestoreDatastore,
+    FirestoreDatastoreWithCaching,
     FirestoreFilestore,
     APP_CONFIG,
     AppInfo,
@@ -61,6 +61,7 @@ function AppConfig(props: Props) {
   ];
 
   initializeFirebase(FIREBASE_CONFIG);
+  initializeFirestore();
   IdentityService.addProvider(googleAuthProvider(GOOGLE_LOGIN_CONFIG));
   registerIconPack('ion', Ionicons);
   registerIconPack('mci', MaterialCommunityIcons);
