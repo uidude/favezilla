@@ -73,7 +73,7 @@ const NAV = {
   main: [
     {
       icon: 'ion:book-outline',
-      title: 'Catalog',
+      title: 'Discover',
       screen: Catalog,
     },
     {
