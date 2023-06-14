@@ -2,24 +2,24 @@
  * Screen for editing the user's profile.
  */
 
-import * as React from 'react';
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
-import {SaveFormat, manipulateAsync} from 'expo-image-manipulator';
+import { useUpdateUserAndProfile } from '@app/common/AppLogic';
+import { Profile } from '@app/common/DataTypes';
+import { ProfilePic } from '@app/components/Profile';
+import ProfileScreen from '@app/screens/ProfileScreen';
+import { requireLoggedInUser } from '@toolkit/core/api/User';
+import { useAction } from '@toolkit/core/client/Action';
+import { withTimeout } from '@toolkit/core/util/DevUtil';
+import { Opt } from '@toolkit/core/util/Types';
+import { getRequired, useDataStore } from '@toolkit/data/DataStore';
+import { useStorage } from '@toolkit/data/FileStore';
+import { useComponents } from '@toolkit/ui/components/Components';
+import { PressableSpring } from '@toolkit/ui/components/Tools';
+import { useNav } from '@toolkit/ui/screen/Nav';
+import { Screen } from '@toolkit/ui/screen/Screen';
+import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import {requireLoggedInUser} from '@toolkit/core/api/User';
-import {useAction} from '@toolkit/core/client/Action';
-import {withTimeout} from '@toolkit/core/util/DevUtil';
-import {Opt} from '@toolkit/core/util/Types';
-import {getRequired, useDataStore} from '@toolkit/data/DataStore';
-import {useStorage} from '@toolkit/data/FileStore';
-import {useComponents} from '@toolkit/ui/components/Components';
-import {PressableSpring} from '@toolkit/ui/components/Tools';
-import {useNav} from '@toolkit/ui/screen/Nav';
-import {Screen} from '@toolkit/ui/screen/Screen';
-import {ProfilePic} from '@app/app/components/Profile';
-import ProfileScreen from '@app/app/screens/ProfileScreen';
-import {useUpdateUserAndProfile} from '@app/common/AppLogic';
-import {Profile} from '@app/common/DataTypes';
+import * as React from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 type Props = {
   async: {

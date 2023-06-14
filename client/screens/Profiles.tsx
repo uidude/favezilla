@@ -4,14 +4,14 @@
  * @format
  */
 
+import { Profile } from '@app/common/DataTypes';
+import { ProfileRow } from '@app/components/Profile';
+import { requireLoggedInUser } from '@toolkit/core/api/User';
+import { useDataStore } from '@toolkit/data/DataStore';
+import { useComponents } from '@toolkit/ui/components/Components';
+import { Screen } from '@toolkit/ui/screen/Screen';
 import * as React from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import {requireLoggedInUser} from '@toolkit/core/api/User';
-import {useDataStore} from '@toolkit/data/DataStore';
-import {useComponents} from '@toolkit/ui/components/Components';
-import {Screen} from '@toolkit/ui/screen/Screen';
-import {ProfileRow} from '@app/app/components/Profile';
-import {Profile} from '@app/common/DataTypes';
+import { ScrollView, StyleSheet } from 'react-native';
 
 type Props = {
   async: {

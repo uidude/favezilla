@@ -1,44 +1,44 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {SimpleUserMessaging} from '@toolkit/core/client/Status';
+import AuthConfig from '@app/AuthConfig';
+import AboutScreen from '@app/screens/AboutScreen';
+import Catalog from '@app/screens/Catalog';
+import CreateNewThingScreen from '@app/screens/CreateThingScreen';
+import DevSettings from '@app/screens/DevSettings';
+import EditProfile from '@app/screens/EditProfile';
+import Favorites from '@app/screens/Favorites';
+import LoginScreen from '@app/screens/LoginScreen';
+import ProfileScreen from '@app/screens/ProfileScreen';
+import Profiles from '@app/screens/Profiles';
+import SettingsScreen from '@app/screens/SettingsScreen';
+import StartupScreen from '@app/screens/StartupScreen';
+import ThingScreen from '@app/screens/ThingScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { SimpleUserMessaging } from '@toolkit/core/client/Status';
 import {
-  deviceIsMobile,
-  filterHandledExceptions,
+    deviceIsMobile,
+    filterHandledExceptions,
 } from '@toolkit/core/util/Environment';
 import {
-  NavContext,
-  useReactNavScreens,
+    NavContext,
+    useReactNavScreens,
 } from '@toolkit/providers/navigation/ReactNavigation';
 import PhoneInput from '@toolkit/screens/login/PhoneInput';
 import PhoneVerification from '@toolkit/screens/login/PhoneVerification';
-import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
-import {bottomTabLayout} from '@toolkit/ui/layout/BottomTabLayout';
-import {ModalLayout} from '@toolkit/ui/layout/LayoutBlocks';
-import {layoutSelector} from '@toolkit/ui/layout/LayoutSelector';
-import {topbarLayout} from '@toolkit/ui/layout/TopbarLayout';
-import {Routes} from '@toolkit/ui/screen/Nav';
+import { NotificationSettingsScreen } from '@toolkit/screens/settings/NotificationSettings';
+import { bottomTabLayout } from '@toolkit/ui/layout/BottomTabLayout';
+import { ModalLayout } from '@toolkit/ui/layout/LayoutBlocks';
+import { layoutSelector } from '@toolkit/ui/layout/LayoutSelector';
+import { topbarLayout } from '@toolkit/ui/layout/TopbarLayout';
+import { Routes } from '@toolkit/ui/screen/Nav';
 import WebViewScreen from '@toolkit/ui/screen/WebScreen';
-import AuthConfig from '@app/app/AuthConfig';
-import AboutScreen from '@app/app/screens/AboutScreen';
-import Catalog from '@app/app/screens/Catalog';
-import CreateNewThingScreen from '@app/app/screens/CreateThingScreen';
-import DevSettings from '@app/app/screens/DevSettings';
-import EditProfile from '@app/app/screens/EditProfile';
-import Favorites from '@app/app/screens/Favorites';
-import LoginScreen from '@app/app/screens/LoginScreen';
-import ProfileScreen from '@app/app/screens/ProfileScreen';
-import Profiles from '@app/app/screens/Profiles';
-import SettingsScreen from '@app/app/screens/SettingsScreen';
-import StartupScreen from '@app/app/screens/StartupScreen';
-import ThingScreen from '@app/app/screens/ThingScreen';
 import 'expo-dev-client';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {StatusBar} from 'expo-status-bar';
+import { StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppConfig from './AppConfig';
-import Onboarding from './app/screens/Onboarding';
+import Onboarding from './screens/Onboarding';
 
 filterHandledExceptions();
 

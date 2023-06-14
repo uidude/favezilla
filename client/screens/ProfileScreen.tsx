@@ -4,21 +4,21 @@
  * @format
  */
 
+import { GetFaves } from '@app/common/AppLogic';
+import { Fave, Profile, Thing } from '@app/common/DataTypes';
+import { ProfilePic } from '@app/components/Profile';
+import ThingRow from '@app/components/ThingRow';
+import EditProfile from '@app/screens/EditProfile';
+import { useApi } from '@toolkit/core/api/DataApi';
+import { requireLoggedInUser } from '@toolkit/core/api/User';
+import { useDataStore } from '@toolkit/data/DataStore';
+import { useComponents } from '@toolkit/ui/components/Components';
+import { Icon } from '@toolkit/ui/components/Icon';
+import { PressableSpring } from '@toolkit/ui/components/Tools';
+import { useNav } from '@toolkit/ui/screen/Nav';
+import { Screen } from '@toolkit/ui/screen/Screen';
 import * as React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {useApi} from '@toolkit/core/api/DataApi';
-import {requireLoggedInUser} from '@toolkit/core/api/User';
-import {useDataStore} from '@toolkit/data/DataStore';
-import {useComponents} from '@toolkit/ui/components/Components';
-import {Icon} from '@toolkit/ui/components/Icon';
-import {PressableSpring} from '@toolkit/ui/components/Tools';
-import {useNav} from '@toolkit/ui/screen/Nav';
-import {Screen} from '@toolkit/ui/screen/Screen';
-import {ProfilePic} from '@app/app/components/Profile';
-import ThingRow from '@app/app/components/ThingRow';
-import EditProfile from '@app/app/screens/EditProfile';
-import {GetFaves} from '@app/common/AppLogic';
-import {Fave, Profile, Thing} from '@app/common/DataTypes';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 type Props = {
   id: string;

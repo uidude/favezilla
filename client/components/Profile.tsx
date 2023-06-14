@@ -2,22 +2,22 @@
  * Commmon profile components and utilities.
  */
 
+import { Profile } from '@app/common/DataTypes';
+import ProfileScreen from '@app/screens/ProfileScreen';
+import { Opt } from '@toolkit/core/util/Types';
+import { PressableSpring } from '@toolkit/ui/components/Tools';
+import { useNav } from '@toolkit/ui/screen/Nav';
 import * as React from 'react';
 import {
-  Linking,
-  Platform,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
+    Linking,
+    Platform,
+    StyleProp,
+    StyleSheet,
+    Text,
+    View,
+    ViewStyle,
 } from 'react-native';
-import {Opt} from '@toolkit/core/util/Types';
-import {PressableSpring} from '@toolkit/ui/components/Tools';
-import {useNav} from '@toolkit/ui/screen/Nav';
-import ProfileScreen from '@app/app/screens/ProfileScreen';
-import {Profile} from '@app/common/DataTypes';
-import {CachingImage} from './CachingImage';
+import { CachingImage } from './CachingImage';
 
 type ProfilePicProps = {
   /** Uri of the profile pic. */

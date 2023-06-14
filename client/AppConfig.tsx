@@ -1,4 +1,4 @@
-import AuthConfig from '@app/app/AuthConfig';
+import AuthConfig from '@app/AuthConfig';
 import {
   APP_CONFIG,
   CLIENT_FALLBACK_ENABLED,

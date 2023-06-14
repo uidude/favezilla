@@ -2,33 +2,33 @@
  * TODO: Describe what this screen is doing :)
  */
 
-import * as React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {Checkbox} from 'react-native-paper';
-import {useApi} from '@toolkit/core/api/DataApi';
-import {Flag, FlagsApiKey} from '@toolkit/core/api/Flags';
+import { TestNotif } from '@app/common/Api';
+import { Profile } from '@app/common/DataTypes';
+import { registerForPushNotificationsAsync } from '@app/util/Notifications';
+import { useApi } from '@toolkit/core/api/DataApi';
+import { Flag, FlagsApiKey } from '@toolkit/core/api/Flags';
 import {
-  ConsoleLoggerEnabled,
-  eventToString,
-  getDevLogs,
+    ConsoleLoggerEnabled,
+    eventToString,
+    getDevLogs,
 } from '@toolkit/core/api/Log';
-import {User, requireLoggedInUser} from '@toolkit/core/api/User';
-import {useAction} from '@toolkit/core/client/Action';
-import {useBackgroundStatus} from '@toolkit/core/client/Status';
-import {use} from '@toolkit/core/providers/Providers';
-import {AdhocError} from '@toolkit/core/util/CodedError';
+import { User, requireLoggedInUser } from '@toolkit/core/api/User';
+import { useAction } from '@toolkit/core/client/Action';
+import { useBackgroundStatus } from '@toolkit/core/client/Status';
+import { use } from '@toolkit/core/providers/Providers';
+import { AdhocError } from '@toolkit/core/util/CodedError';
 import {
-  getNetworkDelayMs,
-  useSetNetworkDelay,
+    getNetworkDelayMs,
+    useSetNetworkDelay,
 } from '@toolkit/core/util/DevUtil';
-import {getRequired, useDataStore} from '@toolkit/data/DataStore';
-import {useTextInput} from '@toolkit/ui/UiHooks';
-import {useComponents} from '@toolkit/ui/components/Components';
-import {useNav} from '@toolkit/ui/screen/Nav';
-import {Screen} from '@toolkit/ui/screen/Screen';
-import {TestNotif} from '@app/common/Api';
-import {Profile} from '@app/common/DataTypes';
-import {registerForPushNotificationsAsync} from '@app/lib/Notifications';
+import { getRequired, useDataStore } from '@toolkit/data/DataStore';
+import { useTextInput } from '@toolkit/ui/UiHooks';
+import { useComponents } from '@toolkit/ui/components/Components';
+import { useNav } from '@toolkit/ui/screen/Nav';
+import { Screen } from '@toolkit/ui/screen/Screen';
+import * as React from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Checkbox } from 'react-native-paper';
 import Onboarding from './Onboarding';
 
 type Props = {

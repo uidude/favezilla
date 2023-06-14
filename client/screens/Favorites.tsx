@@ -1,18 +1,18 @@
+import { GetFaves } from '@app/common/AppLogic';
+import { Fave, Thing } from '@app/common/DataTypes';
+import { SearchBar } from '@app/components/SearchBar';
+import ThingRow from '@app/components/ThingRow';
+import { useApi } from '@toolkit/core/api/DataApi';
+import { requireLoggedInUser } from '@toolkit/core/api/User';
+import { useAction } from '@toolkit/core/client/Action';
+import { useReload } from '@toolkit/core/client/Reload';
+import { sleep } from '@toolkit/core/util/DevUtil';
+import { useDataStore } from '@toolkit/data/DataStore';
+import { useComponents } from '@toolkit/ui/components/Components';
+import { Icon } from '@toolkit/ui/components/Icon';
+import { Screen } from '@toolkit/ui/screen/Screen';
 import * as React from 'react';
-import {Animated, ScrollView, StyleSheet, View} from 'react-native';
-import {useApi} from '@toolkit/core/api/DataApi';
-import {requireLoggedInUser} from '@toolkit/core/api/User';
-import {useAction} from '@toolkit/core/client/Action';
-import {useReload} from '@toolkit/core/client/Reload';
-import {sleep} from '@toolkit/core/util/DevUtil';
-import {useDataStore} from '@toolkit/data/DataStore';
-import {useComponents} from '@toolkit/ui/components/Components';
-import {Icon} from '@toolkit/ui/components/Icon';
-import {Screen} from '@toolkit/ui/screen/Screen';
-import {SearchBar} from '@app/app/components/SearchBar';
-import ThingRow from '@app/app/components/ThingRow';
-import {GetFaves} from '@app/common/AppLogic';
-import {Fave, Thing} from '@app/common/DataTypes';
+import { Animated, ScrollView, StyleSheet, View } from 'react-native';
 
 type Props = {
   async: {
