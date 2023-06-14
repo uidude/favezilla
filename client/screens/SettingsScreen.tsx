@@ -9,13 +9,13 @@ import {navToAction} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {OpenLinkAction, openUrlAction} from '@toolkit/ui/screen/WebScreen';
 import {LEGAL_LINKS} from '@app/common/Config';
-import AboutScreen from '@app/screens/AboutScreen';
+import About from '@app/screens/About';
 import DevSettings from '@app/screens/DevSettings';
 
 const ABOUT = {
   icon: 'information-outline',
   label: 'About',
-  to: AboutScreen,
+  to: About,
 };
 
 const NOTIF_SETTINGS = {

@@ -27,6 +27,7 @@ sed -i '' 's/helloworld/favezilla/g' package.json
 
 # Replace Favezilla config with generic config
 cp scripts/Config.template.tsx common/Config.tsx
+cp scripts/About.template.tsx client/screens/About.tsx
 
 # Copy .gitignore (`create-expo-app` uses `gitignore` to create `.gitignore` files)
 cp .gitignore gitignore

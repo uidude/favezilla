@@ -20,7 +20,7 @@ import {Routes} from '@toolkit/ui/screen/Nav';
 import WebViewScreen from '@toolkit/ui/screen/WebScreen';
 import AppConfig from '@app/AppConfig';
 import AuthConfig from '@app/AuthConfig';
-import AboutScreen from '@app/screens/AboutScreen';
+import About from '@app/screens/About';
 import Catalog from '@app/screens/Catalog';
 import CreateNewThingScreen from '@app/screens/CreateThingScreen';
 import DevSettings from '@app/screens/DevSettings';
@@ -63,7 +63,7 @@ const ROUTES: Routes = {
   PhoneVerification,
   ThingScreen,
   WebViewScreen,
-  AboutScreen,
+  About,
   NotificationSettingsScreen,
   Onboarding,
 };
