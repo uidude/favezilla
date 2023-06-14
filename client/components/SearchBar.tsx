@@ -1,10 +1,13 @@
 import * as React from 'react';
 import {Image, Keyboard, StyleSheet, View} from 'react-native';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useAction} from '@toolkit/core/client/Action';
+import {useReload} from '@toolkit/core/client/Reload';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {Icon} from '@toolkit/ui/components/Icon';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
-import {Thing} from '@app/common/DataTypes';
+import {Fave, Thing} from '@app/common/DataTypes';
 
 export type OpenLibraryResult = {
   author_name: string | string[];
@@ -95,25 +98,24 @@ function imageSource(item: OpenLibraryResult) {
   return {uri: `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`};
 }
 
-type Props = {
-  onAdd: ((toAdd: Thing) => void) | ((toAdd: Thing) => Promise<void>);
-};
+type Props = {};
 
 export const SearchBar = (props: Props) => {
   // TODO: filter out existing faves when on faves screen
-  const {onAdd} = props;
-  const {Body, Button} = useComponents();
-  const [matches, setMatches] = React.useState<OpenLibraryResult[]>([]);
-  const requestCounter = React.useRef(0);
+  const user = requireLoggedInUser();
   const thingStore = useDataStore(Thing);
+  const faveStore = useDataStore(Fave);
+  const requestCounter = React.useRef(0);
   const [value, setValue] = React.useState('');
+  const [matches, setMatches] = React.useState<OpenLibraryResult[]>([]);
+  const reload = useReload();
+  const [addFave] = useAction('AddFavorite', addFaveHandler);
+  const {Body, Button} = useComponents();
 
-  /*
-  Comment out to have default data for easy testing
-  React.useEffect(() => {
-    onNewText('Altered carbon');
-  }, []);
-  */
+  async function addFaveHandler(thing: Thing) {
+    await faveStore.create({user, thing});
+    reload();
+  }
 
   async function onNewText(newValue: string) {
     setValue(newValue);
@@ -165,11 +167,11 @@ export const SearchBar = (props: Props) => {
     return thing;
   }
 
-  async function addFave(toAdd: OpenLibraryResult) {
+  async function itemSelected(toAdd: OpenLibraryResult) {
     const thing = await getOrCreateThing(toAdd);
     setValue('');
     setMatches([]);
-    await onAdd(thing);
+    await addFave(thing);
     Keyboard.dismiss();
   }
 
@@ -192,7 +194,7 @@ export const SearchBar = (props: Props) => {
                 </Body>
               </View>
               <Button
-                onPress={() => addFave(match)}
+                onPress={() => itemSelected(match)}
                 type="secondary"
                 style={{opacity: 0.6, marginLeft: 6}}>
                 Add

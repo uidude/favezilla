@@ -1,15 +1,15 @@
 import * as React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import * as Device from 'expo-device';
 import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
-import {useNotifications} from '@toolkit/services/notifications/NotificationsClient';
+import {useLoad} from '@toolkit/core/util/UseLoad';
+import {useComponents} from '@toolkit/ui/components/Components';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {GetFaves, GetThings} from '@app/common/AppLogic';
 import {Fave, Thing} from '@app/common/DataTypes';
-import {SearchInput} from '@app/components/SearchBar';
+import {SearchBar} from '@app/components/SearchBar';
 import ThingRow from '@app/components/ThingRow';
-import {registerForPushNotificationsAsync} from '@app/util/Notifications';
+import {useRegisterForPushNotifcations} from '@app/util/Notifications';
 
 type Props = {
   async: {
@@ -18,49 +18,24 @@ type Props = {
   };
 };
 
-function searchMatches(thing: Thing, search: string): boolean {
-  return (
-    thing.name.toLowerCase().includes(search.toLowerCase()) ||
-    thing.description.toLowerCase().includes(search.toLowerCase())
-  );
-}
-
 const Catalog: Screen<Props> = props => {
   requireLoggedInUser();
-  const {faves, allThings} = props.async;
-  const [search, setSearch] = React.useState('');
-  const {registerPushToken} = useNotifications();
-  const things = allThings.filter(thing => searchMatches(thing, search));
-
-  React.useEffect(() => {
-    const registerForNotifs = async () => {
-      const pushToken = Device.isDevice
-        ? await registerForPushNotificationsAsync()
-        : null;
-      if (pushToken != null) {
-        const req = {
-          token: pushToken.data,
-          type: pushToken.type,
-          sandbox: false,
-        };
-        await registerPushToken(req);
-      }
-    };
-
-    registerForNotifs();
-  }, []);
+  const getAllThings = useApi(GetThings);
+  const getFaves = useApi(GetFaves);
+  const {faves, things} = useLoad(props, load);
+  const {Subtitle} = useComponents();
+  useRegisterForPushNotifcations();
 
   function faveFor(thing: Thing) {
     return faves.find(fave => fave.thing.id === thing.id);
   }
 
-  async function onNewSearch(newSearch: string) {
-    setSearch(newSearch);
-  }
-
   return (
     <View style={{flex: 1}}>
-      <SearchInput value={search} onNewText={onNewSearch} />
+      <SearchBar />
+      <Subtitle style={S.subtitle}>
+        Search ⬆ or browse a few of the most commonly favorited titles ⬇
+      </Subtitle>
       <ScrollView style={S.container}>
         {things.map((thing, idx) => (
           <ThingRow
@@ -73,18 +48,14 @@ const Catalog: Screen<Props> = props => {
       </ScrollView>
     </View>
   );
+
+  async function load() {
+    const [faves, things] = await Promise.all([getFaves(), getAllThings()]);
+    return {faves, things};
+  }
 };
-Catalog.title = 'Catalog';
+Catalog.title = 'Discover';
 Catalog.style = {type: 'top'};
-
-Catalog.load = async () => {
-  const getAllThings = useApi(GetThings);
-  const getFaves = useApi(GetFaves);
-
-  const [faves, allThings] = await Promise.all([getFaves(), getAllThings()]);
-
-  return {faves, allThings};
-};
 
 const S = StyleSheet.create({
   container: {
@@ -94,6 +65,12 @@ const S = StyleSheet.create({
     padding: 12,
     borderWidth: 1,
     borderColor: '#E0E0E0',
+  },
+  subtitle: {
+    fontWeight: '400',
+    textAlign: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 16,
   },
 });
 

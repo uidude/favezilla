@@ -27,16 +27,10 @@ const Favorites: Screen<Props> = props => {
   const hasFaves = faves.length > 0;
   const faveStore = useDataStore(Fave);
   const reload = useReload();
-  const [addFave] = useAction('AddFavorite', addFaveHandler);
-
-  async function addFaveHandler(thing: Thing) {
-    await faveStore.create({user, thing});
-    reload();
-  }
 
   return (
     <View style={{flex: 1}}>
-      <SearchBar onAdd={addFave} />
+      <SearchBar />
       {hasFaves && (
         <ScrollView style={S.container}>
           {faves.map((fave, idx) => (
