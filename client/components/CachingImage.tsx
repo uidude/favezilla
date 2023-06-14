@@ -50,7 +50,7 @@ export function CachingImage(props: CachingImageProps) {
   }
 
   if (hasError) {
-    return errorView ? errorView(error, uri ?? '') : <></>;
+    return errorView ? errorView(uri ?? '', error) : <></>;
   }
 
   // Show fallback if no image
