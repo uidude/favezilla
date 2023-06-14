@@ -12,7 +12,7 @@ import {Fave, Profile, Thing} from '@app/common/DataTypes';
 import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 import {User, UserRoles} from '@toolkit/core/api/User';
 import {CodedError} from '@toolkit/core/util/CodedError';
-import {Updater, getRequired} from '@toolkit/data/DataStore';
+import {Updater, getRequired, useDataStore} from '@toolkit/data/DataStore';
 import {firebaseStore} from '@toolkit/providers/firebase/DataStore';
 import {
   requireAccountInfo,
@@ -59,8 +59,8 @@ function addDerivedFields(user: User) {
 async function accountToUser(auth: AuthData): Promise<User> {
   // TODO: Make `firestore` role-based (e.g. firestoreForRole('ACCOUNT_CREATOR'))
   // @ts-ignore
-  const users = await getDataStore(User);
-  const profiles = await getDataStore(Profile);
+  const users = useDataStore(User);
+  const profiles = useDataStore(Profile);
   const userId = auth.uid;
 
   let [user, profile] = await Promise.all([
@@ -113,21 +113,15 @@ async function accountToUser(auth: AuthData): Promise<User> {
     await profiles.create(newProfile);
   }
 
-  //return user;
-
   const fs = admin.firestore();
-  await fs.runTransaction(async (txn: any) => {
-    // @ts-ignore: hack to pass in `transaction`
-    const userStoreInTxn = firebaseStore(User, fs, txn, firebaseConfig);
-    // @ts-ignore: ditto
-    const profileStoreInTxn = firebaseStore(Profile, fs, txn, firebaseConfig);
-    // @ts-ignore: ditto
-    const rolesStoreInTxn = firebaseStore(UserRoles, fs, txn, firebaseConfig);
+  const userStore = getAdminDataStore(User);
+  const profileStore = getAdminDataStore(Profile);
+  const roleStore = getAdminDataStore(UserRoles);
 
-    userStoreInTxn.create({...newUser, roles: {id: newUser.id}});
-    profileStoreInTxn.create(newProfile);
-    rolesStoreInTxn.create({roles, id: newUser.id});
-  });
+  // TODO: Re-enable transactions we have a clean way of supporting
+  await userStore.create({...newUser, roles: {id: newUser.id}});
+  await profileStore.create(newProfile);
+  await roleStore.create({roles, id: newUser.id});
 
   const createdUser = await users.get(newUser.id, {edges: [UserRoles]});
   addDerivedFields(createdUser!);
@@ -216,8 +210,8 @@ export const sendFaveNotif = registerHandler(
   SendFaveNotif,
   async ({thingId}) => {
     const user = requireLoggedInUser();
-    const profileStore = await getDataStore(Profile);
-    const thingStore = await getDataStore(Thing);
+    const profileStore = useDataStore(Profile);
+    const thingStore = useDataStore(Thing);
 
     const [thing, profile] = await Promise.all([
       getRequired(thingStore, thingId, {edges: [Fave, [Fave, Profile, 1]]}),
@@ -238,7 +232,7 @@ export const sendFaveNotif = registerHandler(
 
 export const getUser = registerHandler(GetUser, async () => {
   const account = requireAccountInfo();
-  const store = await getDataStore(User);
+  const store = useDataStore(User);
   const user = await getRequired(store, account.uid, {edges: [UserRoles]});
   addDerivedFields(user);
   return user;
@@ -263,7 +257,7 @@ export const updateUser = registerHandler(
       userStoreInTxn.update(values);
       profileStoreInTxn.update(profileValues);
     });
-    const store = await getDataStore(User);
+    const store = useDataStore(User);
     const updatedUser = await store.get(values.id);
     addDerivedFields(updatedUser!);
     return updatedUser!;
@@ -272,16 +266,16 @@ export const updateUser = registerHandler(
 
 export const addThing = registerHandler(AddThing, async data => {
   requireLoggedInUser();
-  const thingStore = await getDataStore(Thing);
+  const thingStore = useDataStore(Thing);
   const newFave = await thingStore.create(data);
   return newFave.id;
 });
 
 export const addFave = registerHandler(AddFave, async (thingId: string) => {
   const uid = requireLoggedInUser().id;
-  const userStore = await getDataStore(User);
-  const thingStore = await getDataStore(Thing);
-  const faveStore = await getDataStore(Fave);
+  const userStore = useDataStore(User);
+  const thingStore = useDataStore(Thing);
+  const faveStore = useDataStore(Fave);
 
   // This should never be undefined because of the call to requireLoggedInUser
   const user = (await userStore.get(uid, {edges: [Thing]}))!;
