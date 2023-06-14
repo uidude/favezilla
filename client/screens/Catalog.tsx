@@ -6,19 +6,12 @@ import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {GetFaves, GetThings} from '@app/common/AppLogic';
-import {Fave, Thing} from '@app/common/DataTypes';
+import {Thing} from '@app/common/DataTypes';
 import {SearchBar} from '@app/components/SearchBar';
 import ThingRow from '@app/components/ThingRow';
 import {useRegisterForPushNotifcations} from '@app/util/Notifications';
 
-type Props = {
-  async: {
-    faves: Fave[];
-    allThings: Thing[];
-  };
-};
-
-const Catalog: Screen<Props> = props => {
+const Catalog: Screen<{}> = props => {
   requireLoggedInUser();
   const getAllThings = useApi(GetThings);
   const getFaves = useApi(GetFaves);

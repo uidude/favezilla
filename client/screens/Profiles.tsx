@@ -4,25 +4,20 @@
  * @format
  */
 
-import { Profile } from '@app/common/DataTypes';
-import { ProfileRow } from '@app/components/Profile';
-import { requireLoggedInUser } from '@toolkit/core/api/User';
-import { useDataStore } from '@toolkit/data/DataStore';
-import { useComponents } from '@toolkit/ui/components/Components';
-import { Screen } from '@toolkit/ui/screen/Screen';
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useLoad} from '@toolkit/core/util/UseLoad';
+import {useDataStore} from '@toolkit/data/DataStore';
+import {useComponents} from '@toolkit/ui/components/Components';
+import {Screen} from '@toolkit/ui/screen/Screen';
+import {Profile} from '@app/common/DataTypes';
+import {ProfileRow} from '@app/components/Profile';
 
-type Props = {
-  async: {
-    me: Profile;
-    profiles: Profile[];
-  };
-};
-
-const Profiles: Screen<Props> = props => {
-  requireLoggedInUser();
-  const {profiles, me} = props.async;
+const Profiles: Screen<{}> = props => {
+  const user = requireLoggedInUser();
+  const profileStore = useDataStore(Profile);
+  const {profiles, me} = useLoad(props, load);
   const {Title} = useComponents();
 
   return (
@@ -34,20 +29,19 @@ const Profiles: Screen<Props> = props => {
       ))}
     </ScrollView>
   );
+
+  async function load() {
+    const profiles = await profileStore.getAll();
+    const myIndex = profiles.findIndex(p => p.id === user.id);
+    const me = profiles[myIndex];
+    profiles.splice(myIndex, 1);
+
+    return {profiles, me};
+  }
 };
+
 Profiles.title = 'Profiles';
 Profiles.style = {type: 'top'};
-
-Profiles.load = async () => {
-  const user = requireLoggedInUser();
-  const profileStore = useDataStore(Profile);
-  const profiles = await profileStore.getAll();
-  const myIndex = profiles.findIndex(p => p.id === user.id);
-  const me = profiles[myIndex];
-  profiles.splice(myIndex, 1);
-
-  return {profiles, me};
-};
 
 const S = StyleSheet.create({
   container: {

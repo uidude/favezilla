@@ -2,31 +2,20 @@ import * as React from 'react';
 import {Animated, ScrollView, StyleSheet, View} from 'react-native';
 import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
-import {useAction} from '@toolkit/core/client/Action';
-import {useReload} from '@toolkit/core/client/Reload';
-import {sleep} from '@toolkit/core/util/DevUtil';
-import {useDataStore} from '@toolkit/data/DataStore';
+import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {Icon} from '@toolkit/ui/components/Icon';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {GetFaves} from '@app/common/AppLogic';
-import {Fave, Thing} from '@app/common/DataTypes';
 import {SearchBar} from '@app/components/SearchBar';
 import ThingRow from '@app/components/ThingRow';
 
-type Props = {
-  async: {
-    faves: Fave[];
-  };
-};
-
-const Favorites: Screen<Props> = props => {
-  const user = requireLoggedInUser();
-  const {faves} = props.async;
+const Favorites: Screen<{}> = props => {
+  requireLoggedInUser();
+  const getFaves = useApi(GetFaves);
+  const {faves} = useLoad(props, load);
   const {Subtitle} = useComponents();
   const hasFaves = faves.length > 0;
-  const faveStore = useDataStore(Fave);
-  const reload = useReload();
 
   return (
     <View style={{flex: 1}}>
@@ -49,6 +38,11 @@ const Favorites: Screen<Props> = props => {
       )}
     </View>
   );
+
+  async function load() {
+    const faves = await getFaves();
+    return {faves};
+  }
 };
 
 Favorites.loading = () => {
@@ -64,15 +58,6 @@ Favorites.loading = () => {
 };
 Favorites.title = 'Favorites';
 Favorites.style = {type: 'top'};
-
-Favorites.load = async () => {
-  const getFaves = useApi(GetFaves);
-
-  // Give time to show the fun loading screen
-  const [faves] = await Promise.all([getFaves(), sleep(0 /*2500*/)]);
-
-  return {faves};
-};
 
 function usePulseAnimation() {
   const scale = new Animated.Value(1);

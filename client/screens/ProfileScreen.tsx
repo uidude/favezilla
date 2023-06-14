@@ -4,37 +4,37 @@
  * @format
  */
 
-import { GetFaves } from '@app/common/AppLogic';
-import { Fave, Profile, Thing } from '@app/common/DataTypes';
-import { ProfilePic } from '@app/components/Profile';
+import * as React from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {useApi} from '@toolkit/core/api/DataApi';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useLoad} from '@toolkit/core/util/UseLoad';
+import {useDataStore} from '@toolkit/data/DataStore';
+import {useComponents} from '@toolkit/ui/components/Components';
+import {Icon} from '@toolkit/ui/components/Icon';
+import {PressableSpring} from '@toolkit/ui/components/Tools';
+import {useNav} from '@toolkit/ui/screen/Nav';
+import {Screen} from '@toolkit/ui/screen/Screen';
+import {GetFaves} from '@app/common/AppLogic';
+import {Fave, Profile, Thing} from '@app/common/DataTypes';
+import {ProfilePic} from '@app/components/Profile';
 import ThingRow from '@app/components/ThingRow';
 import EditProfile from '@app/screens/EditProfile';
-import { useApi } from '@toolkit/core/api/DataApi';
-import { requireLoggedInUser } from '@toolkit/core/api/User';
-import { useDataStore } from '@toolkit/data/DataStore';
-import { useComponents } from '@toolkit/ui/components/Components';
-import { Icon } from '@toolkit/ui/components/Icon';
-import { PressableSpring } from '@toolkit/ui/components/Tools';
-import { useNav } from '@toolkit/ui/screen/Nav';
-import { Screen } from '@toolkit/ui/screen/Screen';
-import * as React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
 
 type Props = {
   id: string;
-  async: {
-    profile: Profile;
-    faves: Fave[];
-    myFaves: Fave[];
-  };
 };
 
 const ProfileScreen: Screen<Props> = props => {
-  const {id} = requireLoggedInUser();
-  const {profile, faves, myFaves} = props.async;
-  const {Title, Body} = useComponents();
+  const {id} = props;
+  const user = requireLoggedInUser();
+  const profileStore = useDataStore(Profile);
+  const getFaves = useApi(GetFaves);
+  const {profile, faves, myFaves} = useLoad(props, load);
   const {navTo} = useNav();
-  const isMe = id === profile.id;
+  const {Title, Body} = useComponents();
+
+  const isMe = user.id === profile.id;
   const about = profile.about ?? '';
 
   function isMyFave(thing: Thing) {
@@ -63,27 +63,23 @@ const ProfileScreen: Screen<Props> = props => {
       ))}
     </ScrollView>
   );
-};
-ProfileScreen.title = 'Profile';
 
-ProfileScreen.load = async props => {
-  const profileStore = useDataStore(Profile);
-  const getFaves = useApi(GetFaves);
-  let [profile, myFaves] = await Promise.all([
-    profileStore.get(props.id, {
+  async function load() {
+    const profileQuery = profileStore.required(id, {
       edges: [
         [Profile, Fave, 1],
         [Fave, Thing, 1],
       ],
-    }),
-    getFaves(),
-  ]);
-  const faves = profile!.faves!;
-  faves.sort((a, b) => a.thing.name.localeCompare(b.thing.name));
-  if (profile == null) throw new Error('Profile not found');
+    });
 
-  return {profile, faves, myFaves};
+    let [profile, myFaves] = await Promise.all([profileQuery, getFaves()]);
+    const faves = profile!.faves!;
+    faves.sort((a, b) => a.thing.name.localeCompare(b.thing.name));
+
+    return {profile, faves, myFaves};
+  }
 };
+ProfileScreen.title = 'Profile';
 
 const S = StyleSheet.create({
   container: {

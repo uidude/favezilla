@@ -10,7 +10,8 @@ import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {withTimeout} from '@toolkit/core/util/DevUtil';
 import {Opt} from '@toolkit/core/util/Types';
-import {getRequired, useDataStore} from '@toolkit/data/DataStore';
+import {useLoad} from '@toolkit/core/util/UseLoad';
+import {useDataStore} from '@toolkit/data/DataStore';
 import {useStorage} from '@toolkit/data/FileStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
@@ -21,97 +22,19 @@ import {Profile} from '@app/common/DataTypes';
 import {ProfilePic} from '@app/components/Profile';
 import ProfileScreen from '@app/screens/ProfileScreen';
 
-type Props = {
-  async: {
-    me: Profile;
-  };
-};
+const EditProfile: Screen<{}> = props => {
+  const user = requireLoggedInUser();
+  const profileStore = useDataStore(Profile);
+  const {me} = useLoad(props, load);
 
-async function pickSquarePhoto(size: number = 256) {
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    quality: 1,
-    allowsEditing: true,
-    aspect: [1, 1],
-  });
-  const image = result.assets && result.assets[0];
-
-  if (image) {
-    // Crop square box in the middle
-    const width = image.width;
-    const height = image.height;
-    const boxSize = Math.min(width, height);
-    const x = (width - boxSize) / 2;
-    const y = (height - boxSize) / 2;
-    const cropped = await manipulateAsync(
-      image.uri,
-      [
-        {crop: {originX: x, originY: y, width: boxSize, height: boxSize}},
-        {resize: {width: size, height: size}},
-      ],
-      {compress: 0.8, format: SaveFormat.JPEG},
-    );
-    return cropped.uri;
-  }
-
-  return null;
-}
-
-export function ProfilePicEditor(props: {
-  pic: Opt<string>;
-  setPic: (pic: string) => void;
-  isLoading?: (loading: boolean) => void;
-  size?: number;
-}) {
-  const {size = 128} = props;
-  const {upload} = useStorage(Profile, 'pic', {maxBytes: 50000000});
-  const {pic, setPic, isLoading} = props;
-  const [uploadPic, uploading] = useAction('UploadPic', uploadPicHandler);
-  const toUploadUri = React.useRef<Opt<string>>();
-
-  React.useEffect(() => {
-    if (isLoading) {
-      isLoading(uploading);
-    }
-  }, [uploading]);
-
-  async function editPic() {
-    toUploadUri.current = await pickSquarePhoto();
-    uploadPic();
-  }
-
-  async function uploadPicHandler() {
-    const uri = toUploadUri.current;
-    if (uri != null) {
-      const uploadResult = await withTimeout(() => upload(uri), 30000);
-      setPic(uploadResult.storageUri);
-    }
-  }
-
-  return (
-    <PressableSpring onPress={editPic}>
-      {uploading ? (
-        <View style={[S.uploading, {width: size, height: size}]}>
-          <ActivityIndicator size="large" />
-        </View>
-      ) : (
-        <ProfilePic pic={pic} size={size} style={{alignSelf: 'center'}} />
-      )}
-    </PressableSpring>
-  );
-}
-
-const EditProfile: Screen<Props> = props => {
-  requireLoggedInUser();
-  const {me} = props.async;
-  const {Button, TextInput} = useComponents();
   const [name, setName] = React.useState(me.name);
   const [bio, setBio] = React.useState(me.about ?? '');
   const [pic, setPic] = React.useState(me.pic);
-  const nav = useNav();
-  const updateUserAndProfile = useUpdateUserAndProfile();
   const [save, saving] = useAction('SaveProfile', saveHandler);
   const [loading, setLoading] = React.useState(false);
+  const {Button, TextInput} = useComponents();
+  const updateUserAndProfile = useUpdateUserAndProfile();
+  const nav = useNav();
 
   function back(reload: boolean = false) {
     if (nav.backOk()) {
@@ -161,16 +84,88 @@ const EditProfile: Screen<Props> = props => {
       </View>
     </ScrollView>
   );
+
+  async function load() {
+    const me = await profileStore.required(user.id);
+    return {me};
+  }
 };
 EditProfile.title = 'Edit Your Profile';
 
-EditProfile.load = async () => {
-  const {id} = requireLoggedInUser();
-  const profileStore = useDataStore(Profile);
-  const me = await getRequired(profileStore, id);
+export function ProfilePicEditor(props: {
+  pic: Opt<string>;
+  setPic: (pic: string) => void;
+  isLoading?: (loading: boolean) => void;
+  size?: number;
+}) {
+  const {size = 128} = props;
+  const {upload} = useStorage(Profile, 'pic', {maxBytes: 50000000});
+  const {pic, setPic, isLoading} = props;
+  const [uploadPic, uploading] = useAction('UploadPic', uploadPicHandler);
+  const toUploadUri = React.useRef<Opt<string>>();
 
-  return {me};
-};
+  React.useEffect(() => {
+    if (isLoading) {
+      isLoading(uploading);
+    }
+  }, [uploading]);
+
+  async function editPic() {
+    toUploadUri.current = await pickSquarePhoto();
+    uploadPic();
+  }
+
+  async function uploadPicHandler() {
+    const uri = toUploadUri.current;
+    if (uri != null) {
+      const uploadResult = await withTimeout(() => upload(uri), 30000);
+      setPic(uploadResult.storageUri);
+    }
+  }
+
+  return (
+    <PressableSpring onPress={editPic}>
+      {uploading ? (
+        <View style={[S.uploading, {width: size, height: size}]}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <ProfilePic pic={pic} size={size} style={{alignSelf: 'center'}} />
+      )}
+    </PressableSpring>
+  );
+}
+
+async function pickSquarePhoto(size: number = 256) {
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    quality: 1,
+    allowsEditing: true,
+    aspect: [1, 1],
+  });
+  const image = result.assets && result.assets[0];
+
+  if (image) {
+    // Crop square box in the middle
+    const width = image.width;
+    const height = image.height;
+    const boxSize = Math.min(width, height);
+    const x = (width - boxSize) / 2;
+    const y = (height - boxSize) / 2;
+    const cropped = await manipulateAsync(
+      image.uri,
+      [
+        {crop: {originX: x, originY: y, width: boxSize, height: boxSize}},
+        {resize: {width: size, height: size}},
+      ],
+      {compress: 0.8, format: SaveFormat.JPEG},
+    );
+    return cropped.uri;
+  }
+
+  return null;
+}
+
 const S = StyleSheet.create({
   container: {
     flex: 1,

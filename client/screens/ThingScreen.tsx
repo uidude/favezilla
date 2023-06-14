@@ -8,6 +8,7 @@ import * as React from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import DefaultThumb from '@assets/bookicon-small.png';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {useScreenState} from '@toolkit/ui/screen/Layout';
@@ -17,14 +18,12 @@ import {ProfileRow} from '@app/components/Profile';
 
 type Props = {
   id: string;
-  async: {
-    thing: Thing;
-  };
 };
 
 const ThingScreen: Screen<Props> = props => {
   requireLoggedInUser();
-  const {thing} = props.async;
+  const thingStore = useDataStore(Thing);
+  const {thing} = useLoad(props, load);
   const {Title, Subtitle} = useComponents();
   const {setScreenState} = useScreenState();
   const image = thing.thumb ? {uri: thing.thumb} : DefaultThumb;
@@ -43,21 +42,18 @@ const ThingScreen: Screen<Props> = props => {
       ))}
     </ScrollView>
   );
+  async function load() {
+    const thing = await thingStore.required(props.id, {
+      edges: [
+        [Thing, Fave, 1],
+        [Fave, Profile, 1],
+      ],
+    });
+
+    return {thing};
+  }
 };
 ThingScreen.title = ' ';
-
-ThingScreen.load = async props => {
-  const thingStore = useDataStore(Thing);
-  const thing = await thingStore.get(props.id, {
-    edges: [
-      [Thing, Fave, 1],
-      [Fave, Profile, 1],
-    ],
-  });
-  if (thing == null) throw new Error('Thing not found');
-
-  return {thing};
-};
 
 const S = StyleSheet.create({
   container: {

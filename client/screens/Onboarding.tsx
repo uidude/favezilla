@@ -8,6 +8,7 @@ import * as React from 'react';
 import {useAuth} from '@toolkit/core/api/Auth';
 import {User} from '@toolkit/core/api/User';
 import {Opt} from '@toolkit/core/util/Types';
+import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useTextInput} from '@toolkit/ui/UiHooks';
 import {MultistepFlow, Step} from '@toolkit/ui/components/MultistepFlow';
@@ -20,20 +21,19 @@ import Favorites from '@app/screens/Favorites';
 
 type Props = {
   user: User;
-  async: {
-    profile: Partial<Profile>;
-  };
 };
 
 const Onboarding: Screen<Props> = props => {
   const {user} = props;
-  const {profile} = props.async;
-  const nav = useNav();
+  const profileStore = useDataStore(Profile);
+  const {profile} = useLoad(props, load);
+
   const [NameInput, name] = useTextInput(user.name);
   const [AboutInput, about, setAbout] = useTextInput(profile.about ?? '');
   const [pic, setPic] = React.useState<Opt<string>>(user.pic);
   const [loading, setLoading] = React.useState(false);
   const auth = useAuth();
+  const nav = useNav();
 
   const updateUserAndProfile = useUpdateUserAndProfile();
 
@@ -85,18 +85,15 @@ const Onboarding: Screen<Props> = props => {
       </Step>
     </MultistepFlow>
   );
+
+  async function load() {
+    const profile =
+      (await profileStore.get(user.id)) ?? ({} as Partial<Profile>);
+    return {profile};
+  }
 };
 Onboarding.title = 'Onboarding';
 Onboarding.style = {nav: 'none'};
 Onboarding.linkable = false;
-
-Onboarding.load = async props => {
-  const userId = props.user.id;
-  const profileStore = useDataStore(Profile);
-
-  const profile = (await profileStore.get(userId)) ?? {};
-
-  return {profile};
-};
 
 export default Onboarding;
