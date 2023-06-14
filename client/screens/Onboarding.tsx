@@ -15,8 +15,8 @@ import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {useUpdateUserAndProfile} from '@app/common/AppLogic';
 import {Profile} from '@app/common/DataTypes';
-import {ProfilePicEditor} from './EditProfile';
-import Favorites from './Favorites';
+import {ProfilePicEditor} from '@app/screens/EditProfile';
+import Favorites from '@app/screens/Favorites';
 
 type Props = {
   user: User;

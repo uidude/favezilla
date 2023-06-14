@@ -1,15 +1,15 @@
-import { GetFaves, GetThings } from '@app/common/AppLogic';
-import { Fave, Thing } from '@app/common/DataTypes';
-import { useApi } from '@toolkit/core/api/DataApi';
-import { requireLoggedInUser } from '@toolkit/core/api/User';
-import { useNotifications } from '@toolkit/services/notifications/NotificationsClient';
-import { Screen } from '@toolkit/ui/screen/Screen';
-import * as Device from 'expo-device';
 import * as React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SearchInput } from '../components/SearchBar';
-import ThingRow from '../components/ThingRow';
-import { registerForPushNotificationsAsync } from '../util/Notifications';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import * as Device from 'expo-device';
+import {useApi} from '@toolkit/core/api/DataApi';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useNotifications} from '@toolkit/services/notifications/NotificationsClient';
+import {Screen} from '@toolkit/ui/screen/Screen';
+import {GetFaves, GetThings} from '@app/common/AppLogic';
+import {Fave, Thing} from '@app/common/DataTypes';
+import {SearchInput} from '@app/components/SearchBar';
+import ThingRow from '@app/components/ThingRow';
+import {registerForPushNotificationsAsync} from '@app/util/Notifications';
 
 type Props = {
   async: {

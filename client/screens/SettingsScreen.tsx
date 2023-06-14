@@ -9,8 +9,8 @@ import {navToAction} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {OpenLinkAction, openUrlAction} from '@toolkit/ui/screen/WebScreen';
 import {LEGAL_LINKS} from '@app/common/Config';
-import AboutScreen from './AboutScreen';
-import DevSettings from './DevSettings';
+import AboutScreen from '@app/screens/AboutScreen';
+import DevSettings from '@app/screens/DevSettings';
 
 const ABOUT = {
   icon: 'information-outline',

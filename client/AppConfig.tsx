@@ -1,15 +1,7 @@
-import AuthConfig from '@app/AuthConfig';
-import {
-  APP_CONFIG,
-  CLIENT_FALLBACK_ENABLED,
-  FIREBASE_CONFIG,
-  GOOGLE_LOGIN_CONFIG,
-  LEGAL_LINKS,
-  MIXPANEL_TOKEN,
-} from '@app/common/Config';
-import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
+import React from 'react';
 import icon from '@assets/icon.png';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {
   setClientFallbackEnabled,
   setDefaultServerApi,
@@ -24,6 +16,7 @@ import {providesValue} from '@toolkit/core/providers/Providers';
 import {initializeFirebase} from '@toolkit/providers/firebase/Config';
 import {FirestoreFilestore} from '@toolkit/providers/firebase/FileStore';
 import {FirestoreDatastoreWithCaching} from '@toolkit/providers/firebase/FirestoreDatastore';
+import {initializeFirestore} from '@toolkit/providers/firebase/client/Firestore';
 import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
 import {MixpanelLogger} from '@toolkit/providers/mixpanel/Logger';
@@ -31,10 +24,16 @@ import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
 import {usePaperComponents} from '@toolkit/ui/components/Paper';
 import {allowWebScreenDomains} from '@toolkit/ui/screen/WebScreen';
-import React from 'react';
-import {Provider as PaperProvider} from 'react-native-paper';
-
-import {initializeFirestore} from '@toolkit/providers/firebase/client/Firestore';
+import AuthConfig from '@app/AuthConfig';
+import {
+  APP_CONFIG,
+  CLIENT_FALLBACK_ENABLED,
+  FIREBASE_CONFIG,
+  GOOGLE_LOGIN_CONFIG,
+  LEGAL_LINKS,
+  MIXPANEL_TOKEN,
+} from '@app/common/Config';
+import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 
 type Props = {
   children: React.ReactNode;

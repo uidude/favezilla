@@ -1,17 +1,17 @@
-import { AddThing } from '@app/common/AppLogic';
-import AllThingsScreen from '@app/screens/Catalog';
-import { Ionicons } from '@expo/vector-icons';
-import { useApi } from '@toolkit/core/api/DataApi';
-import { User, useLoggedInUser } from '@toolkit/core/api/User';
-import { useMessageOnFail } from '@toolkit/core/client/Status';
-import { sleep } from '@toolkit/core/util/DevUtil';
-import { Opt } from '@toolkit/core/util/Types';
-import { useComponents } from '@toolkit/ui/components/Components';
-import { useNav } from '@toolkit/ui/screen/Nav';
-import { Screen } from '@toolkit/ui/screen/Screen';
 import * as React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import {Image, StyleSheet, View} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
+import {TextInput} from 'react-native-paper';
+import {useApi} from '@toolkit/core/api/DataApi';
+import {User, useLoggedInUser} from '@toolkit/core/api/User';
+import {useMessageOnFail} from '@toolkit/core/client/Status';
+import {sleep} from '@toolkit/core/util/DevUtil';
+import {Opt} from '@toolkit/core/util/Types';
+import {useComponents} from '@toolkit/ui/components/Components';
+import {useNav} from '@toolkit/ui/screen/Nav';
+import {Screen} from '@toolkit/ui/screen/Screen';
+import {AddThing} from '@app/common/AppLogic';
+import AllThingsScreen from '@app/screens/Catalog';
 
 const CreateNewThingScreen: Screen<{}> = () => {
   const [name, setName] = React.useState<string>();

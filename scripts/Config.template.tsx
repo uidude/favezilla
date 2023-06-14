@@ -1,7 +1,7 @@
 import {providesValue} from '@toolkit/core/providers/Providers';
 import {AppConfigKey} from '@toolkit/core/util/AppConfig';
+import {NotificationChannelsKey} from '@toolkit/lib/services/notifications/NotificationChannel';
 import {FirebaseConfig} from '@toolkit/providers/firebase/Config';
-import {NotificationChannelsKey} from '../../npe-toolkit/lib/services/notifications/NotificationChannel';
 import {NOTIF_CHANNELS} from './NotifChannels';
 
 let localConf: Record<string, any> = {};

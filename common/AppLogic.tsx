@@ -2,7 +2,7 @@ import {api} from '@toolkit/core/api/DataApi';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {Opt} from '@toolkit/core/util/Types';
 import {Updater, useDataStore} from '@toolkit/data/DataStore';
-import {Fave, Profile, Thing} from './DataTypes';
+import {Fave, Profile, Thing} from '@app/common/DataTypes';
 
 // Cilent business logic
 

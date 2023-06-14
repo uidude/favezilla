@@ -2,8 +2,12 @@ import {noop, serverApi} from '@toolkit/core/api/DataApi';
 import {User} from '@toolkit/core/api/User';
 import {Updater} from '@toolkit/data/DataStore';
 import {PushToken} from '@toolkit/services/notifications/NotificationTypes';
-import {LoginUserInfo, useAddFave, useGetOrCreateUser} from './AppLogic';
-import {Fave, Thing} from './DataTypes';
+import {
+  LoginUserInfo,
+  useAddFave,
+  useGetOrCreateUser,
+} from '@app/common/AppLogic';
+import {Fave, Thing} from '@app/common/DataTypes';
 
 export const GetUser = serverApi<LoginUserInfo, User>(
   'getUser',

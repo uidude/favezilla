@@ -1,20 +1,20 @@
-import { AddFave, SendFaveNotif } from '@app/common/Api';
-import { RemoveThing } from '@app/common/AppLogic';
-import { Fave, Thing } from '@app/common/DataTypes';
-import DefaultThumb from '@assets/bookicon-small.png';
-import { useApi } from '@toolkit/core/api/DataApi';
-import { requireLoggedInUser } from '@toolkit/core/api/User';
-import { useAction } from '@toolkit/core/client/Action';
-import { useReload } from '@toolkit/core/client/Reload';
-import { useMessageOnFail } from '@toolkit/core/client/Status';
-import { Opt } from '@toolkit/core/util/Types';
-import { useDataStore } from '@toolkit/data/DataStore';
-import { Icon } from '@toolkit/ui/components/Icon';
-import { PressableSpring } from '@toolkit/ui/components/Tools';
-import { useNav } from '@toolkit/ui/screen/Nav';
 import React from 'react';
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native';
-import ThingScreen from '../screens/ThingScreen';
+import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
+import DefaultThumb from '@assets/bookicon-small.png';
+import {useApi} from '@toolkit/core/api/DataApi';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useAction} from '@toolkit/core/client/Action';
+import {useReload} from '@toolkit/core/client/Reload';
+import {useMessageOnFail} from '@toolkit/core/client/Status';
+import {Opt} from '@toolkit/core/util/Types';
+import {useDataStore} from '@toolkit/data/DataStore';
+import {Icon} from '@toolkit/ui/components/Icon';
+import {PressableSpring} from '@toolkit/ui/components/Tools';
+import {useNav} from '@toolkit/ui/screen/Nav';
+import {AddFave, SendFaveNotif} from '@app/common/Api';
+import {RemoveThing} from '@app/common/AppLogic';
+import {Fave, Thing} from '@app/common/DataTypes';
+import ThingScreen from '@app/screens/ThingScreen';
 
 type Props = {
   thing: Thing;
@@ -38,7 +38,7 @@ export default function ThingRow(props: Props) {
 
   async function makeFave() {
     const fave = await addFave(thing.id);
-    faveStore.putCache && await faveStore.putCache(fave.id, 'add', fave);
+    faveStore.putCache && (await faveStore.putCache(fave.id, 'add', fave));
     sendFaveNotif({thingId: thing.id});
     reload();
   }
@@ -70,11 +70,17 @@ export default function ThingRow(props: Props) {
       </View>
 
       {canDelete && (
-        <ThingRowAction onPress={messageOnFail(onRemove)} icon="ion:close-circle-outline"  />
+        <ThingRowAction
+          onPress={messageOnFail(onRemove)}
+          icon="ion:close-circle-outline"
+        />
       )}
-      <View style={{width: 6}}/>
+      <View style={{width: 6}} />
       {faveLoading ? (
-        <ActivityIndicator size={24} style={{paddingVertical: 6, paddingHorizontal: 3}}/>
+        <ActivityIndicator
+          size={24}
+          style={{paddingVertical: 6, paddingHorizontal: 3}}
+        />
       ) : fave != null ? (
         <ThingRowAction onPress={unfaveAction} icon="ion:heart" color="red" />
       ) : (
@@ -87,8 +93,8 @@ export default function ThingRow(props: Props) {
 type IconActionProps = {
   onPress: () => void | Promise<void>;
   icon: string;
-  color?: string
-}
+  color?: string;
+};
 
 const ThingRowAction = (props: IconActionProps) => {
   const {onPress, icon, color = 'gray'} = props;
@@ -97,7 +103,7 @@ const ThingRowAction = (props: IconActionProps) => {
       <Icon name={icon} color={color} size={30} />
     </PressableSpring>
   );
-}
+};
 
 const S = StyleSheet.create({
   row: {

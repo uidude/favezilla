@@ -4,16 +4,16 @@
  * @format
  */
 
-import { Fave, Profile, Thing } from '@app/common/DataTypes';
-import { ProfileRow } from '@app/components/Profile';
-import DefaultThumb from '@assets/bookicon-small.png';
-import { requireLoggedInUser } from '@toolkit/core/api/User';
-import { useDataStore } from '@toolkit/data/DataStore';
-import { useComponents } from '@toolkit/ui/components/Components';
-import { useScreenState } from '@toolkit/ui/screen/Layout';
-import { Screen } from '@toolkit/ui/screen/Screen';
 import * as React from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import DefaultThumb from '@assets/bookicon-small.png';
+import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useDataStore} from '@toolkit/data/DataStore';
+import {useComponents} from '@toolkit/ui/components/Components';
+import {useScreenState} from '@toolkit/ui/screen/Layout';
+import {Screen} from '@toolkit/ui/screen/Screen';
+import {Fave, Profile, Thing} from '@app/common/DataTypes';
+import {ProfileRow} from '@app/components/Profile';
 
 type Props = {
   id: string;

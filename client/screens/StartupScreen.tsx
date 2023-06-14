@@ -7,8 +7,8 @@ import {useAuth} from '@toolkit/core/api/Auth';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {FIREBASE_CONFIG} from '@app/common/Config';
-import Favorites from './Favorites';
-import LoginScreen from './LoginScreen';
+import Favorites from '@app/screens/Favorites';
+import LoginScreen from '@app/screens/LoginScreen';
 
 /**
  * Checks that new apps have been initiatlized sufficiently so that they can run.
