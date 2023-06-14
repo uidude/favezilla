@@ -120,22 +120,20 @@ export default function App() {
 
   return (
     <AppConfig>
-      <AuthConfig>
-        <View style={S.background}>
-          <SafeAreaProvider style={S.container}>
-            <SimpleUserMessaging style={S.messaging} />
-            <NavigationContainer linking={linking}>
-              <StatusBar style="auto" />
-              <NavContext routes={ROUTES} />
-              <Stack.Navigator
-                screenOptions={{headerShown: false}}
-                initialRouteName="StartupScreen">
-                {navScreens}
-              </Stack.Navigator>
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </View>
-      </AuthConfig>
+      <View style={S.background}>
+        <SafeAreaProvider style={S.container}>
+          <SimpleUserMessaging style={S.messaging} />
+          <NavigationContainer linking={linking}>
+            <StatusBar style="auto" />
+            <NavContext routes={ROUTES} />
+            <Stack.Navigator
+              screenOptions={{headerShown: false}}
+              initialRouteName="StartupScreen">
+              {navScreens}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </View>
     </AppConfig>
   );
 }
