@@ -12,7 +12,11 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/a5a0f772-b8c9-417c-b1b4-6de4b039682e"
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -21,10 +25,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.npetoolkit.favezilla",
       "config": {
-        "googleSignIn": {
-          "reservedClientId": "com.googleusercontent.apps.316194284018-4iucu1np3ngg7n3ngprre8iro04oe173"
-        },
         "usesNonExemptEncryption": false
+      },
+      "buildNumber": "2",
+      "infoPlist": {
+        "UIUserInterfaceStyle": "Light"
       }
     },
     "android": {
@@ -32,7 +37,8 @@
         "foregroundImage": "../project/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.npetoolkit.favezilla"
+      "package": "com.npetoolkit.favezilla",
+      "versionCode": 2
     },
     "web": {
       "favicon": "../project/assets/favicon.png"

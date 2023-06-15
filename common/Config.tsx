@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import {providesValue} from '@toolkit/core/providers/Providers';
 import {AppConfigKey} from '@toolkit/core/util/AppConfig';
 import {FirebaseConfig} from '@toolkit/providers/firebase/Config';
@@ -44,11 +45,24 @@ export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
  */
 export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
   iosClientId:
-    '383529496724-ua7k0sba6ccn3kfhfhrfjv7u4v2i0qll.apps.googleusercontent.com',
+    '383529496724-7j3up3nd60u0cjmbpgir7ggqmt8jtrds.apps.googleusercontent.com',
   webClientId:
     '383529496724-0tt33uo3bbq0t5sc94m2u9cigd8p92p6.apps.googleusercontent.com',
   androidClientId:
     '383529496724-sde740nljlllndj90e1qfkgonvmdg95d.apps.googleusercontent.com',
+
+  // Different iOS builds need different iOS clients IDs if you want to suppport
+  // side-by-side install (recommended for ease of testing)
+  bundles: {
+    'com.npetoolkit.favezilla': {
+      iosClientId:
+        '383529496724-ua7k0sba6ccn3kfhfhrfjv7u4v2i0qll.apps.googleusercontent.com',
+    },
+    'com.npetoolkit.favezilla.alpha': {
+      iosClientId:
+        '383529496724-ie6cguas967e57aruue45bavvn3i1nho.apps.googleusercontent.com',
+    },
+  },
 };
 
 export const APP_CONFIG = {

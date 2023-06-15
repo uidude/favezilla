@@ -43,7 +43,7 @@ There are four iOS build types:
 - `sim` runs in the Simulator and uses Expo dev client, that will ask user where
   to load JavaScript from
 - `dev` runs on a real iOS device, but otherwise operates like `sim`
-- `preprod` will read from your deployed JS and supports dynamic updates. This
+- `alpha` will read from your deployed JS and supports dynamic updates. This
   uses Apple's "ad hoc" build feature which lets you use the app on a maximum of
   100 devices, which need to be listed in your developer account
 - `prod` is your live build for the app store. Although this build supports
