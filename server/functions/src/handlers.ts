@@ -12,18 +12,13 @@ import {Fave, Profile, Thing} from '@app/common/DataTypes';
 import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 import {User, UserRoles} from '@toolkit/core/api/User';
 import {CodedError} from '@toolkit/core/util/CodedError';
-import {Updater, getRequired, useDataStore} from '@toolkit/data/DataStore';
-import {firebaseStore} from '@toolkit/providers/firebase/DataStore';
+import {Updater, useDataStore} from '@toolkit/data/DataStore';
 import {
   requireAccountInfo,
   requireLoggedInUser,
   setAccountToUserCallback,
 } from '@toolkit/providers/firebase/server/Auth';
 import {getFirebaseConfig} from '@toolkit/providers/firebase/server/Config';
-import {
-  getAdminDataStore,
-  getDataStore,
-} from '@toolkit/providers/firebase/server/Firestore';
 import {registerHandler} from '@toolkit/providers/firebase/server/Handler';
 import {
   apnsToFCMToken,
@@ -37,7 +32,6 @@ import {AuthData} from 'firebase-functions/lib/common/providers/https';
 const {defineSecret} = require('firebase-functions/params');
 
 const notificationApiKey = defineSecret('fcm_server_key');
-const firebaseConfig = getFirebaseConfig();
 
 function newProfileFor(user: Updater<User>): Updater<Profile> {
   const id = user.id!;
@@ -59,13 +53,13 @@ function addDerivedFields(user: User) {
 async function accountToUser(auth: AuthData): Promise<User> {
   // TODO: Make `firestore` role-based (e.g. firestoreForRole('ACCOUNT_CREATOR'))
   // @ts-ignore
-  const users = useDataStore(User);
-  const profiles = useDataStore(Profile);
+  const userStore = useDataStore(User);
+  const profileStore = useDataStore(Profile);
   const userId = auth.uid;
 
   let [user, profile] = await Promise.all([
-    users.get(userId, {edges: [UserRoles]}),
-    profiles.get(userId),
+    userStore.get(userId, {edges: [UserRoles]}),
+    profileStore.get(userId),
   ]);
   const roles = await getAllowlistMatchedRoles(auth);
   if (user != null && profile != null) {
@@ -105,25 +99,24 @@ async function accountToUser(auth: AuthData): Promise<User> {
   // We have an example of doing these in a transaction (in server code)
   // but for simplicity, will make separate calls.
   if (user == null) {
-    user = await users.create(newUser);
+    user = await userStore.create(newUser);
     addDerivedFields(user);
   }
 
   if (profile == null) {
-    await profiles.create(newProfile);
+    await profileStore.create(newProfile);
   }
 
-  const fs = admin.firestore();
-  const userStore = getAdminDataStore(User);
-  const profileStore = getAdminDataStore(Profile);
-  const roleStore = getAdminDataStore(UserRoles);
+  // TODO: Explicit set to admin mode for users, profiles, roles,
+  // and
+  const roleStore = useDataStore(UserRoles);
 
-  // TODO: Re-enable transactions we have a clean way of supporting
+  // TODO: Re-enable transaction if we have a clean way of supporting
   await userStore.create({...newUser, roles: {id: newUser.id}});
   await profileStore.create(newProfile);
   await roleStore.create({roles, id: newUser.id});
 
-  const createdUser = await users.get(newUser.id, {edges: [UserRoles]});
+  const createdUser = await userStore.get(newUser.id, {edges: [UserRoles]});
   addDerivedFields(createdUser!);
   return createdUser!;
 }
@@ -214,8 +207,8 @@ export const sendFaveNotif = registerHandler(
     const thingStore = useDataStore(Thing);
 
     const [thing, profile] = await Promise.all([
-      getRequired(thingStore, thingId, {edges: [Fave, [Fave, Profile, 1]]}),
-      getRequired(profileStore, user.id),
+      thingStore.required(thingId, {edges: [Fave, [Fave, Profile, 1]]}),
+      profileStore.required(user.id),
     ]);
 
     let toNotify = thing.faves.map(f => f.user.id).filter(id => id !== user.id);
@@ -232,8 +225,8 @@ export const sendFaveNotif = registerHandler(
 
 export const getUser = registerHandler(GetUser, async () => {
   const account = requireAccountInfo();
-  const store = useDataStore(User);
-  const user = await getRequired(store, account.uid, {edges: [UserRoles]});
+  const userStore = useDataStore(User);
+  const user = await userStore.required(account.uid, {edges: [UserRoles]});
   addDerivedFields(user);
   return user;
 });
@@ -242,23 +235,21 @@ export const updateUser = registerHandler(
   UpdateUser,
   async (values: Updater<User>) => {
     const user = requireLoggedInUser();
+    const userStore = useDataStore(User);
+    const profileStore = useDataStore(Profile);
+
     // This should be also checked by firestore rules so could remove
     if (values.id != user.id) {
       // TODO: coded typed error
       throw new Error('Not allowed');
     }
-    const fs = admin.firestore();
-    await fs.runTransaction(async txn => {
-      // @ts-ignore: hack to pass in `transaction`
-      const userStoreInTxn = firebaseStore(User, fs, txn, firebaseConfig);
-      // @ts-ignore: ditto
-      const profileStoreInTxn = firebaseStore(Profile, fs, txn, firebaseConfig);
-      const profileValues = newProfileFor(values);
-      userStoreInTxn.update(values);
-      profileStoreInTxn.update(profileValues);
-    });
-    const store = useDataStore(User);
-    const updatedUser = await store.get(values.id);
+
+    // TODO: Reenable transaction
+    const profileValues = newProfileFor(values);
+    await userStore.update(values);
+    await profileStore.update(profileValues);
+
+    const updatedUser = await userStore.get(values.id);
     addDerivedFields(updatedUser!);
     return updatedUser!;
   },
@@ -322,7 +313,8 @@ export const broadcastNotif = registerHandler(
   BroadcastNotif,
   async ({title = '', body}) => {
     const channel = NOTIF_CHANNELS.admin;
-    const userStore = await getAdminDataStore(User);
+    // TODO: Set this handler to admin privileges
+    const userStore = await useDataStore(User);
     const allUsers = await userStore.getAll();
     const send = getSender();
 
