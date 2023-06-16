@@ -49,7 +49,7 @@ export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
   webClientId:
     '383529496724-0tt33uo3bbq0t5sc94m2u9cigd8p92p6.apps.googleusercontent.com',
   androidClientId:
-    '383529496724-sde740nljlllndj90e1qfkgonvmdg95d.apps.googleusercontent.com',
+    '383529496724-uke5c6c2gmuotopmegks33gqaq9es0pm.apps.googleusercontent.com',
 
   // Different iOS builds need different iOS clients IDs if you want to suppport
   // side-by-side install (recommended for ease of testing)
@@ -57,6 +57,8 @@ export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
     'com.npetoolkit.favezilla': {
       iosClientId:
         '383529496724-ua7k0sba6ccn3kfhfhrfjv7u4v2i0qll.apps.googleusercontent.com',
+      androidClientId:
+        '383529496724-sde740nljlllndj90e1qfkgonvmdg95d.apps.googleusercontent.com',
     },
     'com.npetoolkit.favezilla.alpha': {
       iosClientId:

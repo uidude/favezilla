@@ -27,10 +27,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "2",
-      "infoPlist": {
-        "UIUserInterfaceStyle": "Light"
-      }
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {

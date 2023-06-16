@@ -1,7 +1,7 @@
 import config from './app.json';
 
-const buildProfile = process.env.BUILD_TYPE ?? 'dev';
-
+const buildProfile =
+  process.env.EAS_BUILD_PROFILE ?? process.env.BUILD_TYPE ?? 'dev';
 // Builds get unique bundle ID (iOS) and package name (Android)
 const BUNDLE_SUFFIXES = {
   sim: '.dev',
@@ -14,7 +14,7 @@ if (!config.expo.ios.bundleIdentifier.endsWith(bundleSuffix)) {
   config.expo.ios.bundleIdentifier += bundleSuffix;
 }
 if (!config.expo.android.package.endsWith(bundleSuffix)) {
-  //config.expo.android.package += bundleSuffix;
+  config.expo.android.package += bundleSuffix;
 }
 
 // The most effetive way to distinguish builds is with a custom icon.
