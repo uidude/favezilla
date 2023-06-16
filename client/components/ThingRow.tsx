@@ -62,7 +62,7 @@ export default function ThingRow(props: Props) {
   const image = thing.thumb ? {uri: thing.thumb} : DefaultThumb;
 
   return (
-    <PressableSpring style={S.row} onPress={goThing}>
+    <PressableSpring style={S.row} onPress={goThing} delay={100}>
       <Image style={S.image} source={image} resizeMode="contain" />
       <View style={{alignSelf: 'center', marginLeft: 10, flex: 1}}>
         <Text style={{fontSize: 18}}>{props.thing.name}</Text>
