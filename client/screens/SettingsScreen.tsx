@@ -5,12 +5,13 @@ import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {actionHook} from '@toolkit/core/client/Action';
 import Settings, {Setting} from '@toolkit/screens/Settings';
 import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
-import {navToAction} from '@toolkit/ui/screen/Nav';
+import {navToAction, useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {OpenLinkAction, openUrlAction} from '@toolkit/ui/screen/WebScreen';
 import {LEGAL_LINKS} from '@app/common/Config';
 import About from '@app/screens/About';
 import DevSettings from '@app/screens/DevSettings';
+import LoginScreen from './LoginScreen';
 
 const ABOUT = {
   icon: 'information-outline',
@@ -37,7 +38,11 @@ export const LOGOUT_ACTION = {
   icon: 'logout',
   action: actionHook(() => {
     const auth = useAuth();
-    return () => auth.logout();
+    const nav = useNav();
+    return () => {
+      nav.reset(LoginScreen);
+      setTimeout(() => auth.logout(), 0);
+    };
   }),
 };
 
