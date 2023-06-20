@@ -18,6 +18,7 @@ import {FirestoreFilestore} from '@toolkit/providers/firebase/FileStore';
 import {FirestoreDatastoreWithCaching} from '@toolkit/providers/firebase/FirestoreDatastore';
 import {initializeFirestore} from '@toolkit/providers/firebase/client/Firestore';
 import {firebaseFn} from '@toolkit/providers/firebase/client/FunctionsApi';
+import {appleAuthProvider} from '@toolkit/providers/login/AppleLogin';
 import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
 import {MixpanelLogger} from '@toolkit/providers/mixpanel/Logger';
 import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
@@ -62,6 +63,7 @@ function AppConfig(props: Props) {
   initializeFirebase(FIREBASE_CONFIG);
   initializeFirestore();
   IdentityService.addProvider(googleAuthProvider(GOOGLE_LOGIN_CONFIG));
+  IdentityService.addProvider(appleAuthProvider());
   registerIconPack('ion', Ionicons);
   registerIconPack('mci', MaterialCommunityIcons);
   usePaperComponents();
