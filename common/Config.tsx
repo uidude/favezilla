@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import {providesValue} from '@toolkit/core/providers/Providers';
 import {AppConfigKey} from '@toolkit/core/util/AppConfig';
 import {FirebaseConfig} from '@toolkit/providers/firebase/Config';
