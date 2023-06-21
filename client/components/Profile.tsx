@@ -12,6 +12,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import Placeholder from '@assets/profilepic-placeholder.png';
 import {Opt} from '@toolkit/core/util/Types';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
@@ -52,10 +53,12 @@ export const ProfilePic = (props: ProfilePicProps) => {
     );
   };
 
+  const source = pic != null && pic != '' ? {uri: pic} : Placeholder;
+
   return (
     <View style={[{width: size, height: size}, S.profileBox, style]}>
       <CachingImage
-        source={{uri: pic ?? ''}}
+        source={source}
         style={[S.profilePic, sizeStyle, {opacity: loaded ? 1 : 0}]}
         onLoad={onLoad}
         errorView={errorView}
