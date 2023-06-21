@@ -4,7 +4,7 @@ import {useAuth} from '@toolkit/core/api/Auth';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {actionHook} from '@toolkit/core/client/Action';
 import Settings, {Setting} from '@toolkit/screens/Settings';
-import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
+import {NotificationSettings} from '@toolkit/screens/settings/NotificationSettings';
 import {navToAction, useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {OpenLinkAction, openUrlAction} from '@toolkit/ui/screen/WebScreen';
@@ -22,7 +22,7 @@ const ABOUT = {
 const NOTIF_SETTINGS = {
   label: 'Notifications',
   icon: 'bell-ring-outline',
-  to: NotificationSettingsScreen,
+  to: NotificationSettings,
 };
 
 const DEV_SETTINGS = {

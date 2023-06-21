@@ -11,7 +11,7 @@ import {
 } from '@toolkit/providers/navigation/ReactNavigation';
 import PhoneInput from '@toolkit/screens/login/PhoneInput';
 import PhoneVerification from '@toolkit/screens/login/PhoneVerification';
-import {NotificationSettingsScreen} from '@toolkit/screens/settings/NotificationSettings';
+import {NotificationSettings} from '@toolkit/screens/settings/NotificationSettings';
 import {bottomTabLayout} from '@toolkit/ui/layout/BottomTabLayout';
 import {ModalLayout} from '@toolkit/ui/layout/LayoutBlocks';
 import {layoutSelector} from '@toolkit/ui/layout/LayoutSelector';
@@ -64,7 +64,7 @@ const ROUTES: Routes = {
   ThingScreen,
   WebViewScreen,
   About,
-  NotificationSettingsScreen,
+  NotificationSettings,
   Onboarding,
 };
 const Stack = createStackNavigator();
