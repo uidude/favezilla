@@ -17,7 +17,8 @@ service cloud.firestore {
       "allowlist": {"*": ['admin']},
       "check_admin": {"*": ['admin']},
       "check_allowlist": {"*": ['public']},
-      "check_privacy": {"*": []}
+      "check_privacy": {"*": []},
+      "allowlist": {"read": ['owner']},
     }
   }
 
@@ -30,7 +31,8 @@ service cloud.firestore {
       "profile": "user",
       "faves": "user",
       "push_tokens": "user",
-      "notification_pref": "user"
+      "notification_pref": "user",
+      "allowlist": "user"
     }
   }
 
@@ -77,7 +79,8 @@ service cloud.firestore {
           let allowlisted = !enforceAllowlist() || 'allowlist' in roles;
           let adminAccess = globalAdminAccess() && 'admin' in roles && entity != 'check_privacy';
           let ownerAccess = 'owner' in rule && isOwner(entity);
-          return allowlisted && (public || ownerAccess || adminAccess);
+          let isEmptyRead = method == 'read' && resource == null;
+          return allowlisted && (public || ownerAccess || adminAccess || isEmptyRead);
         }
 
         // Get roles for the current user
