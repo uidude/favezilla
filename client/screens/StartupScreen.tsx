@@ -1,14 +1,14 @@
-import * as React from 'react';
-import {Image, Linking, StyleSheet, Text, View} from 'react-native';
-import AppIcon from '@assets/splash.png';
-import {useNavigation} from '@react-navigation/native';
-import Constants from 'expo-constants';
-import {useAuth} from '@toolkit/core/api/Auth';
-import {useNav} from '@toolkit/ui/screen/Nav';
-import {Screen} from '@toolkit/ui/screen/Screen';
 import {FIREBASE_CONFIG} from '@app/common/Config';
 import Favorites from '@app/screens/Favorites';
 import LoginScreen from '@app/screens/LoginScreen';
+import AppIcon from '@assets/splash.png';
+import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '@toolkit/core/api/Auth';
+import {useNav} from '@toolkit/ui/screen/Nav';
+import {Screen} from '@toolkit/ui/screen/Screen';
+import Constants from 'expo-constants';
+import * as React from 'react';
+import {Image, Linking, StyleSheet, Text, View} from 'react-native';
 
 /**
  * Checks that new apps have been initiatlized sufficiently so that they can run.
@@ -22,7 +22,7 @@ function newAppChecks() {
 
   if (FIREBASE_CONFIG.projectId === 'fill-me-in') {
     checks.push({
-      link: 'https://github.com/facebookincubator/npe-toolkit/blob/main/docs/getting-started/Firebase.md',
+      link: 'https://github.com/npe-toolkit/toolkit/blob/main/docs/getting-started/Firebase.md',
       text: 'Configure Firebase',
     });
   }

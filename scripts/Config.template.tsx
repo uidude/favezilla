@@ -35,7 +35,7 @@ export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
  * https://console.cloud.google.com/apis/credentials
  *
  * You also will need to add redirect URIs in the console, see
- * https://github.com/facebookincubator/npe-toolkit/blob/main/docs/getting-started/Firebase.md
+ * https://github.com/npe-toolkit/toolkit/blob/main/docs/getting-started/Firebase.md
  */
 export const GOOGLE_LOGIN_CONFIG = localConf['google-login'] ?? {
   iosClientId: 'fill-me-in',

@@ -1,7 +1,7 @@
 # Favezilla
 
 Template project for
-[NPE Toolkit](https://github.com/facebookincubator/npe-toolkit). Also a way to
+[NPE Toolkit](https://github.com/npe-toolkit/toolkit). Also a way to
 share books you like!
 
 ### Creating your app
