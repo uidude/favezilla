@@ -22,12 +22,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.npetoolkit.favezilla",
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "6"
+      "buildNumber": "8"
     },
     "android": {
       "adaptiveIcon": {
@@ -57,6 +57,12 @@
       ],
       [
         "expo-apple-authentication"
+      ],
+      [
+        "expo-facebook",
+        {
+          "userTrackingPermission": false
+        }
       ]
     ],
     "extra": {
