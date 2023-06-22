@@ -32,6 +32,7 @@ import ProfileScreen from '@app/screens/ProfileScreen';
 import Profiles from '@app/screens/Profiles';
 import SettingsScreen from '@app/screens/SettingsScreen';
 import StartupScreen from '@app/screens/StartupScreen';
+import Support from '@app/screens/Support';
 import ThingScreen from '@app/screens/ThingScreen';
 import 'expo-dev-client';
 import React from 'react';
@@ -66,6 +67,7 @@ const ROUTES: Routes = {
   About,
   NotificationSettings,
   Onboarding,
+  Support,
 };
 const Stack = createStackNavigator();
 
