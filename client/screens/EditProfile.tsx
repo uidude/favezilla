@@ -6,7 +6,8 @@ import * as React from 'react';
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native';
 import {SaveFormat, manipulateAsync} from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import {requireLoggedInUser} from '@toolkit/core/api/User';
+import {useAuth} from '@toolkit/core/api/Auth';
+import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {useAction} from '@toolkit/core/client/Action';
 import {withTimeout} from '@toolkit/core/util/DevUtil';
 import {Opt} from '@toolkit/core/util/Types';
@@ -18,9 +19,11 @@ import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {useUpdateUserAndProfile} from '@app/common/AppLogic';
+import {alertOkCancel} from '@app/common/Components';
 import {Profile} from '@app/common/DataTypes';
 import {ProfilePic} from '@app/components/Profile';
 import ProfileScreen from '@app/screens/ProfileScreen';
+import LoginScreen from './LoginScreen';
 
 const EditProfile: Screen<{}> = props => {
   const user = requireLoggedInUser();
@@ -35,6 +38,8 @@ const EditProfile: Screen<{}> = props => {
   const {Button, TextInput} = useComponents();
   const updateUserAndProfile = useUpdateUserAndProfile();
   const nav = useNav();
+  const userStore = useDataStore(User);
+  const auth = useAuth();
 
   function back(reload: boolean = false) {
     if (nav.backOk()) {
@@ -48,6 +53,20 @@ const EditProfile: Screen<{}> = props => {
   async function saveHandler() {
     await updateUserAndProfile(me.id, {name, pic}, {about: bio});
     back(true);
+  }
+
+  async function deleteAccount() {
+    const confirmed = await alertOkCancel(
+      'Are you sure you want to delete your account?\n\n' +
+        'This is irreversible.',
+    );
+
+    if (confirmed) {
+      await userStore.remove(me.id);
+      await profileStore.remove(me.id);
+      nav.reset(LoginScreen);
+      setTimeout(() => auth.logout(), 0);
+    }
   }
 
   return (
@@ -82,6 +101,12 @@ const EditProfile: Screen<{}> = props => {
           Save
         </Button>
       </View>
+      <Button
+        onPress={deleteAccount}
+        style={{marginTop: 54, alignSelf: 'center'}}
+        type="secondary">
+          Delete Account  
+      </Button>
     </ScrollView>
   );
 
