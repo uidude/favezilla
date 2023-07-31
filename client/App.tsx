@@ -19,7 +19,6 @@ import {topbarLayout} from '@toolkit/ui/layout/TopbarLayout';
 import {Routes} from '@toolkit/ui/screen/Nav';
 import WebViewScreen from '@toolkit/ui/screen/WebScreen';
 import AppConfig from '@app/AppConfig';
-import AuthConfig from '@app/AuthConfig';
 import About from '@app/screens/About';
 import Catalog from '@app/screens/Catalog';
 import CreateNewThingScreen from '@app/screens/CreateThingScreen';
@@ -43,12 +42,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 filterHandledExceptions();
 
-// TODO: Hack to hide header to avoid double back buttons.
-// Fix this by converting these to Screens
-// @ts-ignore
-PhoneInput.style = {nav: 'none'};
-// @ts-ignore
-PhoneVerification.style = {nav: 'none'};
 const ROUTES: Routes = {
   StartupScreen,
   LoginScreen,
