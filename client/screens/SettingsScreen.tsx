@@ -1,6 +1,5 @@
-import {LEGAL_LINKS} from '@app/common/Config';
-import About from '@app/screens/About';
-import DevSettings from '@app/screens/DevSettings';
+import React from 'react';
+import {View} from 'react-native';
 import {useAuth} from '@toolkit/core/api/Auth';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {actionHook} from '@toolkit/core/client/Action';
@@ -9,10 +8,12 @@ import {NotificationSettings} from '@toolkit/screens/settings/NotificationSettin
 import {navToAction, useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {OpenLinkAction, openUrlAction} from '@toolkit/ui/screen/WebScreen';
-import React from 'react';
-import {View} from 'react-native';
+import {LEGAL_LINKS} from '@app/common/Config';
+import About from '@app/screens/About';
+import DevSettings from '@app/screens/DevSettings';
 import EditProfile from './EditProfile';
 import LoginScreen from './LoginScreen';
+import Support from './Support';
 
 const ABOUT = {
   icon: 'information-outline',
@@ -20,12 +21,17 @@ const ABOUT = {
   to: About,
 };
 
+const SUPPORT = {
+  icon: 'help-circle-outline',
+  label: 'Support',
+  to: Support,
+};
+
 const ACCOUNT = {
   icon: 'account-outline',
   label: 'Account',
   to: EditProfile,
 };
-
 
 const NOTIF_SETTINGS = {
   label: 'Notifications',
@@ -58,6 +64,7 @@ const SETTINGS_LIST: Setting[] = [
   navToAction(NOTIF_SETTINGS),
   navToAction(ABOUT),
   navToAction(ACCOUNT),
+  navToAction(SUPPORT),
   LOGOUT_ACTION,
   'LEGAL',
   ...LEGAL_LINKS.map((link: OpenLinkAction) => openUrlAction(link)),

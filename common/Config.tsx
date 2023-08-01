@@ -1,14 +1,15 @@
-import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 import {providesValue} from '@toolkit/core/providers/Providers';
 import {AppConfigKey} from '@toolkit/core/util/AppConfig';
 import {FirebaseConfig} from '@toolkit/providers/firebase/Config';
 import {NotificationChannelsKey} from '@toolkit/services/notifications/NotificationChannel';
+import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 
 let localConf: Record<string, any> = {};
 try {
   // @ts-ignore
   localConf = require('./.localconf.json');
 } catch (_ignored) {}
+
 /**
  * Fill in the Firebase config from values at
  * https://console.firebase.google.com/project/YOUR_PROJECT/settings/general/, under "Web apps"
@@ -34,6 +35,17 @@ export const FIREBASE_CONFIG: FirebaseConfig = localConf['firebase'] ?? {
     },
   },
 };
+
+/**
+ * Allowed countries for web builds.
+ *
+ * You usually want some restrictions here - defaults to US to avoid
+ * unintentionally launching worldwide.
+ *
+ * Note: Currently using only app store restrictions for mobile builds,
+ * but it is possible that we may need stronger restrictions in future
+ */
+export const ALLOWED_WEB_COUNTRIES = ['US'];
 
 /**
  * Fill in the client IDs from
@@ -92,6 +104,18 @@ export const LEGAL_LINKS = [
 export const LOGIN_SCREEN_TOS =
   'By continuing, you accept our [Terms of Service](https://app.termly.io/document/terms-of-service/477358a4-d5ec-4635-8eed-739005f7968b) ' +
   'and [Privacy Policy](https://app.termly.io/document/privacy-policy/158a201a-46b3-4c47-9434-e9a012757ea6).';
+
+export const SUPPORT_PAGE_TITLE = 'Favezilla Support';
+export const SUPPORT_PAGE_TEXT = `
+Sorry you're having problems!
+
+You can contact us at [favezilla.support@innate.net](mailto:favezilla.support@innate.net) with any questions
+or feedback on the product.
+
+
+Thanks,
+Your friendly Favezilla dinosaur
+`;
 
 export const MIXPANEL_TOKEN = 'ae6dcaf512d2311b66a99a020c2ef1c3';
 

@@ -1,21 +1,10 @@
 import {simpleAboutScreen} from '@toolkit/screens/settings/AboutScreen';
 import {Screen} from '@toolkit/ui/screen/Screen';
-
-const TitleMarkdown = 'Favezilla Support';
-const DescriptionMarkdown = `
-Sorry you're having problems!
-
-You can contact us at [favezilla.support@innate.net](favezilla.support@innate.net) with any questions
-or feedback on the product. Thanks!
-
-
-Thanks,
-Your friendly Favezilla dinosaur
-`;
+import {SUPPORT_PAGE_TEXT, SUPPORT_PAGE_TITLE} from '@app/common/Config';
 
 const Support: Screen<{}> = simpleAboutScreen({
-  title: TitleMarkdown,
-  body: DescriptionMarkdown,
+  title: SUPPORT_PAGE_TITLE,
+  body: SUPPORT_PAGE_TEXT,
   showIcon: true,
 });
 
