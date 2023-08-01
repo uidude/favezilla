@@ -1,7 +1,3 @@
-/**
- * TODO: Describe what this screen is doing :)
- */
-
 import * as React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Checkbox} from 'react-native-paper';
@@ -21,27 +17,20 @@ import {
   getNetworkDelayMs,
   useSetNetworkDelay,
 } from '@toolkit/core/util/DevUtil';
-import {getRequired, useDataStore} from '@toolkit/data/DataStore';
+import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useTextInput} from '@toolkit/ui/UiHooks';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {TestNotif} from '@app/common/Api';
-import {Profile} from '@app/common/DataTypes';
 import Onboarding from '@app/screens/Onboarding';
 import {registerForPushNotificationsAsync} from '@app/util/Notifications';
 
-type Props = {
-  async: {
-    networkDelay: number;
-    user: User;
-    profile: Profile;
-  };
-};
+type Props = {};
 
 const DevSettings: Screen<Props> = props => {
-  requireLoggedInUser();
-  const {networkDelay, user, profile} = props.async;
+  const user = requireLoggedInUser();
+  const {networkDelay} = useLoad(props, load);
   const delayText = delayString(networkDelay);
   const {Body, H2} = useComponents();
   const {Button} = useComponents();
@@ -129,19 +118,14 @@ const DevSettings: Screen<Props> = props => {
       <FlagSection />
     </ScrollView>
   );
+
+  async function load() {
+    const [networkDelay] = await Promise.all([getNetworkDelayMs()]);
+
+    return {networkDelay};
+  }
 };
 DevSettings.title = 'Dev Settings';
-
-DevSettings.load = async () => {
-  const user = requireLoggedInUser();
-  const profileStore = useDataStore(Profile);
-  const [networkDelay, profile] = await Promise.all([
-    getNetworkDelayMs(),
-    getRequired(profileStore, user.id),
-  ]);
-
-  return {networkDelay, profile, user};
-};
 
 function toHumanReadable(flag: Flag<boolean>) {
   return flag.id.replace(/(\b[A-Z])(?=[^A-Z])/g, ' $1');
