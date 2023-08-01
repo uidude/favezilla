@@ -16,6 +16,7 @@ import {useDataStore} from '@toolkit/data/DataStore';
 import {useStorage} from '@toolkit/data/FileStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
+import {IconButton} from '@toolkit/ui/layout/LayoutBlocks';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {useUpdateUserAndProfile} from '@app/common/AppLogic';
@@ -135,8 +136,13 @@ export function ProfilePicEditor(props: {
     }
   }, [uploading]);
 
-  async function editPic() {
-    toUploadUri.current = await pickSquarePhoto();
+  async function camera() {
+    toUploadUri.current = await pickSquarePhoto(true);
+    uploadPic();
+  }
+
+  async function browse() {
+    toUploadUri.current = await pickSquarePhoto(false);
     uploadPic();
   }
 
@@ -149,24 +155,40 @@ export function ProfilePicEditor(props: {
   }
 
   return (
-    <PressableSpring onPress={editPic}>
-      {uploading ? (
-        <View style={[S.uploading, {width: size, height: size}]}>
-          <ActivityIndicator size="large" />
-        </View>
-      ) : (
-        <ProfilePic pic={pic} size={size} style={{alignSelf: 'center'}} />
-      )}
-    </PressableSpring>
+    <View style={S.profilePicRow}>
+      <IconButton name="ion:camera-outline" size={32} onPress={camera} />
+      <PressableSpring onPress={camera}>
+        {uploading ? (
+          <View style={[S.uploading, {width: size, height: size}]}>
+            <ActivityIndicator size="large" />
+          </View>
+        ) : (
+          <ProfilePic pic={pic} size={size} style={{alignSelf: 'center'}} />
+        )}
+      </PressableSpring>
+      <IconButton name="ion:list-circle-outline" size={32} onPress={browse} />
+    </View>
   );
 }
 
-async function pickSquarePhoto(size: number = 256) {
-  const result = await ImagePicker.launchImageLibraryAsync({
+async function pickSquarePhoto(useCamera: boolean = false, size: number = 256) {
+  console.log('psp');
+
+  const picker = useCamera
+    ? ImagePicker.launchCameraAsync
+    : ImagePicker.launchImageLibraryAsync;
+
+  if (useCamera) {
+    await ImagePicker.requestCameraPermissionsAsync();
+  }
+
+  const result = await picker({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     quality: 1,
     allowsEditing: true,
     aspect: [1, 1],
+    /** @ts-ignore Documented and works, but not in exposed TypeScript API */
+    cameraType: 'front',
   });
   const image = result.assets && result.assets[0];
 
@@ -212,6 +234,11 @@ const S = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#888',
     alignSelf: 'center',
+  },
+  profilePicRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   uploading: {
     alignSelf: 'center',

@@ -32,7 +32,7 @@ const ProfileScreen: Screen<Props> = props => {
   const getFaves = useApi(GetFaves);
   const {profile, faves, myFaves} = useLoad(props, load);
   const {navTo} = useNav();
-  const {Title, Body} = useComponents();
+  const {Title, Body, Button} = useComponents();
 
   const isMe = user.id === profile.id;
   const about = profile.about ?? '';
@@ -41,22 +41,21 @@ const ProfileScreen: Screen<Props> = props => {
     return myFaves.find(fave => fave.thing.id === thing.id);
   }
 
+  function edit() {
+    navTo(EditProfile);
+  }
+
   return (
     <ScrollView style={S.container}>
       <View style={S.profileHeader}>
         <ProfilePic pic={profile.pic} size={128} />
-        <Title style={S.title}>
-          {isMe && <View style={{width: 30}} />}
-          {profile.name}
-          {isMe && (
-            <PressableSpring
-              style={{marginLeft: 6}}
-              onPress={() => navTo(EditProfile)}>
-              <Icon name="mci:account-edit-outline" size={24} />
-            </PressableSpring>
-          )}
-        </Title>
+        <Title style={S.title}>{profile.name}</Title>
         <Body style={S.subtitle}>{about}</Body>
+        {isMe && (
+          <Button type="primary" style={S.button} onPress={edit}>
+            Edit
+          </Button>
+        )}
       </View>
       {faves.map((fave, idx) => (
         <ThingRow key={idx} thing={fave.thing} fave={isMyFave(fave.thing)} />
@@ -104,6 +103,10 @@ const S = StyleSheet.create({
     maxWidth: 400,
     marginHorizontal: 24,
     marginTop: 12,
+  },
+  button: {
+    paddingHorizontal: 16,
+    marginTop: 16,
   },
 });
 
