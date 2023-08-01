@@ -1,8 +1,10 @@
 import {api} from '@toolkit/core/api/DataApi';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
+import {CodedError} from '@toolkit/core/util/CodedError';
 import {Opt} from '@toolkit/core/util/Types';
 import {Updater, useDataStore} from '@toolkit/data/DataStore';
 import {AllowlistEntry} from '@toolkit/tbd/Allowlist';
+import {ALLOWED_WEB_COUNTRIES} from '@app/common/Config';
 import {Fave, Profile, Thing} from '@app/common/DataTypes';
 
 // Cilent business logic
@@ -103,6 +105,44 @@ export const RemoveThing = api<string, void>('removeThing', () => {
 
     // Delete the thing itself
     await thingStore.remove(thingId);
+  };
+});
+
+/**
+ * Checks whether the user is in a country in `ALLOWED_COUNTRIES`.
+ * '*' is a wildcard that allows all countries.
+ *
+ * Client-side version of this function uses the free https://country.is/ lookup.
+ *
+ * For launches beyond a small scale you'll want to use a commercial GeoIP service
+ * via a server-side call.
+ */
+export const CheckCountry = api<void, boolean>('checkCountry', () => {
+  let countryCode: Opt<string> = null;
+
+  return async function checkCountry() {
+    if (ALLOWED_WEB_COUNTRIES.includes('*')) {
+      return true;
+    }
+
+    if (countryCode == null) {
+      try {
+        const response = await fetch('https://api.country.is/');
+        const json = await response.json();
+        countryCode = json.country || 'ZZ';
+      } catch (e) {
+        // We don't allow this request to fail currently, instead return uknnown country
+        countryCode = 'ZZ';
+      }
+    }
+
+    if (!ALLOWED_WEB_COUNTRIES.includes(countryCode as string)) {
+      throw new CodedError(
+        'npe.invalidCountry',
+        'Sorry, this app is not available in your current location.',
+      );
+    }
+    return true;
   };
 });
 

@@ -9,9 +9,12 @@ import {Screen} from '@toolkit/ui/screen/Screen';
 import {GetFaves} from '@app/common/AppLogic';
 import {SearchBar} from '@app/components/SearchBar';
 import ThingRow from '@app/components/ThingRow';
+import {useCheckCountry} from '@app/util/Availability';
 
 const Favorites: Screen<{}> = props => {
   requireLoggedInUser();
+
+  useCheckCountry();
   const getFaves = useApi(GetFaves);
   const {faves} = useLoad(props, load);
   const {Subtitle} = useComponents();
