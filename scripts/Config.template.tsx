@@ -50,7 +50,11 @@ export const APP_CONFIG = {
 };
 providesValue(AppConfigKey, APP_CONFIG);
 
-export const CLIENT_FALLBACK_ENABLED = true;
+/**
+ * For early development, it is convenient to run all possible logic on the client.
+ * This should be switched to false for launch.
+ */
+export const PREFER_CLIENT_APIS = true;
 
 // Add legal links here for easy reference.
 export const LEGAL_LINKS = [

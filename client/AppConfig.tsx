@@ -3,8 +3,8 @@ import icon from '@assets/icon.png';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {
-  setClientFallbackEnabled,
   setDefaultServerApi,
+  setPreferClientApis,
 } from '@toolkit/core/api/DataApi';
 import {LocalFlags} from '@toolkit/core/api/Flags';
 import {ConsoleLogger, DevLogger, MultiLogger} from '@toolkit/core/api/Log';
@@ -28,11 +28,11 @@ import {allowWebScreenDomains} from '@toolkit/ui/screen/WebScreen';
 import AuthConfig from '@app/AuthConfig';
 import {
   APP_CONFIG,
-  CLIENT_FALLBACK_ENABLED,
   FIREBASE_CONFIG,
   GOOGLE_LOGIN_CONFIG,
   LEGAL_LINKS,
   MIXPANEL_TOKEN,
+  PREFER_CLIENT_APIS,
 } from '@app/common/Config';
 import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 
@@ -69,7 +69,7 @@ function AppConfig(props: Props) {
   usePaperComponents();
 
   setDefaultServerApi(firebaseFn);
-  setClientFallbackEnabled(CLIENT_FALLBACK_ENABLED);
+  setPreferClientApis(PREFER_CLIENT_APIS);
   allowWebScreenDomains(LEGAL_LINKS.map(l => l.url));
 
   return (

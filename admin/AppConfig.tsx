@@ -1,16 +1,10 @@
-import {
-  APP_CONFIG,
-  CLIENT_FALLBACK_ENABLED,
-  FIREBASE_CONFIG,
-  GOOGLE_LOGIN_CONFIG,
-  LEGAL_LINKS,
-} from '@app/common/Config';
-import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
+import React from 'react';
 import icon from '@assets/icon.png';
 import {Ionicons, MaterialCommunityIcons, Octicons} from '@expo/vector-icons';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {
-  setClientFallbackEnabled,
   setDefaultServerApi,
+  setPreferClientApis,
 } from '@toolkit/core/api/DataApi';
 import {LocalFlags} from '@toolkit/core/api/Flags';
 import {ConsoleLogger, DevLogger, MultiLogger} from '@toolkit/core/api/Log';
@@ -27,8 +21,14 @@ import {googleAuthProvider} from '@toolkit/providers/login/GoogleLogin';
 import {BLACK_AND_WHITE} from '@toolkit/ui/QuickThemes';
 import {Icon, registerIconPack} from '@toolkit/ui/components/Icon';
 import {allowWebScreenDomains} from '@toolkit/ui/screen/WebScreen';
-import React from 'react';
-import {Provider as PaperProvider} from 'react-native-paper';
+import {
+  APP_CONFIG,
+  FIREBASE_CONFIG,
+  GOOGLE_LOGIN_CONFIG,
+  LEGAL_LINKS,
+  PREFER_CLIENT_APIS,
+} from '@app/common/Config';
+import {NOTIF_CHANNELS} from '@app/common/NotifChannels';
 import AuthConfig from './app/AuthConfig';
 import {registerUiComponents} from './app/Components';
 
@@ -62,7 +62,7 @@ function AppConfig(props: Props) {
   registerUiComponents();
 
   setDefaultServerApi(firebaseFn);
-  setClientFallbackEnabled(CLIENT_FALLBACK_ENABLED);
+  setPreferClientApis(PREFER_CLIENT_APIS);
   allowWebScreenDomains(LEGAL_LINKS.map(l => l.url));
 
   return (
