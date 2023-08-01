@@ -15,6 +15,7 @@ const LOGIN_SCREEN_CONFIG: SimpleLoginScreenConfig = {
 };
 
 const LoginScreen: Screen<{}> = simpleLoginScreen(LOGIN_SCREEN_CONFIG);
+LoginScreen.title = 'Login';
 LoginScreen.style = {type: 'top', nav: 'none'};
 
 export default LoginScreen;
