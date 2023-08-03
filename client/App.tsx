@@ -115,11 +115,11 @@ export default function App() {
 
   return (
     <AppConfig>
+      <StatusBar style="light" />
       <View style={S.background}>
         <SafeAreaProvider style={S.container}>
           <SimpleUserMessaging style={S.messaging} />
           <NavigationContainer linking={linking}>
-            <StatusBar style="auto" />
             <NavContext routes={ROUTES} />
             <Stack.Navigator
               screenOptions={{headerShown: false}}
@@ -146,5 +146,8 @@ const S = StyleSheet.create({
   messaging: {
     bottom: 100,
   },
-  background: {flex: 1, backgroundColor: '#202020'},
+  background: {
+    flex: 1,
+    backgroundColor: '#202020',
+  },
 });
