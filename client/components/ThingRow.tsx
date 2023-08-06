@@ -65,8 +65,8 @@ export default function ThingRow(props: Props) {
     <PressableSpring style={S.row} onPress={goThing} delay={100}>
       <Image style={S.image} source={image} resizeMode="contain" />
       <View style={{alignSelf: 'center', marginLeft: 10, flex: 1}}>
-        <Text style={{fontSize: 18}}>{props.thing.name}</Text>
-        <Text style={{color: 'gray'}}>{props.thing.description}</Text>
+        <Text style={{fontSize: 18}}>{thing.name}</Text>
+        <Text style={{color: 'gray'}}>{thing.by ?? thing.description}</Text>
       </View>
 
       {canDelete && (

@@ -7,7 +7,8 @@ import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {Icon} from '@toolkit/ui/components/Icon';
 import {PressableSpring} from '@toolkit/ui/components/Tools';
-import {Fave, Thing} from '@app/common/DataTypes';
+import {Fave, Thing, ThingType} from '@app/common/DataTypes';
+import {useMediaType} from '@app/screens/Favorites';
 
 export type OpenLibraryResult = {
   author_name: string | string[];
@@ -52,6 +53,64 @@ function bestMatches(match: string, from: OpenLibraryResult[]) {
   return sorted;
 }
 
+type ReleaseGroup = {
+  id: string;
+  title: string;
+  'primary-type': string;
+  'secondary-types'?: string[];
+  'artist-credit'?: {name: string}[];
+  releases?: {title: string}[];
+};
+
+type ReleaseGroupResponse = {
+  count: number;
+  created: string;
+  offset: number;
+  'release-groups': ReleaseGroup[];
+};
+const MUSIC_BRAINZ_URL = 'https://musicbrainz.org/ws/2/release-group';
+
+// TODO: Run literal match as separate query
+async function musicBrainzMatches(match: string): Promise<Partial<Thing>[]> {
+  if (match.length < 3) {
+    return [];
+  }
+  const query = `${MUSIC_BRAINZ_URL}?query=(artist:${match} OR releasegroup:${match}) AND primarytype:album&fmt=json&limit=100`;
+  const response = await fetch(query);
+  const json = (await response.json()) as ReleaseGroupResponse;
+  const results = json['release-groups'].sort(
+    (a, b) => score(b, match) - score(a, match),
+  );
+  return results.map(r => musicBrainzToThing(r));
+}
+
+function artistFor(from: ReleaseGroup) {
+  return from['artist-credit']?.[0]?.name ?? '';
+}
+
+function musicBrainzToThing(from: ReleaseGroup): Partial<Thing> {
+  return {
+    name: from.title,
+    by: artistFor(from),
+    type: 'album',
+    image: `https://coverartarchive.org/release-group/${from.id}front`,
+    thumb: `https://coverartarchive.org/release-group/${from.id}/front-250`,
+    externalId: from.id,
+    externalType: 'musicbrainz',
+  };
+}
+
+function score(releaseGroup: ReleaseGroup, match: string) {
+  const releases = releaseGroup.releases ? releaseGroup.releases.length : 0;
+  const isAlbum = releaseGroup['secondary-types'] == null;
+  const title = releaseGroup.title.toLowerCase();
+  const artist = artistFor(releaseGroup).toLowerCase();
+  const toMatch = match.toLowerCase();
+  const exact = title === toMatch || artist === toMatch;
+  const substring = title.includes(toMatch) || artist.includes(toMatch);
+  return releases + (isAlbum ? 5 : 0) + (exact ? 10 : 0) + (substring ? 5 : 0);
+}
+
 const OPEN_LIBRARY_URL = 'https://openlibrary.org/search.json';
 const FIELDS =
   'fields=key,title,author_name,readinglog_count,id_amazon,id_goodreads,cover_i';
@@ -59,6 +118,22 @@ const FIELDS =
 function openLibraryMatcher(match: string, type: string) {
   const typeParam = type === '*' ? '' : `${type}:`;
   return `${typeParam}(${match}*) OR ${typeParam}(${match})`;
+}
+
+async function bookMatches(match: string) {
+  const [top, all] = await Promise.all([
+    openLibraryMatches(match, false),
+    openLibraryMatches(match, true),
+  ]);
+
+  const topIds = top.map(t => t.key);
+  const filteredAll = all.filter(t => !topIds.includes(t.key));
+  const books = [
+    ...bestMatches(match, top),
+    ...bestMatches(match, filteredAll),
+  ].map(doc => openLibraryToThing(doc));
+
+  return books;
 }
 
 async function openLibraryMatches(match: string, allDocs: boolean) {
@@ -84,6 +159,17 @@ async function openLibraryMatches(match: string, allDocs: boolean) {
   return [];
 }
 
+function openLibraryToThing(from: OpenLibraryResult): Partial<Thing> {
+  return {
+    name: from.title,
+    by: formatAuthor(from.author_name),
+    type: 'book',
+    image: `https://covers.openlibrary.org/b/id/${from.cover_i}-L.jpg`,
+    thumb: `https://covers.openlibrary.org/b/id/${from.cover_i}-M.jpg`,
+    externalId: from.key,
+    externalType: 'openlibrary',
+  };
+}
 export function formatAuthor(author: string | string[]) {
   if (author == null) {
     return '';
@@ -94,20 +180,17 @@ export function formatAuthor(author: string | string[]) {
   return author.join(', ');
 }
 
-function imageSource(item: OpenLibraryResult) {
-  return {uri: `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`};
-}
-
 type Props = {};
 
-export const SearchBar = (props: Props) => {
+export const SearchBar = () => {
+  const mediaType = useMediaType();
   // TODO: filter out existing faves when on faves screen
   const user = requireLoggedInUser();
   const thingStore = useDataStore(Thing);
   const faveStore = useDataStore(Fave);
   const requestCounter = React.useRef(0);
   const [value, setValue] = React.useState('');
-  const [matches, setMatches] = React.useState<OpenLibraryResult[]>([]);
+  const [matches, setMatches] = React.useState<Partial<Thing>[]>([]);
   const reload = useReload();
   const [addFave] = useAction('AddFavorite', addFaveHandler);
   const {Body, Button} = useComponents();
@@ -126,48 +209,33 @@ export const SearchBar = (props: Props) => {
     requestCounter.current = requestCounter.current + 1;
     const id = requestCounter.current;
 
-    const [top, all] = await Promise.all([
-      openLibraryMatches(newValue, false),
-      openLibraryMatches(newValue, true),
-    ]);
+    const matches =
+      mediaType === 'book'
+        ? await bookMatches(newValue)
+        : await musicBrainzMatches(newValue);
 
     if (requestCounter.current !== id) {
       // Another request was sent while in flight, so don't update value
       return;
     }
 
-    const topIds = top.map(t => t.key);
-    const filteredAll = all.filter(t => !topIds.includes(t.key));
-    const docs = [
-      ...bestMatches(newValue, top),
-      ...bestMatches(newValue, filteredAll),
-    ];
-
-    setMatches(docs.slice(0, 6));
+    setMatches(matches.slice(0, 6));
   }
 
-  async function getOrCreateThing(from: OpenLibraryResult) {
+  async function getOrCreateThing(matched: Partial<Thing>) {
     let thing;
     let existing = await thingStore.query({
-      where: [{field: 'externalId', op: '==', value: from.key}],
+      where: [{field: 'externalId', op: '==', value: matched.externalId!}],
     });
     if (existing.length > 0) {
       thing = existing[0];
     } else {
-      thing = await thingStore.create({
-        name: from.title,
-        description: 'by ' + formatAuthor(from.author_name),
-        type: 'book',
-        image: `https://covers.openlibrary.org/b/id/${from.cover_i}-L.jpg`,
-        thumb: `https://covers.openlibrary.org/b/id/${from.cover_i}-M.jpg`,
-        externalId: from.key,
-        externalType: 'openlibrary',
-      });
+      thing = await thingStore.create(matched);
     }
     return thing;
   }
 
-  async function itemSelected(toAdd: OpenLibraryResult) {
+  async function itemSelected(toAdd: Partial<Thing>) {
     const thing = await getOrCreateThing(toAdd);
     setValue('');
     setMatches([]);
@@ -182,16 +250,12 @@ export const SearchBar = (props: Props) => {
         <View style={S.autocompletes}>
           {matches.map((match, idx) => (
             <View key={idx} style={S.autocomplete}>
-              <Image source={imageSource(match)} style={S.thumb} />
+              <Image source={{uri: match.thumb!}} style={S.thumb} />
               <View style={{flexShrink: 1, flexGrow: 1}}>
                 <Body numberOfLines={1} style={{fontWeight: 'bold'}}>
-                  {match.title}
+                  {match.name}
                 </Body>
-                <Body numberOfLines={1}>
-                  {formatAuthor(match.author_name)} ({match.readinglog_count}|
-                  {match.id_amazon != null ? '+' : '-'}|
-                  {match.id_goodreads != null ? '+' : '-'})
-                </Body>
+                <Body numberOfLines={1}>{match.by ?? match.description}</Body>
               </View>
               <Button
                 onPress={() => itemSelected(match)}

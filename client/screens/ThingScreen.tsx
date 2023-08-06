@@ -34,7 +34,7 @@ const ThingScreen: Screen<Props> = props => {
     <ScrollView style={S.container}>
       <View style={S.profileHeader}>
         <Image style={S.image} source={image} resizeMode="contain" />
-        <Subtitle style={S.title}>{thing.description}</Subtitle>
+        <Subtitle style={S.title}>{thing.by ?? thing.description}</Subtitle>
       </View>
       <Title style={S.sectionHeader}>Favorited By</Title>
       {thing.faves.map((fave, idx) => (

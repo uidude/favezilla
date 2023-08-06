@@ -19,11 +19,12 @@ export class Profile extends BaseModel {
   @InverseField() faves?: Fave[];
 }
 
-export type ThingType = 'book';
-export type ExternalType = 'openlibrary';
+export type ThingType = 'book' | 'album';
+export type ExternalType = 'openlibrary' | 'musicbrainz';
 @Model({name: 'things'})
 export class Thing extends BaseModel {
   @Field() name: string;
+  @Field() by: string;
   @Field() description: string;
   @Field(TString) type: ThingType;
   @Field() image: string;
