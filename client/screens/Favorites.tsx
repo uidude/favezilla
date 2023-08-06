@@ -1,5 +1,11 @@
 import * as React from 'react';
-import {Animated, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Animated,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import {useApi} from '@toolkit/core/api/DataApi';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
@@ -13,7 +19,7 @@ import {GetFaves} from '@app/common/AppLogic';
 import {ThingType} from '@app/common/DataTypes';
 import {SearchBar} from '@app/components/SearchBar';
 import ThingRow from '@app/components/ThingRow';
-import {useCheckCountry} from '@app/util/Availability';
+import {useCheckCountry, useRefresh} from '@app/util/Misc';
 
 export function useMediaType(): ThingType {
   const [type] = useStored('mediaType', STRING, 'book');
@@ -43,12 +49,12 @@ export function MediaTypeToggle() {
 
 const Favorites: Screen<{}> = props => {
   requireLoggedInUser();
-
   useCheckCountry();
   const getFaves = useApi(GetFaves);
   const mediaType = useMediaType();
   const {faves} = useLoad(props, load);
   const {Subtitle} = useComponents();
+  const refresh = useRefresh();
   const hasFaves = faves.length > 0;
   const typeText = mediaType === 'book' ? 'books' : 'albums';
 
@@ -56,6 +62,7 @@ const Favorites: Screen<{}> = props => {
     <View style={{flex: 1}}>
       <SearchBar />
       <ScrollView style={S.container}>
+        <RefreshControl refreshing={false} onRefresh={refresh} />
         <MediaTypeToggle />
         {hasFaves && (
           <>

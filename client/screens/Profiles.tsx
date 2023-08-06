@@ -5,23 +5,29 @@
  */
 
 import * as React from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {RefreshControl, ScrollView, StyleSheet} from 'react-native';
+import {useEnabled} from '@toolkit/core/api/Flags';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {Screen} from '@toolkit/ui/screen/Screen';
+import {IncludeTestProfiles} from '@app/common/AppLogic';
 import {Profile} from '@app/common/DataTypes';
 import {ProfileRow} from '@app/components/Profile';
+import {useRefresh} from '@app/util/Misc';
 
 const Profiles: Screen<{}> = props => {
   const user = requireLoggedInUser();
+  const showTestProfiles = useEnabled(IncludeTestProfiles);
   const profileStore = useDataStore(Profile);
   const {profiles, me} = useLoad(props, load);
   const {Title} = useComponents();
+  const refresh = useRefresh();
 
   return (
     <ScrollView style={S.container} contentContainerStyle={S.content}>
+      <RefreshControl refreshing={false} onRefresh={refresh} />
       <ProfileRow profile={me} isMe={true} />
       <Title style={S.otherProfiles}>Other Profiles</Title>
       {profiles.map((profile, idx) => (
@@ -31,7 +37,10 @@ const Profiles: Screen<{}> = props => {
   );
 
   async function load() {
-    const profiles = await profileStore.getAll();
+    let profiles = await profileStore.getAll();
+    if (!showTestProfiles) {
+      profiles = profiles.filter(p => !p.test);
+    }
     const myIndex = profiles.findIndex(p => p.id === user.id);
     const me = profiles[myIndex];
     profiles.splice(myIndex, 1);

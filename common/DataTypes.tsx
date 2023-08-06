@@ -16,6 +16,7 @@ export class Profile extends BaseModel {
   @Field() name: string;
   @Field(TString) pic?: Opt<string>;
   @Field(TString) about?: Opt<string>;
+  @Field() test?: boolean;
   @InverseField() faves?: Fave[];
 }
 

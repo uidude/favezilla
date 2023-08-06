@@ -23,6 +23,7 @@ import {useComponents} from '@toolkit/ui/components/Components';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {TestNotif} from '@app/common/Api';
+import {IncludeTestProfiles} from '@app/common/AppLogic';
 import Onboarding from '@app/screens/Onboarding';
 import {registerForPushNotificationsAsync} from '@app/util/Notifications';
 
@@ -71,7 +72,7 @@ const DevSettings: Screen<Props> = props => {
   }
 
   return (
-    <ScrollView style={S.container}>
+    <ScrollView style={S.container} contentContainerStyle={S.content}>
       <H2>Notifications</H2>
       <Body>Test that notifications are working end-to-end</Body>
       <Button
@@ -114,7 +115,6 @@ const DevSettings: Screen<Props> = props => {
           ))}
         </View>
       )}
-
       <FlagSection />
     </ScrollView>
   );
@@ -132,7 +132,7 @@ function toHumanReadable(flag: Flag<boolean>) {
 }
 
 function FlagSection() {
-  const flagsToShow = [ConsoleLoggerEnabled];
+  const flagsToShow = [ConsoleLoggerEnabled, IncludeTestProfiles];
   const {Body, H2} = useComponents();
   const flags = use(FlagsApiKey);
   const [refresh, setRefresh] = React.useState(0);
@@ -167,6 +167,9 @@ const S = StyleSheet.create({
   container: {
     flex: 1,
     padding: 28,
+  },
+  content: {
+    paddingBottom: 32,
   },
   row: {
     padding: 20,

@@ -11,8 +11,6 @@ import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
-import {Icon} from '@toolkit/ui/components/Icon';
-import {PressableSpring} from '@toolkit/ui/components/Tools';
 import {useNav} from '@toolkit/ui/screen/Nav';
 import {Screen} from '@toolkit/ui/screen/Screen';
 import {GetFaves} from '@app/common/AppLogic';

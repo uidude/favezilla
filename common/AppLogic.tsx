@@ -1,4 +1,5 @@
 import {api} from '@toolkit/core/api/DataApi';
+import {defineFlag} from '@toolkit/core/api/Flags';
 import {User, requireLoggedInUser} from '@toolkit/core/api/User';
 import {CodedError} from '@toolkit/core/util/CodedError';
 import {Opt} from '@toolkit/core/util/Types';
@@ -246,3 +247,5 @@ export function useUpdateUserAndProfile() {
     await profileStore.update({...profile, ...userFieldsToCopy, id});
   };
 }
+
+export const IncludeTestProfiles = defineFlag('IncludeTestProfiles', __DEV__);

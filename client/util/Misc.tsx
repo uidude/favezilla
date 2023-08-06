@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {Platform} from 'react-native';
 import {useApi} from '@toolkit/core/api/DataApi';
+import {useReload} from '@toolkit/core/client/Reload';
+import {use} from '@toolkit/core/providers/Providers';
+import {CacheManagerKey} from '@toolkit/data/DataCache';
 import {CheckCountry} from '@app/common/AppLogic';
 
 /**
@@ -21,4 +24,13 @@ export function useCheckCountry() {
       checkCountry().catch(e => setError(e));
     }
   }, []);
+}
+
+export function useRefresh() {
+  const reload = useReload();
+  const cacheManager = use(CacheManagerKey);
+  return async () => {
+    await cacheManager.clear();
+    reload();
+  };
 }

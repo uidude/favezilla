@@ -5,16 +5,25 @@
  */
 
 import * as React from 'react';
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import DefaultThumb from '@assets/bookicon-small.png';
+import {useEnabled} from '@toolkit/core/api/Flags';
 import {requireLoggedInUser} from '@toolkit/core/api/User';
 import {useLoad} from '@toolkit/core/util/UseLoad';
 import {useDataStore} from '@toolkit/data/DataStore';
 import {useComponents} from '@toolkit/ui/components/Components';
 import {useScreenState} from '@toolkit/ui/screen/Layout';
 import {Screen} from '@toolkit/ui/screen/Screen';
+import {IncludeTestProfiles} from '@app/common/AppLogic';
 import {Fave, Profile, Thing} from '@app/common/DataTypes';
 import {ProfileRow} from '@app/components/Profile';
+import {useRefresh} from '@app/util/Misc';
 
 type Props = {
   id: string;
@@ -23,15 +32,18 @@ type Props = {
 const ThingScreen: Screen<Props> = props => {
   requireLoggedInUser();
   const thingStore = useDataStore(Thing);
+  const showTestProfiles = useEnabled(IncludeTestProfiles);
   const {thing} = useLoad(props, load);
   const {Title, Subtitle} = useComponents();
   const {setScreenState} = useScreenState();
+  const refresh = useRefresh();
   const image = thing.thumb ? {uri: thing.thumb} : DefaultThumb;
 
   React.useEffect(() => setScreenState({title: thing.name}), []);
 
   return (
     <ScrollView style={S.container}>
+      <RefreshControl refreshing={false} onRefresh={refresh} />
       <View style={S.profileHeader}>
         <Image style={S.image} source={image} resizeMode="contain" />
         <Subtitle style={S.title}>{thing.by ?? thing.description}</Subtitle>
@@ -49,6 +61,9 @@ const ThingScreen: Screen<Props> = props => {
         [Fave, Profile, 1],
       ],
     });
+    if (!showTestProfiles) {
+      thing.faves = thing.faves.filter(f => !f.user.test);
+    }
 
     return {thing};
   }
@@ -62,6 +77,7 @@ const S = StyleSheet.create({
   profileHeader: {
     paddingVertical: 40,
     alignItems: 'center',
+    paddingHorizontal: 12,
   },
   title: {
     textAlign: 'center',
