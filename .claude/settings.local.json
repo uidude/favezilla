@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd dev container configuration with auto-install for Claude Code and Graphite CLI\n\nConfigure GitHub Codespaces dev container to automatically install Claude Code and Graphite CLI tools on container creation. This streamlines the development environment setup by ensuring these essential tools are available immediately when the dev container opens.\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh pr create:*)",
+      "Bash(gh repo view:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "Bash(git reset:*)",
+      "Bash(git fetch:*)",
+      "Bash(git commit:*)",
+      "Bash(git lfs:*)",
+      "Bash(cat:*)",
+      "Bash(git config:*)",
+      "Bash(sudo apt-get:*)",
+      "Bash(sudo apt-get install:*)",
+      "Bash(git merge-base:*)",
+      "Bash(gt create:*)",
+      "Bash(gt log:*)"
+    ]
+  }
+}
