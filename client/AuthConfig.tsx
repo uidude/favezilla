@@ -1,5 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
+import 'firebase/auth';
 import {Account} from '@toolkit/core/api/Auth';
 import {useApi} from '@toolkit/core/api/DataApi';
 import {useOnAllowlist} from '@toolkit/core/util/Access';
@@ -8,7 +9,20 @@ import {FirebaseAuthService} from '@toolkit/providers/firebase/client/AuthServic
 import {GetUser} from '@app/common/Api';
 import {LoginUserInfo} from '@app/common/AppLogic';
 
+// Track if we've configured auth settings for testing
+let authTestConfigured = false;
+
+function configureAuthForTesting() {
+  if (!authTestConfigured && process.env.E2E_TEST === 'true') {
+    // @ts-ignore - appVerificationDisabledForTesting exists on auth settings
+    firebase.auth().settings.appVerificationDisabledForTesting = true;
+    authTestConfigured = true;
+  }
+}
+
 export default function AuthConfig(props: {children?: React.ReactNode}) {
+  // Configure auth for testing after Firebase is initialized
+  configureAuthForTesting();
   const getUser = useApi(GetUser);
   const getOnAllowlist = useOnAllowlist();
 
