@@ -64,6 +64,7 @@ function AppConfig(props: Props) {
 
   initializeFirebase(FIREBASE_CONFIG);
   initializeFirestore();
+
   IdentityService.addProvider(googleAuthProvider(GOOGLE_LOGIN_CONFIG));
   IdentityService.addProvider(appleAuthProvider());
   registerIconPack('ion', Ionicons);

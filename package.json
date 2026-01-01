@@ -16,10 +16,17 @@
     "go:android": "cd project && yarn go:android",
     "start:android": "cd project && yarn start:android",
     "build:android": "cd project && yarn build:android",
-    "postinstall": "cd project && ./setup.sh"
+    "postinstall": "cd project && ./setup.sh",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:update-snapshots": "playwright test --update-snapshots"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^3.7.1",
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3",
     "prettier": "^2.5.1",
     "typescript": "^4.5.5"
   }
