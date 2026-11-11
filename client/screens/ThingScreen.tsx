@@ -48,7 +48,10 @@ const ThingScreen: Screen<Props> = props => {
         <Image style={S.image} source={image} resizeMode="contain" />
         <Subtitle style={S.title}>{thing.by ?? thing.description}</Subtitle>
       </View>
-      <Title style={S.sectionHeader}>Favorited By</Title>
+      <Title style={S.sectionHeader}>
+        Favorited by {thing.faves.length}{' '}
+        {thing.faves.length === 1 ? 'reader' : 'readers'}
+      </Title>
       {thing.faves.map((fave, idx) => (
         <ProfileRow profile={fave.user} key={idx} />
       ))}
@@ -84,9 +87,9 @@ const S = StyleSheet.create({
     marginTop: 12,
   },
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 7,
+    width: 96,
+    height: 96,
+    borderRadius: 12,
     backgroundColor: '#FAFAFA',
     borderWidth: 1,
     borderColor: '#E0E0E0',
