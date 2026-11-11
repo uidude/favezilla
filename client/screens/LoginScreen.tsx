@@ -7,7 +7,7 @@ import {LOGIN_SCREEN_TOS} from '@app/common/Config';
 
 const LOGIN_SCREEN_CONFIG: SimpleLoginScreenConfig = {
   title: 'Favezilla',
-  subtitle: 'Share your favorite books!\n(and soon other favorite things)',
+  subtitle: 'Discover and share the books you love.',
   authTypes: __DEV__ ? ['google', 'phone', 'apple'] : ['google', 'apple'],
   home: 'Favorites',
   onboarding: 'Onboarding',
