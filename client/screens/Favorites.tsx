@@ -53,7 +53,7 @@ const Favorites: Screen<{}> = props => {
   const getFaves = useApi(GetFaves);
   const mediaType = useMediaType();
   const {faves} = useLoad(props, load);
-  const {Subtitle} = useComponents();
+  const {Body, Subtitle} = useComponents();
   const refresh = useRefresh();
   const hasFaves = faves.length > 0;
   const typeText = mediaType === 'book' ? 'books' : 'albums';
@@ -73,10 +73,13 @@ const Favorites: Screen<{}> = props => {
         )}
         {!hasFaves && (
           <View style={S.center}>
-            <Subtitle style={S.noFavesText}>
-              You haven't added any favorites yet!{'\n\n'}Search for {typeText}{' '}
-              in the search box at the top of the page.
+            <Icon name="ion:heart-outline" size={56} color="#C0C0C0" />
+            <Subtitle style={S.noFavesTitle}>
+              No favorite {typeText} yet
             </Subtitle>
+            <Body style={S.noFavesText}>
+              Search above and tap Add to save the {typeText} you love.
+            </Body>
           </View>
         )}
       </ScrollView>
@@ -135,9 +138,15 @@ const S = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  noFavesTitle: {
+    textAlign: 'center',
+    marginTop: 12,
+  },
   noFavesText: {
     textAlign: 'center',
     maxWidth: 250,
+    marginTop: 6,
+    color: '#606060',
   },
   toggle: {
     marginVertical: 24,
