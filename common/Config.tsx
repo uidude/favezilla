@@ -114,11 +114,11 @@ export const SUPPORT_PAGE_TEXT = `
 Sorry you're having problems!
 
 You can contact us at [favezilla.support@innate.net](mailto:favezilla.support@innate.net) with any questions
-or feedback on the product.
+or feedback on this product.
 
 
 Thanks,
-Your friendly Favezilla dinosaur
+Your friendly Favezilla tyrannosaur
 `;
 
 export const MIXPANEL_TOKEN = 'ae6dcaf512d2311b66a99a020c2ef1c3';
