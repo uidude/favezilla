@@ -5,6 +5,7 @@ import {SUPPORT_PAGE_TEXT, SUPPORT_PAGE_TITLE} from '@app/common/Config';
 const Support: Screen<{}> = simpleAboutScreen({
   title: SUPPORT_PAGE_TITLE,
   body: SUPPORT_PAGE_TEXT,
+  center: true,
   showIcon: true,
 });
 
