@@ -259,8 +259,8 @@ export const SearchBar = () => {
               </View>
               <Button
                 onPress={() => itemSelected(match)}
-                type="secondary"
-                style={{opacity: 0.6, marginLeft: 6}}>
+                type="primary"
+                style={S.addButton}>
                 Add
               </Button>
             </View>
@@ -344,6 +344,10 @@ const S = StyleSheet.create({
   },
   searchStuff: {
     zIndex: 20,
+  },
+  addButton: {
+    marginLeft: 6,
+    borderRadius: 999,
   },
   thumb: {
     width: 48,
